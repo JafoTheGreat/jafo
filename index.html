@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="JÄFO" />
+  <meta name="theme-color" content="#080808" />
+  <title>JÄFO</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Bebas+Neue&family=Playfair+Display:ital@0;1&display=swap');
+    html, body { margin:0; padding:0; background:#080808; height:100%; }
+    #root { height:100%; }
+    * { box-sizing:border-box; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // ── CONSTANTS ──────────────────────────────────────────────────────────────
+    const BIRTHDAY = new Date("2026-09-14");
+
+    const WORKOUT_SCHEDULE = {
+      1: { type:"Strength", duration:"55 min", intensity:"High", time:"7:00 AM", tip:"Compound lifts — deadlift, bench, rows. Heavy, controlled reps." },
+      2: { type:"Walk + Core", duration:"60 min walk / 20 min core", intensity:"Moderate", time:"6:30 AM", tip:"4–6 miles. Core circuit: planks, hollow holds, Russian twists." },
+      3: { type:"Strength", duration:"55 min", intensity:"High", time:"7:00 AM", tip:"Push/pull focus. Shoulder work for posture and definition." },
+      4: { type:"Walk + Mobility", duration:"60 min walk / 20 min mobility", intensity:"Low", time:"6:30 AM", tip:"Active recovery. Hip flexors, thoracic spine, hamstrings." },
+      5: { type:"Strength", duration:"55 min", intensity:"High", time:"7:00 AM", tip:"Lower body and arms. Squats, lunges, curls. End with 10 min incline walk." },
+      6: { type:"Core + HIIT", duration:"45 min", intensity:"High", time:"4:30 PM", tip:"20 min HIIT cardio, 25 min core. Primary fat-burn session of the week." },
+      0: { type:"Long Walk + Reflection", duration:"75–90 min", intensity:"Low", time:"8:00 AM", tip:"6+ miles. No headphones first 20 min. Let the mind clear before God." },
+    };
+
+    const MEALS = {
+      breakfast: { name:"Steak & Egg Sandwich", items:"Lean steak · 2 eggs · whole grain bread · avocado", time:"8:00 AM", why:"Protein-first. No sugar spike. Fuels the morning sprint." },
+      meal1: { name:"Grilled Fish + Jollof Rice", items:"Tilapia or catfish · small jollof portion · sautéed greens", time:"1:00 PM", why:"Lean protein + complex carb. No afternoon crash." },
+      snack: { name:"Kilishi + Hibiscus Tea", items:"30g kilishi · Tazo hibiscus tea", time:"4:00 PM", why:"High-protein Nigerian snack. Hibiscus supports fat metabolism." },
+      meal2: { name:"Pepper Soup + Salad", items:"Chicken or fish pepper soup · sweet & spicy salad · water", time:"7:00 PM", why:"Anti-inflammatory. Light at night. Supports belly fat reduction." },
+    };
+
+    const SCRIPTURES = [
+      { ref:"Proverbs 4:7", text:"Wisdom is the principal thing; therefore get wisdom. And in all your getting, get understanding.", embodiment:"Every decision today is an act of stewardship over the understanding God gave you. Ask before you act." },
+      { ref:"Psalm 1:3", text:"He shall be like a tree planted by the rivers of water, that brings forth its fruit in its season.", embodiment:"You are in a planting season. Systems, habits, discipline. The fruit is coming. Don't demand harvest before the roots are deep." },
+      { ref:"Isaiah 40:31", text:"But those who wait on the Lord shall renew their strength; they shall mount up with wings like eagles.", embodiment:"When you feel overwhelmed mid-sprint — pause. That is not a sign to push harder. Wait. Then proceed with clarity." },
+      { ref:"Philippians 4:6–7", text:"Be anxious for nothing, but in everything by prayer and supplication, with thanksgiving, let your requests be made known to God.", embodiment:"Before your first task, before your phone — present it to God. Let His peace guard your mind today." },
+      { ref:"Proverbs 21:5", text:"The plans of the diligent lead surely to plenty, but those of everyone who is hasty, surely to poverty.", embodiment:"Don't rush today's work. Done well today means months of leverage ahead." },
+      { ref:"Joshua 1:9", text:"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", embodiment:"Your name is Joshua. You were born to lead into the next territory. Step forward where today asks you to be bold." },
+      { ref:"Romans 12:2", text:"Do not be conformed to this world, but be transformed by the renewing of your mind.", embodiment:"Every learning block, every podcast, every chapter is renewing your mind. Protect that time. The transformation happens in daily repetition." },
+    ];
+
+    const AFFIRMATION = `With humility and hope, I evoke divine discernment for every decision I will make today.
+May the wisdom from above guide each choice, and may the Lord's presence be the beacon that illuminates my life.
+
+In the name of Jesus — I reject confusion, hesitation, and doubt that may obscure my vision.
+Deliver me, Lord, from distractions and false voices that seek to lead me astray.
+I cry out for security and clarity, trusting that You are guiding my steps.
+
+I ask, Lord, for complete healing of my body, mind, and spirit —
+and that the peace that surpasses all understanding be my fortress.
+Protect me and my loved ones. I declare that all circumstances work in our favor.
+May Your blessing cover us, may Your protection surround us,
+and may we be shielded from all evil.
+
+I implore Your generosity in my life.
+May new horizons open before me, filled with Your grace and contentment.
+Amen.`;
+
+    const CALENDAR = [
+      { id:"auto", time:"11:00 AM – 1:30 PM", title:"JA Automation — Phase 1 Sprint", subtitle:"5 Systems: SaneBox · Proposal Engine · Otter.ai · Perplexity · Daily Brief", type:"DO", color:"#FF4747", emoji:"⚙️", desc:"25 min per system. Sequential. Do not multitask." },
+      { id:"pj",   time:"1:45 PM – 2:45 PM",  title:"PJ Star Work Session", subtitle:"Client execution block", type:"DO", color:"#B47FFF", emoji:"🎯", desc:"Come prepared. Hard stop 2:45 PM. Protect gym." },
+      { id:"gym",  time:"4:30 PM – 6:00 PM",  title:"Strength Training #4", subtitle:"Core + HIIT · Recurring", type:"PROTECTED", color:"#E8FF47", emoji:"💪", desc:"Non-negotiable. Chiseled by Sept 14 happens here." },
+      { id:"jour", time:"6:00 PM – 7:00 PM",  title:"Weekly Journal Review", subtitle:"Set by Esther · Recurring", type:"SPIRIT", color:"#FF6B35", emoji:"📓", desc:"Reflect before planning next week." },
+      { id:"pray", time:"9:30 PM – 10:00 PM", title:"End Day with God", subtitle:"Prayer · Bible Study · Reflection", type:"SACRED", color:"#FFD147", emoji:"🙏", desc:"Everything bends around this." },
+    ];
+
+    const LEARN = [
+      { icon:"📰", label:"Newspaper", detail:"Punch · Wall Street Journal · Feeder" },
+      { icon:"📖", label:"Book Chapter", detail:"Current book — one chapter minimum" },
+      { icon:"🎙️", label:"Podcast", detail:"All In Pod · Jerry Flowers · Pivot" },
+      { icon:"🧠", label:"Elevate", detail:"Brain training — one full session" },
+    ];
+
+    const SECTIONS = [
+      { id:"today",   emoji:"📅", label:"TODAY"    },
+      { id:"body",    emoji:"💪", label:"BODY"     },
+      { id:"spirit",  emoji:"🔥", label:"SPIRIT"   },
+      { id:"mind",    emoji:"⚡", label:"MIND"     },
+      { id:"business",emoji:"🎯", label:"BUSINESS" },
+      { id:"energy",  emoji:"🛡️", label:"ENERGY"   },
+      { id:"esther",  emoji:"👤", label:"ESTHER"   },
+      { id:"eod",     emoji:"🌙", label:"EOD"      },
+      { id:"patterns",emoji:"📊", label:"PATTERNS" },
+    ];
+
+    const ACCENT = {
+      today:"#E8FF47", body:"#E8FF47", spirit:"#FF6B35",
+      mind:"#47C4FF", business:"#B47FFF", energy:"#47FFB4",
+      esther:"#FF47A3", eod:"#FFD147", patterns:"#47FFB4"
+    };
+
+    const todayKey = () => new Date().toISOString().split("T")[0];
+    const todayLabel = () => new Date().toLocaleDateString("en-US",{ weekday:"long", year:"numeric", month:"long", day:"numeric" });
+    const daysLeft = () => Math.ceil((BIRTHDAY - new Date()) / 86400000);
+    const dow = new Date().getDay();
+
+    // ── STORAGE (localStorage for PWA) ────────────────────────────────────────
+    const STORE_KEY = "jafo_v4";
+    function loadData() {
+      try { return JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); }
+      catch { return {}; }
+    }
+    function saveData(d) {
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(d)); } catch {}
+    }
+
+    // ── APP ────────────────────────────────────────────────────────────────────
+    function App() {
+      const [tab, setTab] = useState("today");
+      const [all, setAll] = useState(() => {
+        const d = loadData();
+        const k = todayKey();
+        if (!d[k]) d[k] = { notes:{}, checks:{}, scores:{focus:7,health:7,emotion:7,strategy:7}, esther:{priority:"",context:"",flag:""} };
+        return d;
+      });
+      const [saved, setSaved] = useState(false);
+      const [affOpen, setAffOpen] = useState(false);
+      const [learnDone, setLearnDone] = useState({});
+      const [estherSent, setEstherSent] = useState(false);
+      const saveRef = useRef(null);
+
+      const tk = todayKey();
+      const td = all[tk] || { notes:{}, checks:{}, scores:{focus:7,health:7,emotion:7,strategy:7}, esther:{priority:"",context:"",flag:""} };
+
+      // auto-save
+      useEffect(() => {
+        clearTimeout(saveRef.current);
+        saveRef.current = setTimeout(() => { saveData(all); setSaved(true); setTimeout(()=>setSaved(false),1800); }, 600);
+      }, [all]);
+
+      const setNote  = (k,v) => setAll(p => { const n={...p}; n[tk]={...n[tk],notes:{...n[tk].notes,[k]:v}}; return n; });
+      const setCheck = (k)   => setAll(p => { const n={...p}; n[tk]={...n[tk],checks:{...n[tk].checks,[k]:!n[tk].checks[k]}}; return n; });
+      const setScore = (k,v) => setAll(p => { const n={...p}; n[tk]={...n[tk],scores:{...n[tk].scores,[k]:v}}; return n; });
+      const setEst   = (k,v) => setAll(p => { const n={...p}; n[tk]={...n[tk],esther:{...n[tk].esther,[k]:v}}; return n; });
+
+      const checks = td.checks||{};
+      const notes  = td.notes||{};
+      const scores = td.scores||{focus:7,health:7,emotion:7,strategy:7};
+      const esther = td.esther||{priority:"",context:"",flag:""};
+      const avg    = (Object.values(scores).reduce((a,b)=>a+b,0)/4).toFixed(1);
+      const ac     = ACCENT[tab]||"#E8FF47";
+      const dl     = daysLeft();
+      const workout = WORKOUT_SCHEDULE[dow];
+      const scripture = SCRIPTURES[dow % SCRIPTURES.length];
+
+      // pattern data
+      const allDays = Object.entries(all).filter(([k])=>k.match(/^\d{4}-\d{2}-\d{2}$/)).sort(([a],[b])=>a>b?1:-1);
+      const last7   = allDays.slice(-7);
+      const avg7 = (key) => { const v=last7.map(([,d])=>d?.scores?.[key]).filter(Number); return v.length?(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1):"—"; };
+      const streak  = (() => { let s=0; for(let i=allDays.length-1;i>=0;i--){ if(allDays[i][1]?.checks?.["eodb_workout"]) s++; else break; } return s; })();
+
+      const css = `
+        *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+        body{font-family:'DM Mono','Courier New',monospace;background:#080808;color:#E0DFD8;min-height:100vh;}
+        ::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:#1e1e1e;}
+        textarea,input[type=text]{outline:none;background:#0d0d0d;border:1px solid #1e1e1e;color:#E0DFD8;border-radius:4px;padding:9px 11px;font-family:inherit;font-size:13px;resize:vertical;width:100%;line-height:1.7;}
+        textarea:focus,input[type=text]:focus{border-color:${ac};}
+        input[type=range]{-webkit-appearance:none;width:100%;height:3px;border-radius:2px;background:#1e1e1e;}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:${ACCENT.eod};cursor:pointer;}
+        .nb{background:none;border:none;cursor:pointer;padding:8px 10px;border-radius:3px;font-family:inherit;font-size:9px;letter-spacing:1.5px;transition:all .15s;text-transform:uppercase;white-space:nowrap;}
+        .nb.on{color:#080808;font-weight:600;}
+        .nb:not(.on){color:#3a3a3a;}
+        .ci{display:flex;align-items:flex-start;gap:11px;padding:8px 0;border-bottom:1px solid #111;cursor:pointer;}
+        .cb{width:17px;height:17px;border:1.5px solid #252525;border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+        .card{background:#0d0d0d;border:1px solid #171717;border-radius:6px;padding:15px;margin-bottom:10px;}
+        .rul{height:1px;background:linear-gradient(to right,${ac},transparent);margin:12px 0;opacity:.2;}
+        .st{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;line-height:1;}
+        .sub{font-size:9px;color:#2e2e2e;letter-spacing:2px;text-transform:uppercase;margin-top:2px;margin-bottom:18px;}
+        .tag{display:inline-block;padding:2px 7px;border-radius:2px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;}
+        .meal{background:#0c0c0c;border:1px solid #151515;border-radius:5px;padding:12px 14px;margin:6px 0;}
+        .lbtn{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:4px;padding:11px 13px;cursor:pointer;display:flex;gap:10px;align-items:center;margin-bottom:7px;}
+        .sbtn{border:none;border-radius:3px;padding:11px 20px;font-family:inherit;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-weight:600;}
+        .stat{background:#0d0d0d;border:1px solid #171717;border-radius:5px;padding:13px;text-align:center;}
+        .hist{padding:12px 6px;border-bottom:1px solid #0f0f0f;}
+        .fade{animation:fi .2s ease;}
+        @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+      `;
+
+      return (
+        <div style={{fontFamily:"'DM Mono','Courier New',monospace",background:"#080808",minHeight:"100vh",color:"#E0DFD8"}}>
+          <style>{css}</style>
+
+          {/* HEADER */}
+          <div style={{padding:"env(safe-area-inset-top, 16px) 18px 0",borderBottom:"1px solid #0f0f0f",background:"#080808",position:"sticky",top:0,zIndex:100}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",paddingTop:"max(16px, env(safe-area-inset-top))"}}>
+              <div>
+                <div style={{fontSize:8,letterSpacing:3,color:"#2a2a2a",textTransform:"uppercase"}}>JÄFO · AI Chief of Staff</div>
+                <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:36,letterSpacing:4,lineHeight:1,color:"#E0DFD8"}}>FOUNDER DAY</div>
+                <div style={{fontSize:8,color:"#222",marginTop:1}}>{todayLabel()}</div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:8,color:"#2a2a2a",letterSpacing:2,textTransform:"uppercase"}}>Discipline</div>
+                <div style={{fontFamily:"'Bebas Neue'",fontSize:42,color:ac,lineHeight:1}}>{avg}</div>
+                <div style={{fontSize:8,color:"#252525"}}>/ 10.0</div>
+                <div style={{fontSize:8,color:ac,marginTop:2}}>⏳ {dl}d · Sept 14</div>
+                {saved && <div style={{fontSize:7,color:"#2a4a2a",letterSpacing:1}}>✓ SAVED</div>}
+              </div>
+            </div>
+            {/* birthday bar */}
+            <div style={{marginTop:6,height:1,background:"#0f0f0f",borderRadius:1,overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${Math.max(2,100-(dl/200)*100)}%`,background:ac,transition:"width 1s"}}/>
+            </div>
+            {/* nav */}
+            <div style={{display:"flex",gap:2,marginTop:10,overflowX:"auto",paddingBottom:8,WebkitOverflowScrolling:"touch"}}>
+              {SECTIONS.map(s=>(
+                <button key={s.id} className={`nb ${tab===s.id?"on":""}`}
+                  style={tab===s.id?{background:ACCENT[s.id]}:{}}
+                  onClick={()=>setTab(s.id)}>
+                  {s.emoji} {s.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* CONTENT */}
+          <div style={{maxWidth:780,margin:"0 auto",padding:"20px 16px 80px"}} className="fade" key={tab}>
+
+            {/* ── TODAY ── */}
+            {tab==="today" && <div>
+              <div className="st" style={{color:"#E8FF47"}}>TODAY'S MAP</div>
+              <div className="sub">JÄFO Intelligence · Live Calendar</div>
+
+              {estherSent && esther.priority && (
+                <div style={{background:"#0f0810",border:"1px solid #FF47A3",borderRadius:6,padding:12,marginBottom:12}}>
+                  <div style={{fontSize:9,color:"#FF47A3",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>📌 From Esther</div>
+                  <div style={{fontSize:12,color:"#E0DFD8",marginBottom:2}}>{esther.priority}</div>
+                  {esther.context && <div style={{fontSize:11,color:"#666",marginBottom:2}}>{esther.context}</div>}
+                  {esther.flag && <div style={{fontSize:11,color:"#FF47A3"}}>⚑ {esther.flag}</div>}
+                </div>
+              )}
+
+              {/* Yesterday's lock-in */}
+              {(()=>{
+                const yk = new Date(Date.now()-86400000).toISOString().split("T")[0];
+                const prev = all[yk]?.notes?.tomorrow;
+                return prev ? (
+                  <div style={{background:"#080f08",border:"1px solid #1a3020",borderRadius:6,padding:12,marginBottom:12}}>
+                    <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🔒 Yesterday's Lock-In — Did You Do It?</div>
+                    <div style={{fontSize:12,color:"#777",fontStyle:"italic",marginBottom:8}}>"{prev}"</div>
+                    <div className="ci" onClick={()=>setCheck("lockindone")}>
+                      <div className="cb" style={{background:checks.lockindone?"#47FFB4":"transparent",borderColor:checks.lockindone?"#47FFB4":"#252525"}}>
+                        {checks.lockindone && <span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                      </div>
+                      <div style={{fontSize:10,color:checks.lockindone?"#47FFB4":"#444"}}>{checks.lockindone?"Done. You kept your word.":"Mark it done"}</div>
+                    </div>
+                  </div>
+                ) : null;
+              })()}
+
+              {CALENDAR.map(ev=>(
+                <div key={ev.id} className="card" style={{borderColor:"#171717"}}>
+                  <div style={{display:"flex",gap:12,alignItems:"flex-start"}}>
+                    <div style={{fontSize:20,flexShrink:0}}>{ev.emoji}</div>
+                    <div style={{flex:1}}>
+                      <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:5}}>
+                        <div>
+                          <div style={{fontSize:9,color:ev.color,letterSpacing:1.5,textTransform:"uppercase"}}>{ev.time}</div>
+                          <div style={{fontSize:13,color:"#E0DFD8"}}>{ev.title}</div>
+                          <div style={{fontSize:9,color:"#333",marginTop:1}}>{ev.subtitle}</div>
+                        </div>
+                        <span className="tag" style={{background:ev.color+"18",color:ev.color,height:"fit-content"}}>{ev.type}</span>
+                      </div>
+                      <div style={{fontSize:10,color:"#2e2e2e",marginTop:7,borderLeft:`2px solid ${ev.color}25`,paddingLeft:8}}>{ev.desc}</div>
+                    </div>
+                  </div>
+                  <div className="ci" onClick={()=>setCheck("ev_"+ev.id)}>
+                    <div className="cb" style={{background:checks["ev_"+ev.id]?ev.color:"transparent",borderColor:checks["ev_"+ev.id]?ev.color:"#252525"}}>
+                      {checks["ev_"+ev.id]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:9,color:"#2e2e2e"}}>Mark complete</div>
+                  </div>
+                </div>
+              ))}
+            </div>}
+
+            {/* ── BODY ── */}
+            {tab==="body" && <div>
+              <div className="st" style={{color:"#E8FF47"}}>BODY</div>
+              <div className="sub">Health First · Drop 8–12 lbs · Chiseled by Sept 14</div>
+
+              <div style={{background:"#0c0c08",border:"1px solid #E8FF4720",borderRadius:6,padding:12,marginBottom:12,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
+                <div>
+                  <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Days to Birthday</div>
+                  <div style={{fontFamily:"'Bebas Neue'",fontSize:32,color:"#E8FF47"}}>{dl} DAYS</div>
+                </div>
+                <div style={{textAlign:"right",fontSize:10,color:"#444",lineHeight:2}}>
+                  <div>Now: 225–234 lbs</div>
+                  <div>Goal: 220–225 lbs</div>
+                  <div>Streak: <span style={{color:"#E8FF47"}}>{streak}d</span></div>
+                </div>
+              </div>
+
+              <div style={{background:"#0c0c08",border:"1px solid #E8FF4725",borderRadius:7,padding:15,marginBottom:10}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:8}}>
+                  <div>
+                    <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Today's Training</div>
+                    <div style={{fontFamily:"'Bebas Neue'",fontSize:30,color:"#E8FF47",marginTop:2}}>{workout.type}</div>
+                  </div>
+                  <div style={{textAlign:"right",fontSize:9,color:"#555",lineHeight:2}}>
+                    <div>⏱ {workout.duration}</div>
+                    <div style={{color:"#E8FF47"}}>⏰ {workout.time}</div>
+                  </div>
+                </div>
+                <div style={{height:1,background:"linear-gradient(to right,#E8FF47,transparent)",margin:"10px 0",opacity:.18}}/>
+                <div style={{fontSize:11,color:"#555",lineHeight:1.8}}><strong style={{color:"#E8FF47"}}>Coach: </strong>{workout.tip}</div>
+              </div>
+
+              {Object.values(MEALS).map((m,i)=>(
+                <div key={i} className="meal">
+                  <div style={{fontSize:9,color:"#E8FF47",letterSpacing:1.5,textTransform:"uppercase"}}>{m.time}</div>
+                  <div style={{fontSize:13,color:"#E0DFD8",margin:"3px 0 2px"}}>{m.name}</div>
+                  <div style={{fontSize:11,color:"#555"}}>{m.items}</div>
+                  <div style={{fontSize:9,color:"#2e2e2e",marginTop:3}}>→ {m.why}</div>
+                </div>
+              ))}
+
+              <div style={{display:"flex",gap:8,marginTop:10,flexWrap:"wrap"}}>
+                {[
+                  {c:"#47FFB4",bg:"#0a1410",label:"💧 Water",val:"3.5 L"},
+                  {c:"#FF4747",bg:"#120d0d",label:"🚫 Avoid",val:"After 8:30 PM"},
+                  {c:"#B47FFF",bg:"#0e0a14",label:"✅ Cheat",val:"1x weekly"},
+                ].map(b=>(
+                  <div key={b.label} style={{flex:1,minWidth:100,background:b.bg,border:`1px solid ${b.c}20`,borderRadius:5,padding:10}}>
+                    <div style={{fontSize:9,color:b.c,letterSpacing:2,textTransform:"uppercase"}}>{b.label}</div>
+                    <div style={{fontFamily:"'Bebas Neue'",fontSize:16,color:b.c,marginTop:2}}>{b.val}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="card" style={{marginTop:10}}>
+                <div style={{fontSize:9,color:"#333",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Body note / how you're feeling today:</div>
+                <textarea rows={2} placeholder="Energy level, soreness, sleep quality..." value={notes.bodynote||""} onChange={e=>setNote("bodynote",e.target.value)}/>
+              </div>
+            </div>}
+
+            {/* ── SPIRIT ── */}
+            {tab==="spirit" && <div>
+              <div className="st" style={{color:"#FF6B35"}}>SPIRIT</div>
+              <div className="sub">Grounded before grinding.</div>
+
+              {/* DAILY AFFIRMATION — FIXED FOREVER */}
+              <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginBottom:10}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+                  <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase"}}>🙏 Daily Affirmation — Speak Aloud</div>
+                  <button onClick={()=>setAffOpen(!affOpen)} style={{background:"none",border:"1px solid #2a1a10",borderRadius:2,color:"#FF6B35",fontSize:8,cursor:"pointer",padding:"3px 7px",fontFamily:"inherit",letterSpacing:1,textTransform:"uppercase"}}>
+                    {affOpen?"Close":"Open"}
+                  </button>
+                </div>
+                {affOpen
+                  ? AFFIRMATION.split("\n").map((line,i)=>(
+                      <div key={i} style={{padding:"2px 0",fontSize:12,color:line.startsWith("In the name")||line.startsWith("Amen")?"#E0DFD8":"#666",fontStyle:line.startsWith("In the name")||line.startsWith("Amen")?"normal":"italic",fontFamily:"'Playfair Display',serif",lineHeight:1.9}}>
+                        {line||<br/>}
+                      </div>
+                    ))
+                  : <div style={{fontSize:12,color:"#555",fontStyle:"italic",fontFamily:"'Playfair Display',serif"}}>"With humility and hope, I evoke divine discernment..."</div>
+                }
+                <div className="ci" style={{marginTop:8}} onClick={()=>setCheck("aff_spoken")}>
+                  <div className="cb" style={{background:checks.aff_spoken?"#FF6B35":"transparent",borderColor:checks.aff_spoken?"#FF6B35":"#252525"}}>
+                    {checks.aff_spoken&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                  </div>
+                  <div style={{fontSize:9,color:checks.aff_spoken?"#FF6B35":"#333"}}>I spoke this aloud today</div>
+                </div>
+              </div>
+
+              {/* IDENTITY */}
+              <div className="card" style={{marginBottom:10}}>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>🪞 Identity · This Season</div>
+                <div style={{fontSize:13,color:"#E0DFD8",lineHeight:1.8,fontFamily:"'Playfair Display',serif"}}>
+                  "I am Joshua — a founder who builds <em style={{color:"#FF6B35"}}>legacy, not just revenue</em>. I am disciplined in my body, clear in my mind, and rooted in God. The man I am becoming is already present in the choices I make today."
+                </div>
+              </div>
+
+              {/* SCRIPTURE */}
+              <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginBottom:10}}>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>📖 {scripture.ref}</div>
+                <div style={{fontSize:14,color:"#E0DFD8",lineHeight:1.7,fontStyle:"italic",fontFamily:"'Playfair Display',serif",marginBottom:10}}>"{scripture.text}"</div>
+                <div style={{height:1,background:"linear-gradient(to right,#FF6B35,transparent)",margin:"10px 0",opacity:.18}}/>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>How to embody this today</div>
+                <div style={{fontSize:11,color:"#666",lineHeight:1.8,marginBottom:8}}>{scripture.embodiment}</div>
+                <textarea rows={2} placeholder="Your specific moment to live it today..." value={notes.embody||""} onChange={e=>setNote("embody",e.target.value)}/>
+                <div className="ci" onClick={()=>setCheck("embody_lived")}>
+                  <div className="cb" style={{background:checks.embody_lived?"#FF6B35":"transparent",borderColor:checks.embody_lived?"#FF6B35":"#252525"}}>
+                    {checks.embody_lived&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                  </div>
+                  <div style={{fontSize:9,color:checks.embody_lived?"#FF6B35":"#333"}}>I lived this — not just read it</div>
+                </div>
+              </div>
+
+              {/* DREAMS */}
+              <div className="card" style={{marginBottom:10}}>
+                <div style={{fontSize:9,color:"#B47FFF",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🌙 Dreams & Recurring Thoughts</div>
+                <div style={{fontSize:9,color:"#2e2e2e",marginBottom:7}}>These are data. Capture them. Patterns reveal over time.</div>
+                <textarea rows={3} placeholder="Last night I dreamed... / A thought that keeps returning..." value={notes.dreams||""} onChange={e=>setNote("dreams",e.target.value)}/>
+              </div>
+
+              {/* JOURNAL */}
+              <div className="card">
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>✍️ Morning Journal</div>
+                <div style={{fontSize:13,color:"#E0DFD8",lineHeight:1.7,marginBottom:8,fontStyle:"italic",fontFamily:"'Playfair Display',serif"}}>
+                  "What fear is trying to disguise itself as 'logic' in how I'm building ATIDE right now?"
+                </div>
+                <textarea rows={5} placeholder="Write freely. No editing. Just truth..." value={notes.journal||""} onChange={e=>setNote("journal",e.target.value)}/>
+              </div>
+            </div>}
+
+            {/* ── MIND ── */}
+            {tab==="mind" && <div>
+              <div className="st" style={{color:"#47C4FF"}}>MIND</div>
+              <div className="sub">Strategic clarity + daily learning.</div>
+
+              <div style={{background:"#080e11",border:"1px solid #1a2a33",borderRadius:8,padding:14,marginBottom:12}}>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📚 Learn Something Today</div>
+                {LEARN.map(opt=>(
+                  <div key={opt.label} className="lbtn"
+                    style={{borderColor:learnDone[opt.label]?"#47C4FF":"#1a1a1a",background:learnDone[opt.label]?"#0d1a1a":"#0d0d0d"}}
+                    onClick={()=>setLearnDone(p=>({...p,[opt.label]:!p[opt.label]}))}>
+                    <div style={{fontSize:18}}>{opt.icon}</div>
+                    <div>
+                      <div style={{fontSize:11,color:learnDone[opt.label]?"#47C4FF":"#777"}}>{opt.label}</div>
+                      <div style={{fontSize:9,color:"#2a2a2a"}}>{opt.detail}</div>
+                    </div>
+                  </div>
+                ))}
+                <div style={{marginTop:8}}>
+                  <div style={{fontSize:9,color:"#2e2e2e",letterSpacing:1.5,textTransform:"uppercase",marginBottom:4}}>One thing I learned today:</div>
+                  <textarea rows={2} placeholder="The insight that stuck..." value={notes.learned||""} onChange={e=>setNote("learned",e.target.value)}/>
+                </div>
+              </div>
+
+              {[
+                {n:"01",title:"Complete Automation Phase 1 Sprint",outcome:"All 5 systems live.",time:"11:00 AM – 1:30 PM",why:"Each system frees 2–5 hrs/week permanently."},
+                {n:"02",title:"Deliver PJ Star Session",outcome:"Client has clear next steps.",time:"1:45 PM – 2:45 PM",why:"Revenue and trust live here. Come prepared."},
+                {n:"03",title:"Weekly Journal Review",outcome:"1 pattern spotted. 1 decision locked.",time:"6:00 PM – 7:00 PM",why:"Founders who don't review the week repeat it."},
+              ].map(m=>(
+                <div key={m.n} style={{border:"1px solid #1a2a33",borderRadius:6,padding:13,marginBottom:8,background:"#080e11"}}>
+                  <div style={{display:"flex",gap:10,alignItems:"flex-start"}}>
+                    <div style={{fontFamily:"'Bebas Neue'",fontSize:28,color:"#1a3040",lineHeight:1,flexShrink:0}}>{m.n}</div>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:13,color:"#47C4FF",marginBottom:4}}>{m.title}</div>
+                      <div style={{fontSize:10,color:"#555",lineHeight:1.7,marginBottom:5}}>
+                        <span style={{color:"#2a2a2a"}}>OUTCOME: </span>{m.outcome}<br/>
+                        <span style={{color:"#2a2a2a"}}>TIME: </span><span style={{color:"#47C4FF"}}>{m.time}</span>
+                      </div>
+                      <div style={{fontSize:9,color:"#333",borderLeft:"2px solid #47C4FF20",paddingLeft:7}}>{m.why}</div>
+                    </div>
+                  </div>
+                  <div className="ci" onClick={()=>setCheck("mind_"+m.n)}>
+                    <div className="cb" style={{background:checks["mind_"+m.n]?"#47C4FF":"transparent",borderColor:checks["mind_"+m.n]?"#47C4FF":"#252525"}}>
+                      {checks["mind_"+m.n]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:9,color:"#2e2e2e"}}>Mark done</div>
+                  </div>
+                </div>
+              ))}
+            </div>}
+
+            {/* ── BUSINESS ── */}
+            {tab==="business" && <div>
+              <div className="st" style={{color:"#B47FFF"}}>BUSINESS</div>
+              <div className="sub">Eisenhower Matrix · Be Ruthless.</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
+                {[
+                  {label:"DO NOW",sub:"Urgent + Important",color:"#FF4747",bg:"#130808",items:["Automation Sprint 11am","PJ Star 1:45pm","Urgent client comms"]},
+                  {label:"SCHEDULE",sub:"Important + Not Urgent",color:"#B47FFF",bg:"#0e0a14",items:["ATIDE Q2 strategy","New biz outreach","Team growth plan"]},
+                  {label:"DELEGATE",sub:"Urgent + Not Important",color:"#47C4FF",bg:"#080e11",items:["Admin → Esther","Social media","Routine follow-ups"]},
+                  {label:"DELETE",sub:"Not Urgent + Not Important",color:"#333",bg:"#0a0a0a",items:["Vanity metrics","No-outcome meetings","Unbooked calls"]},
+                ].map(q=>(
+                  <div key={q.label} style={{border:`1px solid ${q.color}20`,borderRadius:6,padding:11,background:q.bg}}>
+                    <div style={{fontSize:9,color:q.color,letterSpacing:2,textTransform:"uppercase",marginBottom:1}}>{q.label}</div>
+                    <div style={{fontSize:8,color:"#252525",marginBottom:8}}>{q.sub}</div>
+                    {q.items.map(item=>(
+                      <div key={item} className="ci" onClick={()=>setCheck("biz_"+item)}>
+                        <div className="cb" style={{background:checks["biz_"+item]?q.color:"transparent",borderColor:checks["biz_"+item]?q.color:"#222"}}>
+                          {checks["biz_"+item]&&<span style={{fontSize:7,color:"#080808"}}>✓</span>}
+                        </div>
+                        <div style={{fontSize:10,color:checks["biz_"+item]?"#2a2a2a":"#555",textDecoration:checks["biz_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+              <div className="card">
+                <div style={{fontSize:9,color:"#333",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Dump + sort your tasks:</div>
+                <textarea rows={5} placeholder="List tasks. Label: DO / SCHEDULE / DELEGATE / DELETE..." value={notes.matrix||""} onChange={e=>setNote("matrix",e.target.value)}/>
+              </div>
+            </div>}
+
+            {/* ── ENERGY ── */}
+            {tab==="energy" && <div>
+              <div className="st" style={{color:"#47FFB4"}}>ENERGY</div>
+              <div className="sub">Protect energy first.</div>
+              <div style={{background:"#080f0d",border:"1px solid #1a3325",borderRadius:8,padding:14,marginBottom:10}}>
+                {[
+                  {risk:"Automation sprint scope creep",fix:"25 min hard timer per system. Move on.",icon:"⚙️"},
+                  {risk:"PJ Star running long",fix:"Hard stop 2:45 PM. Gym is non-negotiable.",icon:"⏱"},
+                  {risk:"Skipping strength training",fix:"Treat it like a client meeting.",icon:"💪"},
+                  {risk:"Late eating after 8:30 PM",fix:"Dinner 7 PM. Kitchen closes 8:30. #1 belly-fat lever.",icon:"🍽️"},
+                  {risk:"Phone before prayer block",fix:"Phone out of room by 9 PM. Prayer first.",icon:"📱"},
+                ].map(item=>(
+                  <div key={item.risk} style={{display:"flex",gap:10,padding:"8px 0",borderBottom:"1px solid #0e0e0e",alignItems:"flex-start"}}>
+                    <div style={{fontSize:15,flexShrink:0}}>{item.icon}</div>
+                    <div>
+                      <div style={{fontSize:11,color:"#FF4747",marginBottom:1}}>{item.risk}</div>
+                      <div style={{fontSize:9,color:"#3a3a3a"}}>→ {item.fix}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="card">
+                <div style={{fontSize:9,color:"#333",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Your override plan today:</div>
+                <textarea rows={3} placeholder="What might pull you off, and what's your one override?" value={notes.energy||""} onChange={e=>setNote("energy",e.target.value)}/>
+              </div>
+            </div>}
+
+            {/* ── ESTHER ── */}
+            {tab==="esther" && <div>
+              <div className="st" style={{color:"#FF47A3"}}>ESTHER</div>
+              <div className="sub">Team information portal.</div>
+              <div className="card">
+                <div style={{fontSize:9,color:"#FF47A3",letterSpacing:2,textTransform:"uppercase",marginBottom:12}}>📌 Daily Input</div>
+                {[
+                  {label:"Today's Top Priority",key:"priority",ph:"e.g. Mavin's proposal out before 3pm",type:"text"},
+                  {label:"Context Joshua Needs",key:"context",ph:"e.g. Client called — deadline moved. I've already replied.",rows:3},
+                  {label:"Flag / Watch Out For",key:"flag",ph:"e.g. Don't commit to new work this week",type:"text"},
+                ].map(f=>(
+                  <div key={f.key} style={{marginBottom:10}}>
+                    <div style={{fontSize:9,color:"#3a3a3a",letterSpacing:1.5,textTransform:"uppercase",marginBottom:4}}>{f.label}</div>
+                    {f.type==="text"
+                      ? <input type="text" placeholder={f.ph} value={esther[f.key]} onChange={e=>setEst(f.key,e.target.value)}/>
+                      : <textarea rows={f.rows||2} placeholder={f.ph} value={esther[f.key]} onChange={e=>setEst(f.key,e.target.value)}/>
+                    }
+                  </div>
+                ))}
+                <button className="sbtn" style={{background:"#FF47A3",color:"#080808"}}
+                  onClick={()=>{setEstherSent(true);setTab("today");}}>
+                  ✓ Send to Joshua's Day
+                </button>
+              </div>
+            </div>}
+
+            {/* ── EOD ── */}
+            {tab==="eod" && <div>
+              <div className="st" style={{color:"#FFD147"}}>EOD REVIEW</div>
+              <div className="sub">Whole life review. No hiding.</div>
+
+              <div style={{background:"#0e0c08",border:"1px solid #252000",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>💪 BODY</div>
+                {[
+                  ["eodb_workout","Completed today's workout"],
+                  ["eodb_eat","Ate aligned — protein-forward"],
+                  ["eodb_water","Hit 3.5L hydration"],
+                  ["eodb_fast","No food after 8:30 PM"],
+                  ["eodb_sleep","In bed by 10:30 PM"],
+                ].map(([k,label])=>(
+                  <div key={k} className="ci" onClick={()=>setCheck(k)}>
+                    <div className="cb" style={{background:checks[k]?"#FFD147":"transparent",borderColor:checks[k]?"#FFD147":"#222"}}>
+                      {checks[k]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:11,color:checks[k]?"#3a3a3a":"#666",textDecoration:checks[k]?"line-through":"none"}}>{label}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{background:"#0e0a08",border:"1px solid #251500",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>🔥 SPIRIT</div>
+                {[
+                  {q:"Did I speak my affirmation?",k:"sp_aff"},
+                  {q:"Did I embody today's scripture?",k:"sp_scrip"},
+                  {q:"Grounded or reactive today?",k:"sp_gnd"},
+                  {q:"What emotion did I avoid?",k:"sp_emo"},
+                ].map(item=>(
+                  <div key={item.k} style={{marginBottom:8}}>
+                    <div style={{fontSize:11,color:"#555",marginBottom:3}}>{item.q}</div>
+                    <textarea rows={1} style={{minHeight:36}} placeholder="Honest answer..." value={notes[item.k]||""} onChange={e=>setNote(item.k,e.target.value)}/>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{background:"#0a0810",border:"1px solid #150d25",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#B47FFF",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>🎯 BUSINESS</div>
+                {[
+                  ["eodbi_auto","Automation Sprint advanced"],
+                  ["eodbi_pj","PJ Star delivered"],
+                  ["eodbi_founder","Operated as FOUNDER (not manager)"],
+                  ["eodbi_rev","Revenue moved or relationship advanced"],
+                ].map(([k,label])=>(
+                  <div key={k} className="ci" onClick={()=>setCheck(k)}>
+                    <div className="cb" style={{background:checks[k]?"#B47FFF":"transparent",borderColor:checks[k]?"#B47FFF":"#222"}}>
+                      {checks[k]&&<span style={{fontSize:8,color:"#fff"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:11,color:checks[k]?"#333":"#666",textDecoration:checks[k]?"line-through":"none"}}>{label}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Scores */}
+              <div style={{background:"#0d0d0a",border:"1px solid #222200",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📊 DISCIPLINE SCORE</div>
+                {[["Focus","focus"],["Health","health"],["Emotional Regulation","emotion"],["Strategic Execution","strategy"]].map(([label,key])=>(
+                  <div key={key} style={{marginBottom:11}}>
+                    <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
+                      <div style={{fontSize:11,color:"#555"}}>{label}</div>
+                      <div style={{fontFamily:"'Bebas Neue'",fontSize:20,color:"#FFD147"}}>{scores[key]}</div>
+                    </div>
+                    <input type="range" min={1} max={10} value={scores[key]} onChange={e=>setScore(key,+e.target.value)}/>
+                  </div>
+                ))}
+                <div style={{textAlign:"center",marginTop:6}}>
+                  <div style={{fontFamily:"'Bebas Neue'",fontSize:44,color:"#FFD147",lineHeight:1}}>{avg}<span style={{fontSize:18,color:"#2a2a2a"}}> / 10</span></div>
+                </div>
+              </div>
+
+              <div style={{background:"#0d0809",border:"1px solid #251018",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#FF47A3",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🪞 REAL TRUTH</div>
+                <textarea rows={3} placeholder="The story I told myself was... The truth is..." value={notes.truth||""} onChange={e=>setNote("truth",e.target.value)}/>
+              </div>
+
+              <div style={{background:"#090d09",border:"2px solid #47FFB4",borderRadius:7,padding:13}}>
+                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🔒 TOMORROW LOCK-IN</div>
+                <div style={{fontSize:9,color:"#2a2a2a",marginBottom:6}}>ONE move. Not a list.</div>
+                <textarea rows={2} placeholder="Tomorrow I will non-negotiably..." value={notes.tomorrow||""} onChange={e=>setNote("tomorrow",e.target.value)}/>
+              </div>
+            </div>}
+
+            {/* ── PATTERNS ── */}
+            {tab==="patterns" && <div>
+              <div className="st" style={{color:"#47FFB4"}}>PATTERNS</div>
+              <div className="sub">JÄFO Intelligence · {allDays.length} days logged</div>
+
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}}>
+                {[
+                  {label:"Focus 7d",val:avg7("focus"),color:"#47C4FF"},
+                  {label:"Health 7d",val:avg7("health"),color:"#E8FF47"},
+                  {label:"Emotion 7d",val:avg7("emotion"),color:"#FF6B35"},
+                  {label:"Execution 7d",val:avg7("strategy"),color:"#B47FFF"},
+                ].map(s=>(
+                  <div key={s.label} className="stat">
+                    <div style={{fontSize:9,color:"#333",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>{s.label}</div>
+                    <div style={{fontFamily:"'Bebas Neue'",fontSize:34,color:s.val==="—"?"#222":s.color}}>{s.val}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{background:"#0c0c08",border:"1px solid #E8FF4715",borderRadius:6,padding:12,marginBottom:12,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <div>
+                  <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Workout Streak</div>
+                  <div style={{fontFamily:"'Bebas Neue'",fontSize:30,color:"#E8FF47"}}>{streak} DAYS</div>
+                </div>
+                <div style={{fontSize:9,color:"#333",textAlign:"right",lineHeight:2}}>
+                  <div>{allDays.length} days logged</div>
+                  <div>{dl} days to Sept 14</div>
+                </div>
+              </div>
+
+              {/* Score bar chart */}
+              {last7.length > 0 && (
+                <div className="card" style={{marginBottom:12}}>
+                  <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>Discipline Score — Last {last7.length} Days</div>
+                  <div style={{display:"flex",gap:5,alignItems:"flex-end",height:55}}>
+                    {last7.map(([dk,d])=>{
+                      const s=d?.scores;
+                      const da=s?((s.focus+s.health+s.emotion+s.strategy)/4):0;
+                      const h=Math.round((da/10)*55);
+                      const isT=dk===tk;
+                      const lbl=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"});
+                      return (
+                        <div key={dk} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
+                          <div style={{fontSize:8,color:isT?"#47FFB4":"#2a2a2a"}}>{da>0?da.toFixed(1):""}</div>
+                          <div style={{width:"100%",height:h,background:isT?"#47FFB4":"#1e3e2e",borderRadius:2,minHeight:2}}/>
+                          <div style={{fontSize:7,color:isT?"#47FFB4":"#2a2a2a",letterSpacing:1}}>{lbl}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Past entries */}
+              <div style={{fontSize:9,color:"#333",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Past Entries</div>
+              {allDays.length <= 1
+                ? <div style={{fontSize:11,color:"#2a2a2a",textAlign:"center",padding:"30px 0"}}>No past entries yet. Come back tomorrow.</div>
+                : allDays.slice().reverse().filter(([k])=>k!==tk).map(([dk,d])=>{
+                    const s=d?.scores;
+                    const da=s?((s.focus+s.health+s.emotion+s.strategy)/4).toFixed(1):"—";
+                    const lbl=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"});
+                    const trained=d?.checks?.["eodb_workout"];
+                    return (
+                      <div key={dk} className="hist">
+                        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:5}}>
+                          <div>
+                            <div style={{fontSize:11,color:"#777"}}>{lbl}</div>
+                            {d?.notes?.tomorrow && <div style={{fontSize:9,color:"#444",marginTop:2,fontStyle:"italic"}}>Lock-in: "{d.notes.tomorrow}"</div>}
+                            {d?.notes?.journal && <div style={{fontSize:8,color:"#2e2e2e"}}>📝 journal saved</div>}
+                            {d?.notes?.dreams  && <div style={{fontSize:8,color:"#2e2e2e"}}>🌙 dream logged</div>}
+                          </div>
+                          <div style={{textAlign:"right"}}>
+                            <div style={{fontFamily:"'Bebas Neue'",fontSize:22,color:parseFloat(da)>=7?"#47FFB4":parseFloat(da)>=5?"#FFD147":"#FF4747"}}>{da}</div>
+                            {trained && <div style={{fontSize:8,color:"#E8FF47"}}>💪 trained</div>}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+              }
+
+              {allDays.length >= 3 && (
+                <div style={{marginTop:14,background:"#080f0d",border:"1px solid #1a3325",borderRadius:6,padding:13}}>
+                  <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:7}}>🧠 JÄFO Pattern Notes</div>
+                  <div style={{fontSize:11,color:"#555",lineHeight:1.9}}>
+                    {parseFloat(avg7("emotion"))<parseFloat(avg7("focus")) && <div>→ Emotional regulation running below focus. Watch for stress-eating and late nights when deadlines hit.</div>}
+                    {parseFloat(avg7("health"))<7 && <div>→ Health avg below 7. Gym gets skipped when business pressure rises. Protect the block first.</div>}
+                    {streak>=3 && <div>→ <span style={{color:"#E8FF47"}}>{streak}-day streak.</span> Protect it. Momentum compounds.</div>}
+                    {streak===0 && <div>→ No current streak. Re-anchor tomorrow. One session resets the clock.</div>}
+                  </div>
+                </div>
+              )}
+            </div>}
+
+          </div>
+
+          {/* FOOTER */}
+          <div style={{borderTop:"1px solid #0d0d0d",padding:"10px 16px",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:6,paddingBottom:"max(10px, env(safe-area-inset-bottom))"}}>
+            <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:3,textTransform:"uppercase"}}>JÄFO · AI Chief of Staff</div>
+            <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:2,textTransform:"uppercase"}}>Energy · Revenue · Never Ego</div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App/>, document.getElementById("root"));
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(()=>{});
+    }
+  </script>
+</body>
+</html>
