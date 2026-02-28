@@ -25,25 +25,66 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-    // ── CONSTANTS ──────────────────────────────────────────────────────────────
-    const BIRTHDAY = new Date("2026-09-14");
-
-    const WORKOUT_SCHEDULE = {
-      1: { type:"Strength", duration:"55 min", intensity:"High", time:"7:00 AM", tip:"Compound lifts — deadlift, bench, rows. Heavy, controlled reps." },
-      2: { type:"Walk + Core", duration:"60 min walk / 20 min core", intensity:"Moderate", time:"6:30 AM", tip:"4–6 miles. Core circuit: planks, hollow holds, Russian twists." },
-      3: { type:"Strength", duration:"55 min", intensity:"High", time:"7:00 AM", tip:"Push/pull focus. Shoulder work for posture and definition." },
-      4: { type:"Walk + Mobility", duration:"60 min walk / 20 min mobility", intensity:"Low", time:"6:30 AM", tip:"Active recovery. Hip flexors, thoracic spine, hamstrings." },
-      5: { type:"Strength", duration:"55 min", intensity:"High", time:"7:00 AM", tip:"Lower body and arms. Squats, lunges, curls. End with 10 min incline walk." },
-      6: { type:"Core + HIIT", duration:"45 min", intensity:"High", time:"4:30 PM", tip:"20 min HIIT cardio, 25 min core. Primary fat-burn session of the week." },
-      0: { type:"Long Walk + Reflection", duration:"75–90 min", intensity:"Low", time:"8:00 AM", tip:"6+ miles. No headphones first 20 min. Let the mind clear before God." },
-    };
-
-    const MEALS = {
-      breakfast: { name:"Steak & Egg Sandwich", items:"Lean steak · 2 eggs · whole grain bread · avocado", time:"8:00 AM", why:"Protein-first. No sugar spike. Fuels the morning sprint." },
-      meal1: { name:"Grilled Fish + Jollof Rice", items:"Tilapia or catfish · small jollof portion · sautéed greens", time:"1:00 PM", why:"Lean protein + complex carb. No afternoon crash." },
-      snack: { name:"Kilishi + Hibiscus Tea", items:"30g kilishi · Tazo hibiscus tea", time:"4:00 PM", why:"High-protein Nigerian snack. Hibiscus supports fat metabolism." },
-      meal2: { name:"Pepper Soup + Salad", items:"Chicken or fish pepper soup · sweet & spicy salad · water", time:"7:00 PM", why:"Anti-inflammatory. Light at night. Supports belly fat reduction." },
-    };
+    // ── SUNDAY MARCH 1 — LIVE CALENDAR DATA ───────────────────────────────────
+    const CALENDAR = [
+      {
+        id:"pray", time:"8:00 AM – 8:30 AM", title:"Wake Up & Pray",
+        subtitle:"Recurring · Morning anchor", type:"SACRED", color:"#FFD147", emoji:"🙏",
+        desc:"This is first. Before the phone. Before the brief. Everything else is downstream of this 30 minutes."
+      },
+      {
+        id:"walk", time:"8:30 AM – 9:30 AM", title:"Walk — 4 Miles",
+        subtitle:"Morning movement · Recurring", type:"BODY", color:"#E8FF47", emoji:"🚶🏾",
+        desc:"Sunday walk is your spiritual reset, not just cardio. No agenda. Let the mind decompress before the planning session."
+      },
+      {
+        id:"breakfast", time:"9:30 AM – 10:00 AM", title:"Breakfast",
+        subtitle:"Fuel before financial review", type:"ROUTINE", color:"#47FFB4", emoji:"🍳",
+        desc:"Eat before the financial session. Don't make money decisions on an empty stomach."
+      },
+      {
+        id:"finance", time:"10:30 AM – 11:30 AM", title:"Monthly Financial Tracking — CRITICAL",
+        subtitle:"NGN + USD · Piggvest · Brokerage · All accounts", type:"DO", color:"#FF4747", emoji:"📊",
+        desc:"Non-negotiable. Pull all bank statements, update Actual vs Budget (Sheet 1), Investment Portfolio (Sheet 4), Goals Progress (Sheet 6), Expense Analysis (Sheet 7). Make 1 decision before you close the sheet.",
+        detail: "Files needed: Financial Tracking Template.xlsx · Bank app · Brokerage app"
+      },
+      {
+        id:"church", time:"12:00 PM – 2:15 PM", title:"CHURCH",
+        subtitle:"Protected · Sacred time", type:"SACRED", color:"#FF6B35", emoji:"⛪",
+        desc:"Show up present. Not planning. Not on your phone. This feeds everything else."
+      },
+      {
+        id:"family", time:"3:00 PM – 4:00 PM", title:"Check-Up on Family & Friends",
+        subtitle:"Set by Esther · Recurring · Relationship block", type:"PEOPLE", color:"#FF47A3", emoji:"❤️",
+        desc:"1 family member · 1 close friend · 1 person you've been meaning to reconnect with. Voice notes count. This is the work."
+      },
+      {
+        id:"planweek", time:"4:00 PM – 6:00 PM", title:"PLAN THE WEEK",
+        subtitle:"Soul Dive (4–4:45pm) + Week Planning (4:45–6pm)", type:"DO", color:"#B47FFF", emoji:"🗓️",
+        desc:"This is your most important 2 hours of the week. Soul Dive first — witness, reframe, realign. Then plan every work block by name. No unnamed blocks. The week is only as good as this session.",
+        detail:"Block 1: Soul Dive · Block 2: Name every work block · Body check · Investment & Money · The One Thing"
+      },
+      {
+        id:"autobrief", time:"5:15 PM – 6:00 PM", title:"🤖 JA Automation — Daily Assistant Brief System",
+        subtitle:"Phase 1 · 45 min setup", type:"DO", color:"#47C4FF", emoji:"⚙️",
+        desc:"Build the Claude Project 'Daily Operations Brief'. Set up morning brief system prompt + EOD recap format. Deliverable: Esther sends your first morning brief by 8:30am Monday. This is the system that runs your week."
+      },
+      {
+        id:"dinner", time:"7:00 PM – 7:30 PM", title:"Dinner",
+        subtitle:"Kitchen closes 8:30 PM — non-negotiable", type:"BODY", color:"#47FFB4", emoji:"🍽️",
+        desc:"Eat by 7. Belly fat reduction lives here. Late eating is your #1 friction zone. Guard this hard stop."
+      },
+      {
+        id:"sync", time:"9:00 PM – 10:00 PM", title:"Joshua × Esther Weekly Sync",
+        subtitle:"Set by Esther · Recurring · Weekly", type:"TEAM", color:"#FF47A3", emoji:"👤",
+        desc:"Weekly sync before the week starts. Align on priorities, flags, and what Esther needs from you to run Monday well. Come with your Plan the Week outputs."
+      },
+      {
+        id:"endday", time:"9:30 PM – 10:00 PM", title:"End Day with God — Prayer & Reflection",
+        subtitle:"Review the day spiritually · Bible study · Journal · Pray", type:"SACRED", color:"#FFD147", emoji:"✝️",
+        desc:"Review the day spiritually. Revisit Bible study notes. Journal reflections. Pray before sleeping. Everything bends around this."
+      },
+    ];
 
     const SCRIPTURES = [
       { ref:"Proverbs 4:7", text:"Wisdom is the principal thing; therefore get wisdom. And in all your getting, get understanding.", embodiment:"Every decision today is an act of stewardship over the understanding God gave you. Ask before you act." },
@@ -72,46 +113,40 @@ I implore Your generosity in my life.
 May new horizons open before me, filled with Your grace and contentment.
 Amen.`;
 
-    const CALENDAR = [
-      { id:"auto", time:"11:00 AM – 1:30 PM", title:"JA Automation — Phase 1 Sprint", subtitle:"5 Systems: SaneBox · Proposal Engine · Otter.ai · Perplexity · Daily Brief", type:"DO", color:"#FF4747", emoji:"⚙️", desc:"25 min per system. Sequential. Do not multitask." },
-      { id:"pj",   time:"1:45 PM – 2:45 PM",  title:"PJ Star Work Session", subtitle:"Client execution block", type:"DO", color:"#B47FFF", emoji:"🎯", desc:"Come prepared. Hard stop 2:45 PM. Protect gym." },
-      { id:"gym",  time:"4:30 PM – 6:00 PM",  title:"Strength Training #4", subtitle:"Core + HIIT · Recurring", type:"PROTECTED", color:"#E8FF47", emoji:"💪", desc:"Non-negotiable. Chiseled by Sept 14 happens here." },
-      { id:"jour", time:"6:00 PM – 7:00 PM",  title:"Weekly Journal Review", subtitle:"Set by Esther · Recurring", type:"SPIRIT", color:"#FF6B35", emoji:"📓", desc:"Reflect before planning next week." },
-      { id:"pray", time:"9:30 PM – 10:00 PM", title:"End Day with God", subtitle:"Prayer · Bible Study · Reflection", type:"SACRED", color:"#FFD147", emoji:"🙏", desc:"Everything bends around this." },
-    ];
-
-    const LEARN = [
-      { icon:"📰", label:"Newspaper", detail:"Punch · Wall Street Journal · Feeder" },
-      { icon:"📖", label:"Book Chapter", detail:"Current book — one chapter minimum" },
-      { icon:"🎙️", label:"Podcast", detail:"All In Pod · Jerry Flowers · Pivot" },
-      { icon:"🧠", label:"Elevate", detail:"Brain training — one full session" },
-    ];
+    const MEALS = {
+      breakfast: { name:"Oatmeal + Fruit", items:"Rolled oats · banana · handful of berries · black coffee or hibiscus tea", time:"9:30 AM", why:"Light, anti-inflammatory. Church day — you want energy without heaviness." },
+      meal1: { name:"Post-Church Meal — Jollof Rice & Turkey", items:"Jollof rice · grilled turkey · side salad", time:"2:30 PM", why:"Earned carbs after church. Grilled protein keeps it goal-aligned." },
+      snack: { name:"Kilishi + Zobo", items:"30g kilishi · chilled zobo (no added sugar)", time:"5:00 PM", why:"Fuels the planning session without spiking blood sugar." },
+      meal2: { name:"Pepper Soup", items:"Light chicken or fish pepper soup · water", time:"7:00 PM", why:"Anti-inflammatory. Light. Hard stop. Kitchen closes 8:30 PM." },
+    };
 
     const SECTIONS = [
-      { id:"today",   emoji:"📅", label:"TODAY"    },
-      { id:"body",    emoji:"💪", label:"BODY"     },
-      { id:"spirit",  emoji:"🔥", label:"SPIRIT"   },
-      { id:"mind",    emoji:"⚡", label:"MIND"     },
-      { id:"business",emoji:"🎯", label:"BUSINESS" },
-      { id:"energy",  emoji:"🛡️", label:"ENERGY"   },
-      { id:"esther",  emoji:"👤", label:"ESTHER"   },
-      { id:"eod",     emoji:"🌙", label:"EOD"      },
-      { id:"patterns",emoji:"📊", label:"PATTERNS" },
+      { id:"today",    emoji:"📅", label:"TODAY"    },
+      { id:"body",     emoji:"💪", label:"BODY"     },
+      { id:"spirit",   emoji:"🔥", label:"SPIRIT"   },
+      { id:"mind",     emoji:"⚡", label:"MIND"     },
+      { id:"business", emoji:"🎯", label:"BUSINESS" },
+      { id:"energy",   emoji:"🛡️", label:"ENERGY"   },
+      { id:"eod",      emoji:"🌙", label:"EOD"      },
+      { id:"patterns", emoji:"📊", label:"PATTERNS" },
     ];
 
     const ACCENT = {
       today:"#E8FF47", body:"#E8FF47", spirit:"#FF6B35",
       mind:"#47C4FF", business:"#B47FFF", energy:"#47FFB4",
-      esther:"#FF47A3", eod:"#FFD147", patterns:"#47FFB4"
+      eod:"#FFD147", patterns:"#47FFB4"
     };
 
-    const todayKey = () => new Date().toISOString().split("T")[0];
-    const todayLabel = () => new Date().toLocaleDateString("en-US",{ weekday:"long", year:"numeric", month:"long", day:"numeric" });
-    const daysLeft = () => Math.ceil((BIRTHDAY - new Date()) / 86400000);
-    const dow = new Date().getDay();
+    const BIRTHDAY = new Date("2026-09-14");
+    const daysLeft = Math.ceil((BIRTHDAY - new Date()) / 86400000);
 
-    // ── STORAGE (localStorage for PWA) ────────────────────────────────────────
+    // Sunday scripture
+    const scripture = SCRIPTURES[0]; // Proverbs 4:7 — wisdom for a planning day
+
+    // ── STORAGE ───────────────────────────────────────────────────────────────
     const STORE_KEY = "jafo_v4";
+    const todayKey  = () => "2026-03-01";
+
     function loadData() {
       try { return JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); }
       catch { return {}; }
@@ -120,7 +155,126 @@ Amen.`;
       try { localStorage.setItem(STORE_KEY, JSON.stringify(d)); } catch {}
     }
 
-    // ── APP ────────────────────────────────────────────────────────────────────
+    // ── APP ───────────────────────────────────────────────────────────────────
+    // ── LINKS TAB COMPONENT ───────────────────────────────────────────────────
+    const CATS      = ["Article","Video","Podcast","Tool","Research","Other"];
+    const CAT_COLOR = { Article:"#47C4FF", Video:"#FF6B35", Podcast:"#B47FFF", Tool:"#E8FF47", Research:"#FF47A3", Other:"#666" };
+
+    function LinksTab() {
+      const [url,    setUrl]    = useState("");
+      const [title,  setTitle]  = useState("");
+      const [cat,    setCat]    = useState("Article");
+      const [links,  setLinks]  = useState(() => {
+        try { return JSON.parse(localStorage.getItem("jafo_links")||"[]"); } catch { return []; }
+      });
+
+      const persist = (updated) => {
+        localStorage.setItem("jafo_links", JSON.stringify(updated));
+        setLinks(updated);
+      };
+
+      const save = () => {
+        if(!url.trim()) return;
+        const newLink = {
+          id: Date.now(),
+          url: url.trim(),
+          title: title.trim() || url.trim(),
+          cat,
+          saved: new Date().toLocaleDateString("en-US",{month:"short",day:"numeric"}),
+          done: false
+        };
+        persist([newLink, ...links]);
+        setUrl(""); setTitle("");
+      };
+
+      const toggle = (id) => persist(links.map(l => l.id===id ? {...l,done:!l.done} : l));
+      const remove = (id) => persist(links.filter(l => l.id!==id));
+
+      const unread = links.filter(l => !l.done);
+      const done   = links.filter(l =>  l.done);
+
+      return (
+        <div>
+          <div className="st" style={{color:"#FF6B35"}}>LINKS</div>
+          <div className="sub">Read later · Watch later · Save for reference.</div>
+
+          {/* Input */}
+          <div style={{background:"#0d0d0d",border:"1px solid #1e1e1e",borderRadius:7,padding:14,marginBottom:14}}>
+            <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>+ Save a Link</div>
+            <input type="text" placeholder="Paste URL here..." value={url} onChange={e=>setUrl(e.target.value)} style={{marginBottom:7}}/>
+            <input type="text" placeholder="Title or description (optional)..." value={title} onChange={e=>setTitle(e.target.value)} style={{marginBottom:10}}/>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>
+              {CATS.map(c=>(
+                <button key={c} onClick={()=>setCat(c)}
+                  style={{background:cat===c?CAT_COLOR[c]+"22":"transparent",border:`1px solid ${cat===c?CAT_COLOR[c]:"#222"}`,borderRadius:3,padding:"4px 10px",fontSize:9,color:cat===c?CAT_COLOR[c]:"#444",cursor:"pointer",fontFamily:"inherit",letterSpacing:1,textTransform:"uppercase"}}>
+                  {c}
+                </button>
+              ))}
+            </div>
+            <button onClick={save}
+              style={{background:"#FF6B35",color:"#080808",border:"none",borderRadius:3,padding:"10px 18px",fontSize:10,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:600,cursor:"pointer",width:"100%"}}>
+              Save Link
+            </button>
+          </div>
+
+          {/* Unread */}
+          {unread.length > 0 && (
+            <div>
+              <div style={{fontSize:9,color:"#333",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>
+                To Read/Watch — {unread.length} item{unread.length!==1?"s":""}
+              </div>
+              {unread.map(l=>(
+                <div key={l.id} style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:6,padding:12,marginBottom:7}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
+                    <div style={{flex:1,minWidth:0}}>
+                      <span className="tag" style={{background:CAT_COLOR[l.cat]+"18",color:CAT_COLOR[l.cat],marginBottom:5,display:"inline-block"}}>{l.cat}</span>
+                      <div style={{fontSize:12,color:"#E0DFD8",lineHeight:1.5,marginBottom:3,wordBreak:"break-word"}}>{l.title}</div>
+                      <div style={{fontSize:9,color:"#2a2a2a",wordBreak:"break-all"}}>{l.url.length>60?l.url.slice(0,60)+"...":l.url}</div>
+                      <div style={{fontSize:8,color:"#1e1e1e",marginTop:3}}>Saved {l.saved}</div>
+                    </div>
+                    <div style={{display:"flex",flexDirection:"column",gap:5,flexShrink:0}}>
+                      <a href={l.url} target="_blank" rel="noreferrer"
+                        style={{background:"#1a1a1a",color:"#E0DFD8",border:"none",borderRadius:2,padding:"5px 9px",fontSize:8,cursor:"pointer",fontFamily:"inherit",letterSpacing:1,textDecoration:"none",textAlign:"center"}}>
+                        OPEN
+                      </a>
+                      <button onClick={()=>toggle(l.id)}
+                        style={{background:"#47FFB422",color:"#47FFB4",border:"1px solid #47FFB430",borderRadius:2,padding:"5px 9px",fontSize:8,cursor:"pointer",fontFamily:"inherit",letterSpacing:1}}>
+                        DONE
+                      </button>
+                      <button onClick={()=>remove(l.id)}
+                        style={{background:"transparent",color:"#2a2a2a",border:"1px solid #1a1a1a",borderRadius:2,padding:"5px 9px",fontSize:8,cursor:"pointer",fontFamily:"inherit",letterSpacing:1}}>
+                        DEL
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Done */}
+          {done.length > 0 && (
+            <div style={{marginTop:16}}>
+              <div style={{fontSize:9,color:"#1e1e1e",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Completed — {done.length}</div>
+              {done.map(l=>(
+                <div key={l.id} style={{background:"#0a0a0a",border:"1px solid #111",borderRadius:6,padding:10,marginBottom:5,display:"flex",justifyContent:"space-between",alignItems:"center",gap:8}}>
+                  <span style={{fontSize:9,color:"#1e1e1e",textDecoration:"line-through",flex:1,minWidth:0}}>{l.title}</span>
+                  <button onClick={()=>remove(l.id)} style={{background:"transparent",color:"#222",border:"none",fontSize:10,cursor:"pointer",padding:"2px 6px"}}>✕</button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {links.length === 0 && (
+            <div style={{textAlign:"center",padding:"40px 0",fontSize:11,color:"#1e1e1e"}}>
+              No links saved yet.<br/>Paste a URL above to start your reading list.
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // ── APP ───────────────────────────────────────────────────────────────────
     function App() {
       const [tab, setTab] = useState("today");
       const [all, setAll] = useState(() => {
@@ -129,16 +283,15 @@ Amen.`;
         if (!d[k]) d[k] = { notes:{}, checks:{}, scores:{focus:7,health:7,emotion:7,strategy:7}, esther:{priority:"",context:"",flag:""} };
         return d;
       });
-      const [saved, setSaved] = useState(false);
-      const [affOpen, setAffOpen] = useState(false);
-      const [learnDone, setLearnDone] = useState({});
-      const [estherSent, setEstherSent] = useState(false);
+      const [saved,       setSaved]       = useState(false);
+      const [affOpen,     setAffOpen]     = useState(false);
+      const [learnDone,   setLearnDone]   = useState({});
+      const [estherSent,  setEstherSent]  = useState(false);
       const saveRef = useRef(null);
 
       const tk = todayKey();
       const td = all[tk] || { notes:{}, checks:{}, scores:{focus:7,health:7,emotion:7,strategy:7}, esther:{priority:"",context:"",flag:""} };
 
-      // auto-save
       useEffect(() => {
         clearTimeout(saveRef.current);
         saveRef.current = setTimeout(() => { saveData(all); setSaved(true); setTimeout(()=>setSaved(false),1800); }, 600);
@@ -155,11 +308,7 @@ Amen.`;
       const esther = td.esther||{priority:"",context:"",flag:""};
       const avg    = (Object.values(scores).reduce((a,b)=>a+b,0)/4).toFixed(1);
       const ac     = ACCENT[tab]||"#E8FF47";
-      const dl     = daysLeft();
-      const workout = WORKOUT_SCHEDULE[dow];
-      const scripture = SCRIPTURES[dow % SCRIPTURES.length];
 
-      // pattern data
       const allDays = Object.entries(all).filter(([k])=>k.match(/^\d{4}-\d{2}-\d{2}$/)).sort(([a],[b])=>a>b?1:-1);
       const last7   = allDays.slice(-7);
       const avg7 = (key) => { const v=last7.map(([,d])=>d?.scores?.[key]).filter(Number); return v.length?(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1):"—"; };
@@ -179,17 +328,16 @@ Amen.`;
         .ci{display:flex;align-items:flex-start;gap:11px;padding:8px 0;border-bottom:1px solid #111;cursor:pointer;}
         .cb{width:17px;height:17px;border:1.5px solid #252525;border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;}
         .card{background:#0d0d0d;border:1px solid #171717;border-radius:6px;padding:15px;margin-bottom:10px;}
-        .rul{height:1px;background:linear-gradient(to right,${ac},transparent);margin:12px 0;opacity:.2;}
         .st{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;line-height:1;}
         .sub{font-size:9px;color:#2e2e2e;letter-spacing:2px;text-transform:uppercase;margin-top:2px;margin-bottom:18px;}
         .tag{display:inline-block;padding:2px 7px;border-radius:2px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;}
         .meal{background:#0c0c0c;border:1px solid #151515;border-radius:5px;padding:12px 14px;margin:6px 0;}
-        .lbtn{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:4px;padding:11px 13px;cursor:pointer;display:flex;gap:10px;align-items:center;margin-bottom:7px;}
         .sbtn{border:none;border-radius:3px;padding:11px 20px;font-family:inherit;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-weight:600;}
         .stat{background:#0d0d0d;border:1px solid #171717;border-radius:5px;padding:13px;text-align:center;}
         .hist{padding:12px 6px;border-bottom:1px solid #0f0f0f;}
         .fade{animation:fi .2s ease;}
         @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+        .lbtn{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:4px;padding:11px 13px;cursor:pointer;display:flex;gap:10px;align-items:center;margin-bottom:7px;}
       `;
 
       return (
@@ -197,26 +345,24 @@ Amen.`;
           <style>{css}</style>
 
           {/* HEADER */}
-          <div style={{padding:"env(safe-area-inset-top, 16px) 18px 0",borderBottom:"1px solid #0f0f0f",background:"#080808",position:"sticky",top:0,zIndex:100}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",paddingTop:"max(16px, env(safe-area-inset-top))"}}>
+          <div style={{padding:"env(safe-area-inset-top,16px) 18px 0",borderBottom:"1px solid #0f0f0f",background:"#080808",position:"sticky",top:0,zIndex:100}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",paddingTop:"max(16px,env(safe-area-inset-top))"}}>
               <div>
                 <div style={{fontSize:8,letterSpacing:3,color:"#2a2a2a",textTransform:"uppercase"}}>JÄFO · AI Chief of Staff</div>
                 <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:36,letterSpacing:4,lineHeight:1,color:"#E0DFD8"}}>FOUNDER DAY</div>
-                <div style={{fontSize:8,color:"#222",marginTop:1}}>{todayLabel()}</div>
+                <div style={{fontSize:8,color:"#222",marginTop:1}}>Sunday, March 1 2026 · Lagos</div>
               </div>
               <div style={{textAlign:"right"}}>
                 <div style={{fontSize:8,color:"#2a2a2a",letterSpacing:2,textTransform:"uppercase"}}>Discipline</div>
                 <div style={{fontFamily:"'Bebas Neue'",fontSize:42,color:ac,lineHeight:1}}>{avg}</div>
                 <div style={{fontSize:8,color:"#252525"}}>/ 10.0</div>
-                <div style={{fontSize:8,color:ac,marginTop:2}}>⏳ {dl}d · Sept 14</div>
+                <div style={{fontSize:8,color:ac,marginTop:2}}>⏳ {daysLeft}d · Sept 14</div>
                 {saved && <div style={{fontSize:7,color:"#2a4a2a",letterSpacing:1}}>✓ SAVED</div>}
               </div>
             </div>
-            {/* birthday bar */}
             <div style={{marginTop:6,height:1,background:"#0f0f0f",borderRadius:1,overflow:"hidden"}}>
-              <div style={{height:"100%",width:`${Math.max(2,100-(dl/200)*100)}%`,background:ac,transition:"width 1s"}}/>
+              <div style={{height:"100%",width:`${Math.max(2,100-(daysLeft/200)*100)}%`,background:ac,transition:"width 1s"}}/>
             </div>
-            {/* nav */}
             <div style={{display:"flex",gap:2,marginTop:10,overflowX:"auto",paddingBottom:8,WebkitOverflowScrolling:"touch"}}>
               {SECTIONS.map(s=>(
                 <button key={s.id} className={`nb ${tab===s.id?"on":""}`}
@@ -234,7 +380,19 @@ Amen.`;
             {/* ── TODAY ── */}
             {tab==="today" && <div>
               <div className="st" style={{color:"#E8FF47"}}>TODAY'S MAP</div>
-              <div className="sub">JÄFO Intelligence · Live Calendar</div>
+              <div className="sub">JÄFO Intelligence · Sunday March 1 · 11 events</div>
+
+              {/* JÄFO Sunday briefing note */}
+              <div style={{background:"#080f0d",border:"1px solid #47FFB430",borderRadius:8,padding:14,marginBottom:14}}>
+                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>🧠 JÄFO Sunday Brief</div>
+                <div style={{fontSize:12,color:"#666",lineHeight:1.9}}>
+                  Today is your <strong style={{color:"#E0DFD8"}}>highest-leverage day of the week</strong> — not because of what you produce, but because of what you plan. The 4–6 PM block shapes everything that follows Monday through Friday. Protect it like a client meeting.
+                  <br/><br/>
+                  Two non-negotiables JÄFO is watching: <strong style={{color:"#FF4747"}}>Monthly Financial Tracking at 10:30 AM</strong> — this is month-end, it cannot roll to next week. And <strong style={{color:"#47C4FF"}}>the Assistant Brief System setup at 5:15 PM</strong> — your Monday morning depends on this being built today.
+                  <br/><br/>
+                  Sunday is also a rest day from strength training. Walk, church, family, planning. That's the full architecture of a well-lived Sunday.
+                </div>
+              </div>
 
               {estherSent && esther.priority && (
                 <div style={{background:"#0f0810",border:"1px solid #FF47A3",borderRadius:6,padding:12,marginBottom:12}}>
@@ -245,26 +403,8 @@ Amen.`;
                 </div>
               )}
 
-              {/* Yesterday's lock-in */}
-              {(()=>{
-                const yk = new Date(Date.now()-86400000).toISOString().split("T")[0];
-                const prev = all[yk]?.notes?.tomorrow;
-                return prev ? (
-                  <div style={{background:"#080f08",border:"1px solid #1a3020",borderRadius:6,padding:12,marginBottom:12}}>
-                    <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🔒 Yesterday's Lock-In — Did You Do It?</div>
-                    <div style={{fontSize:12,color:"#777",fontStyle:"italic",marginBottom:8}}>"{prev}"</div>
-                    <div className="ci" onClick={()=>setCheck("lockindone")}>
-                      <div className="cb" style={{background:checks.lockindone?"#47FFB4":"transparent",borderColor:checks.lockindone?"#47FFB4":"#252525"}}>
-                        {checks.lockindone && <span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                      </div>
-                      <div style={{fontSize:10,color:checks.lockindone?"#47FFB4":"#444"}}>{checks.lockindone?"Done. You kept your word.":"Mark it done"}</div>
-                    </div>
-                  </div>
-                ) : null;
-              })()}
-
               {CALENDAR.map(ev=>(
-                <div key={ev.id} className="card" style={{borderColor:"#171717"}}>
+                <div key={ev.id} style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:6,padding:14,marginBottom:7}}>
                   <div style={{display:"flex",gap:12,alignItems:"flex-start"}}>
                     <div style={{fontSize:20,flexShrink:0}}>{ev.emoji}</div>
                     <div style={{flex:1}}>
@@ -277,6 +417,7 @@ Amen.`;
                         <span className="tag" style={{background:ev.color+"18",color:ev.color,height:"fit-content"}}>{ev.type}</span>
                       </div>
                       <div style={{fontSize:10,color:"#2e2e2e",marginTop:7,borderLeft:`2px solid ${ev.color}25`,paddingLeft:8}}>{ev.desc}</div>
+                      {ev.detail && <div style={{fontSize:9,color:"#333",marginTop:4,paddingLeft:10}}>→ {ev.detail}</div>}
                     </div>
                   </div>
                   <div className="ci" onClick={()=>setCheck("ev_"+ev.id)}>
@@ -292,12 +433,12 @@ Amen.`;
             {/* ── BODY ── */}
             {tab==="body" && <div>
               <div className="st" style={{color:"#E8FF47"}}>BODY</div>
-              <div className="sub">Health First · Drop 8–12 lbs · Chiseled by Sept 14</div>
+              <div className="sub">Rest Day · Long Walk + Reflection · Health First</div>
 
               <div style={{background:"#0c0c08",border:"1px solid #E8FF4720",borderRadius:6,padding:12,marginBottom:12,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
                 <div>
                   <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Days to Birthday</div>
-                  <div style={{fontFamily:"'Bebas Neue'",fontSize:32,color:"#E8FF47"}}>{dl} DAYS</div>
+                  <div style={{fontFamily:"'Bebas Neue'",fontSize:32,color:"#E8FF47"}}>{daysLeft} DAYS</div>
                 </div>
                 <div style={{textAlign:"right",fontSize:10,color:"#444",lineHeight:2}}>
                   <div>Now: 225–234 lbs</div>
@@ -307,18 +448,14 @@ Amen.`;
               </div>
 
               <div style={{background:"#0c0c08",border:"1px solid #E8FF4725",borderRadius:7,padding:15,marginBottom:10}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:8}}>
-                  <div>
-                    <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Today's Training</div>
-                    <div style={{fontFamily:"'Bebas Neue'",fontSize:30,color:"#E8FF47",marginTop:2}}>{workout.type}</div>
-                  </div>
-                  <div style={{textAlign:"right",fontSize:9,color:"#555",lineHeight:2}}>
-                    <div>⏱ {workout.duration}</div>
-                    <div style={{color:"#E8FF47"}}>⏰ {workout.time}</div>
-                  </div>
-                </div>
+                <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Today's Training</div>
+                <div style={{fontFamily:"'Bebas Neue'",fontSize:30,color:"#E8FF47",marginTop:2}}>Long Walk + Reflection</div>
                 <div style={{height:1,background:"linear-gradient(to right,#E8FF47,transparent)",margin:"10px 0",opacity:.18}}/>
-                <div style={{fontSize:11,color:"#555",lineHeight:1.8}}><strong style={{color:"#E8FF47"}}>Coach: </strong>{workout.tip}</div>
+                <div style={{fontSize:11,color:"#555",lineHeight:1.9}}>
+                  <strong style={{color:"#E8FF47"}}>Target: </strong>4 miles (already on calendar 8:30 AM)<br/>
+                  <strong style={{color:"#E8FF47"}}>How: </strong>No headphones for the first 20 minutes. Let your mind clear before God. Walking is grounding for you — spiritually and mentally. Don't waste it on content.<br/>
+                  <strong style={{color:"#E8FF47"}}>Sunday rule: </strong>No strength training today. This is active recovery. The body needs it for the week ahead.
+                </div>
               </div>
 
               {Object.values(MEALS).map((m,i)=>(
@@ -344,17 +481,16 @@ Amen.`;
               </div>
 
               <div className="card" style={{marginTop:10}}>
-                <div style={{fontSize:9,color:"#333",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Body note / how you're feeling today:</div>
-                <textarea rows={2} placeholder="Energy level, soreness, sleep quality..." value={notes.bodynote||""} onChange={e=>setNote("bodynote",e.target.value)}/>
+                <div style={{fontSize:9,color:"#333",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Body note / how you're feeling:</div>
+                <textarea rows={2} placeholder="Energy level, soreness, sleep quality last night..." value={notes.bodynote||""} onChange={e=>setNote("bodynote",e.target.value)}/>
               </div>
             </div>}
 
             {/* ── SPIRIT ── */}
             {tab==="spirit" && <div>
               <div className="st" style={{color:"#FF6B35"}}>SPIRIT</div>
-              <div className="sub">Grounded before grinding.</div>
+              <div className="sub">Sunday — grounded before the week begins.</div>
 
-              {/* DAILY AFFIRMATION — FIXED FOREVER */}
               <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginBottom:10}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
                   <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase"}}>🙏 Daily Affirmation — Speak Aloud</div>
@@ -378,7 +514,6 @@ Amen.`;
                 </div>
               </div>
 
-              {/* IDENTITY */}
               <div className="card" style={{marginBottom:10}}>
                 <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>🪞 Identity · This Season</div>
                 <div style={{fontSize:13,color:"#E0DFD8",lineHeight:1.8,fontFamily:"'Playfair Display',serif"}}>
@@ -386,34 +521,30 @@ Amen.`;
                 </div>
               </div>
 
-              {/* SCRIPTURE */}
               <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginBottom:10}}>
-                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>📖 {scripture.ref}</div>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>📖 {scripture.ref} — Sunday's Word</div>
                 <div style={{fontSize:14,color:"#E0DFD8",lineHeight:1.7,fontStyle:"italic",fontFamily:"'Playfair Display',serif",marginBottom:10}}>"{scripture.text}"</div>
                 <div style={{height:1,background:"linear-gradient(to right,#FF6B35,transparent)",margin:"10px 0",opacity:.18}}/>
-                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>How to embody this today</div>
-                <div style={{fontSize:11,color:"#666",lineHeight:1.8,marginBottom:8}}>{scripture.embodiment}</div>
-                <textarea rows={2} placeholder="Your specific moment to live it today..." value={notes.embody||""} onChange={e=>setNote("embody",e.target.value)}/>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Sunday embodiment</div>
+                <div style={{fontSize:11,color:"#666",lineHeight:1.8,marginBottom:8}}>Today you plan the week. Every block you name, every decision you make in the 4–6 PM session is an act of wisdom. Don't plan from ambition. Plan from understanding. Ask what God is asking of you this week — not just what your calendar demands.</div>
+                <textarea rows={2} placeholder="What is God asking of me specifically this week?" value={notes.embody||""} onChange={e=>setNote("embody",e.target.value)}/>
                 <div className="ci" onClick={()=>setCheck("embody_lived")}>
                   <div className="cb" style={{background:checks.embody_lived?"#FF6B35":"transparent",borderColor:checks.embody_lived?"#FF6B35":"#252525"}}>
                     {checks.embody_lived&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
                   </div>
-                  <div style={{fontSize:9,color:checks.embody_lived?"#FF6B35":"#333"}}>I lived this — not just read it</div>
+                  <div style={{fontSize:9,color:checks.embody_lived?"#FF6B35":"#333"}}>I carried this into my week planning</div>
                 </div>
               </div>
 
-              {/* DREAMS */}
               <div className="card" style={{marginBottom:10}}>
                 <div style={{fontSize:9,color:"#B47FFF",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🌙 Dreams & Recurring Thoughts</div>
-                <div style={{fontSize:9,color:"#2e2e2e",marginBottom:7}}>These are data. Capture them. Patterns reveal over time.</div>
                 <textarea rows={3} placeholder="Last night I dreamed... / A thought that keeps returning..." value={notes.dreams||""} onChange={e=>setNote("dreams",e.target.value)}/>
               </div>
 
-              {/* JOURNAL */}
               <div className="card">
-                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>✍️ Morning Journal</div>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>✍️ Sunday Journal Prompt</div>
                 <div style={{fontSize:13,color:"#E0DFD8",lineHeight:1.7,marginBottom:8,fontStyle:"italic",fontFamily:"'Playfair Display',serif"}}>
-                  "What fear is trying to disguise itself as 'logic' in how I'm building ATIDE right now?"
+                  "What did last week cost me — and was it worth it?"
                 </div>
                 <textarea rows={5} placeholder="Write freely. No editing. Just truth..." value={notes.journal||""} onChange={e=>setNote("journal",e.target.value)}/>
               </div>
@@ -422,96 +553,133 @@ Amen.`;
             {/* ── MIND ── */}
             {tab==="mind" && <div>
               <div className="st" style={{color:"#47C4FF"}}>MIND</div>
-              <div className="sub">Strategic clarity + daily learning.</div>
+              <div className="sub">Sunday — plan with clarity, not urgency.</div>
 
-              <div style={{background:"#080e11",border:"1px solid #1a2a33",borderRadius:8,padding:14,marginBottom:12}}>
-                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📚 Learn Something Today</div>
-                {LEARN.map(opt=>(
-                  <div key={opt.label} className="lbtn"
-                    style={{borderColor:learnDone[opt.label]?"#47C4FF":"#1a1a1a",background:learnDone[opt.label]?"#0d1a1a":"#0d0d0d"}}
-                    onClick={()=>setLearnDone(p=>({...p,[opt.label]:!p[opt.label]}))}>
-                    <div style={{fontSize:18}}>{opt.icon}</div>
-                    <div>
-                      <div style={{fontSize:11,color:learnDone[opt.label]?"#47C4FF":"#777"}}>{opt.label}</div>
-                      <div style={{fontSize:9,color:"#2a2a2a"}}>{opt.detail}</div>
+              {/* PLAN THE WEEK — expanded for Sunday */}
+              <div style={{background:"#080e11",border:"1px solid #47C4FF30",borderRadius:8,padding:15,marginBottom:12}}>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🗓️ Plan the Week — 4:00 PM – 6:00 PM</div>
+                <div style={{fontSize:10,color:"#444",marginBottom:12}}>This is your most important meeting of the week. Run it in two blocks.</div>
+
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Block 1 — Soul Dive (4:00–4:45 PM)</div>
+                {[
+                  "Phone away — do not touch until Block 2",
+                  "4–7–8 breathing (3 rounds) + grounding prayer",
+                  "WITNESS: What actually happened this week? Where did I show up? Where did I disappear?",
+                  "REFRAME: What was I protecting myself from? What would self-trust have looked like?",
+                  "REALIGN: Choose 3 priorities — 1 personal · 1 body/health · 1 work/creative",
+                  "What am I NOT doing next week, on purpose?",
+                  "Bless & Release — name one gratitude, forgive yourself for one thing",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("soul_"+item)}>
+                    <div className="cb" style={{background:checks["soul_"+item]?"#47C4FF":"transparent",borderColor:checks["soul_"+item]?"#47C4FF":"#252525"}}>
+                      {checks["soul_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
                     </div>
+                    <div style={{fontSize:10,color:checks["soul_"+item]?"#2a2a2a":"#666",textDecoration:checks["soul_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
                   </div>
                 ))}
-                <div style={{marginTop:8}}>
-                  <div style={{fontSize:9,color:"#2e2e2e",letterSpacing:1.5,textTransform:"uppercase",marginBottom:4}}>One thing I learned today:</div>
-                  <textarea rows={2} placeholder="The insight that stuck..." value={notes.learned||""} onChange={e=>setNote("learned",e.target.value)}/>
-                </div>
+
+                <div style={{height:1,background:"linear-gradient(to right,#47C4FF,transparent)",margin:"14px 0",opacity:.15}}/>
+
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Block 2 — Plan the Week (4:45–6:00 PM)</div>
+                {[
+                  "RELATIONSHIPS: 3 names — 1 family · 1 close friend · 1 reconnect",
+                  "NAME EVERY WORK BLOCK: What does ATIDE need this week?",
+                  "NAME EVERY WORK BLOCK: What does JRS need this week?",
+                  "BODY CHECK: All 3 strength sessions confirmed? Walking protected?",
+                  "INVESTMENT & MONEY: Update JA Investment Tracker · Check CABA",
+                  "THE ONE THING: If this week were a success, what one thing would be true?",
+                  "CLOSE: Week is named. Set assistant briefing note for Esther.",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("plan_"+item)}>
+                    <div className="cb" style={{background:checks["plan_"+item]?"#47C4FF":"transparent",borderColor:checks["plan_"+item]?"#47C4FF":"#252525"}}>
+                      {checks["plan_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:10,color:checks["plan_"+item]?"#2a2a2a":"#666",textDecoration:checks["plan_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                  </div>
+                ))}
               </div>
 
-              {[
-                {n:"01",title:"Complete Automation Phase 1 Sprint",outcome:"All 5 systems live.",time:"11:00 AM – 1:30 PM",why:"Each system frees 2–5 hrs/week permanently."},
-                {n:"02",title:"Deliver PJ Star Session",outcome:"Client has clear next steps.",time:"1:45 PM – 2:45 PM",why:"Revenue and trust live here. Come prepared."},
-                {n:"03",title:"Weekly Journal Review",outcome:"1 pattern spotted. 1 decision locked.",time:"6:00 PM – 7:00 PM",why:"Founders who don't review the week repeat it."},
-              ].map(m=>(
-                <div key={m.n} style={{border:"1px solid #1a2a33",borderRadius:6,padding:13,marginBottom:8,background:"#080e11"}}>
-                  <div style={{display:"flex",gap:10,alignItems:"flex-start"}}>
-                    <div style={{fontFamily:"'Bebas Neue'",fontSize:28,color:"#1a3040",lineHeight:1,flexShrink:0}}>{m.n}</div>
-                    <div style={{flex:1}}>
-                      <div style={{fontSize:13,color:"#47C4FF",marginBottom:4}}>{m.title}</div>
-                      <div style={{fontSize:10,color:"#555",lineHeight:1.7,marginBottom:5}}>
-                        <span style={{color:"#2a2a2a"}}>OUTCOME: </span>{m.outcome}<br/>
-                        <span style={{color:"#2a2a2a"}}>TIME: </span><span style={{color:"#47C4FF"}}>{m.time}</span>
-                      </div>
-                      <div style={{fontSize:9,color:"#333",borderLeft:"2px solid #47C4FF20",paddingLeft:7}}>{m.why}</div>
+              {/* THE ONE THING */}
+              <div className="card" style={{border:"2px solid #47C4FF30"}}>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>🎯 THE ONE THING This Week</div>
+                <div style={{fontSize:10,color:"#333",marginBottom:8}}>If this week were a success, what single thing would have to be true?</div>
+                <textarea rows={2} placeholder="This week is a success if..." value={notes.onethinq||""} onChange={e=>setNote("onethinq",e.target.value)}/>
+              </div>
+
+              {/* Assistant Brief System */}
+              <div style={{background:"#080e11",border:"1px solid #47C4FF25",borderRadius:7,padding:14,marginTop:10}}>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>⚙️ JA Automation — Assistant Brief System (5:15 PM)</div>
+                {[
+                  "Create Claude Project: 'Daily Operations Brief'",
+                  "Write morning brief system prompt: Top 3 priorities / Meetings + prep / Pending decisions / Key follow-ups",
+                  "Write EOD recap format: Completed / Moved forward / Pending tomorrow / Flags",
+                  "Add 'Founder Focus' field — one sentence on the single most important thing",
+                  "Walk Esther through the workflow so she can execute from Monday",
+                  "Deliverable: Esther sends first morning brief by 8:30 AM Monday",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("auto_"+item)}>
+                    <div className="cb" style={{background:checks["auto_"+item]?"#47C4FF":"transparent",borderColor:checks["auto_"+item]?"#47C4FF":"#252525"}}>
+                      {checks["auto_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
                     </div>
+                    <div style={{fontSize:10,color:checks["auto_"+item]?"#2a2a2a":"#666",textDecoration:checks["auto_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
                   </div>
-                  <div className="ci" onClick={()=>setCheck("mind_"+m.n)}>
-                    <div className="cb" style={{background:checks["mind_"+m.n]?"#47C4FF":"transparent",borderColor:checks["mind_"+m.n]?"#47C4FF":"#252525"}}>
-                      {checks["mind_"+m.n]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                    </div>
-                    <div style={{fontSize:9,color:"#2e2e2e"}}>Mark done</div>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {/* ── LINKS — embedded in Mind ── */}
+              <div style={{height:1,background:"linear-gradient(to right,#47C4FF,transparent)",margin:"20px 0",opacity:.15}}/>
+              <LinksTab/>
+
             </div>}
 
             {/* ── BUSINESS ── */}
             {tab==="business" && <div>
               <div className="st" style={{color:"#B47FFF"}}>BUSINESS</div>
-              <div className="sub">Eisenhower Matrix · Be Ruthless.</div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
+              <div className="sub">Sunday — monthly finance review + week setup.</div>
+
+              {/* FINANCIAL TRACKING */}
+              <div style={{background:"#130808",border:"2px solid #FF474730",borderRadius:8,padding:15,marginBottom:12}}>
+                <div style={{fontSize:9,color:"#FF4747",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>📊 Monthly Financial Tracking — 10:30 AM (NON-NEGOTIABLE)</div>
+                <div style={{fontSize:10,color:"#444",marginBottom:10}}>Month-end. Cannot roll to next week. 60 minutes. Files: Financial Tracking Template.xlsx · Bank app · Brokerage app</div>
                 {[
-                  {label:"DO NOW",sub:"Urgent + Important",color:"#FF4747",bg:"#130808",items:["Automation Sprint 11am","PJ Star 1:45pm","Urgent client comms"]},
-                  {label:"SCHEDULE",sub:"Important + Not Urgent",color:"#B47FFF",bg:"#0e0a14",items:["ATIDE Q2 strategy","New biz outreach","Team growth plan"]},
-                  {label:"DELEGATE",sub:"Urgent + Not Important",color:"#47C4FF",bg:"#080e11",items:["Admin → Esther","Social media","Routine follow-ups"]},
-                  {label:"DELETE",sub:"Not Urgent + Not Important",color:"#333",bg:"#0a0a0a",items:["Vanity metrics","No-outcome meetings","Unbooked calls"]},
-                ].map(q=>(
-                  <div key={q.label} style={{border:`1px solid ${q.color}20`,borderRadius:6,padding:11,background:q.bg}}>
-                    <div style={{fontSize:9,color:q.color,letterSpacing:2,textTransform:"uppercase",marginBottom:1}}>{q.label}</div>
-                    <div style={{fontSize:8,color:"#252525",marginBottom:8}}>{q.sub}</div>
-                    {q.items.map(item=>(
-                      <div key={item} className="ci" onClick={()=>setCheck("biz_"+item)}>
-                        <div className="cb" style={{background:checks["biz_"+item]?q.color:"transparent",borderColor:checks["biz_"+item]?q.color:"#222"}}>
-                          {checks["biz_"+item]&&<span style={{fontSize:7,color:"#080808"}}>✓</span>}
-                        </div>
-                        <div style={{fontSize:10,color:checks["biz_"+item]?"#2a2a2a":"#555",textDecoration:checks["biz_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-                      </div>
-                    ))}
+                  "Gather: All bank statements (NGN + USD)",
+                  "Gather: Piggvest balances · Brokerage accounts",
+                  "Sheet 1: Actual vs Budget — fill all income + expense actuals",
+                  "Sheet 4: Investment Portfolio — update current values (Column D)",
+                  "Sheet 6: Goals Progress — update current values, check status",
+                  "Sheet 7: Expense Analysis — fill actuals, identify biggest overspends",
+                  "Make 1 budget decision before closing",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("fin_"+item)}>
+                    <div className="cb" style={{background:checks["fin_"+item]?"#FF4747":"transparent",borderColor:checks["fin_"+item]?"#FF4747":"#252525"}}>
+                      {checks["fin_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:10,color:checks["fin_"+item]?"#2a2a2a":"#666",textDecoration:checks["fin_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
                   </div>
                 ))}
+                <div style={{marginTop:10}}>
+                  <div style={{fontSize:9,color:"#444",letterSpacing:1.5,textTransform:"uppercase",marginBottom:5}}>Key insight from this month's review:</div>
+                  <textarea rows={2} placeholder="What the numbers are telling me..." value={notes.fininsight||""} onChange={e=>setNote("fininsight",e.target.value)}/>
+                </div>
               </div>
+
               <div className="card">
-                <div style={{fontSize:9,color:"#333",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Dump + sort your tasks:</div>
-                <textarea rows={5} placeholder="List tasks. Label: DO / SCHEDULE / DELEGATE / DELETE..." value={notes.matrix||""} onChange={e=>setNote("matrix",e.target.value)}/>
+                <div style={{fontSize:9,color:"#333",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Week ahead — business priorities:</div>
+                <textarea rows={5} placeholder="ATIDE: ... / JRS: ... / Investment: ... / Key decisions needed this week..." value={notes.weekbiz||""} onChange={e=>setNote("weekbiz",e.target.value)}/>
               </div>
             </div>}
 
             {/* ── ENERGY ── */}
             {tab==="energy" && <div>
               <div className="st" style={{color:"#47FFB4"}}>ENERGY</div>
-              <div className="sub">Protect energy first.</div>
+              <div className="sub">Sunday friction zones — protect the planning session.</div>
               <div style={{background:"#080f0d",border:"1px solid #1a3325",borderRadius:8,padding:14,marginBottom:10}}>
                 {[
-                  {risk:"Automation sprint scope creep",fix:"25 min hard timer per system. Move on.",icon:"⚙️"},
-                  {risk:"PJ Star running long",fix:"Hard stop 2:45 PM. Gym is non-negotiable.",icon:"⏱"},
-                  {risk:"Skipping strength training",fix:"Treat it like a client meeting.",icon:"💪"},
-                  {risk:"Late eating after 8:30 PM",fix:"Dinner 7 PM. Kitchen closes 8:30. #1 belly-fat lever.",icon:"🍽️"},
-                  {risk:"Phone before prayer block",fix:"Phone out of room by 9 PM. Prayer first.",icon:"📱"},
+                  {risk:"Financial review running over into church time",fix:"Hard stop at 11:30 AM. Church is 12 PM. Non-negotiable.",icon:"📊"},
+                  {risk:"Phone during church",fix:"Phone face down, silent. You go there to receive. Not to manage.",icon:"⛪"},
+                  {risk:"Planning session becoming a task dump",fix:"Soul Dive first, always. Don't skip Block 1 to rush Block 2.",icon:"🗓️"},
+                  {risk:"Esther sync running late into prayer time",fix:"Sync ends 10 PM. Prayer block is 9:30–10 PM — flag this conflict.",icon:"👤"},
+                  {risk:"Late eating after 8:30 PM",fix:"Dinner is at 7 PM. Sunday is not an exception.",icon:"🍽️"},
                 ].map(item=>(
                   <div key={item.risk} style={{display:"flex",gap:10,padding:"8px 0",borderBottom:"1px solid #0e0e0e",alignItems:"flex-start"}}>
                     <div style={{fontSize:15,flexShrink:0}}>{item.icon}</div>
@@ -524,46 +692,20 @@ Amen.`;
               </div>
               <div className="card">
                 <div style={{fontSize:9,color:"#333",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Your override plan today:</div>
-                <textarea rows={3} placeholder="What might pull you off, and what's your one override?" value={notes.energy||""} onChange={e=>setNote("energy",e.target.value)}/>
-              </div>
-            </div>}
-
-            {/* ── ESTHER ── */}
-            {tab==="esther" && <div>
-              <div className="st" style={{color:"#FF47A3"}}>ESTHER</div>
-              <div className="sub">Team information portal.</div>
-              <div className="card">
-                <div style={{fontSize:9,color:"#FF47A3",letterSpacing:2,textTransform:"uppercase",marginBottom:12}}>📌 Daily Input</div>
-                {[
-                  {label:"Today's Top Priority",key:"priority",ph:"e.g. Mavin's proposal out before 3pm",type:"text"},
-                  {label:"Context Joshua Needs",key:"context",ph:"e.g. Client called — deadline moved. I've already replied.",rows:3},
-                  {label:"Flag / Watch Out For",key:"flag",ph:"e.g. Don't commit to new work this week",type:"text"},
-                ].map(f=>(
-                  <div key={f.key} style={{marginBottom:10}}>
-                    <div style={{fontSize:9,color:"#3a3a3a",letterSpacing:1.5,textTransform:"uppercase",marginBottom:4}}>{f.label}</div>
-                    {f.type==="text"
-                      ? <input type="text" placeholder={f.ph} value={esther[f.key]} onChange={e=>setEst(f.key,e.target.value)}/>
-                      : <textarea rows={f.rows||2} placeholder={f.ph} value={esther[f.key]} onChange={e=>setEst(f.key,e.target.value)}/>
-                    }
-                  </div>
-                ))}
-                <button className="sbtn" style={{background:"#FF47A3",color:"#080808"}}
-                  onClick={()=>{setEstherSent(true);setTab("today");}}>
-                  ✓ Send to Joshua's Day
-                </button>
+                <textarea rows={3} placeholder="What might pull you off today, and what's your one override?" value={notes.energy||""} onChange={e=>setNote("energy",e.target.value)}/>
               </div>
             </div>}
 
             {/* ── EOD ── */}
             {tab==="eod" && <div>
               <div className="st" style={{color:"#FFD147"}}>EOD REVIEW</div>
-              <div className="sub">Whole life review. No hiding.</div>
+              <div className="sub">Sunday close · No hiding.</div>
 
               <div style={{background:"#0e0c08",border:"1px solid #252000",borderRadius:7,padding:13,marginBottom:8}}>
                 <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>💪 BODY</div>
                 {[
-                  ["eodb_workout","Completed today's workout"],
-                  ["eodb_eat","Ate aligned — protein-forward"],
+                  ["eodb_workout","Completed 4-mile walk"],
+                  ["eodb_eat","Ate aligned — no late eating"],
                   ["eodb_water","Hit 3.5L hydration"],
                   ["eodb_fast","No food after 8:30 PM"],
                   ["eodb_sleep","In bed by 10:30 PM"],
@@ -581,9 +723,9 @@ Amen.`;
                 <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>🔥 SPIRIT</div>
                 {[
                   {q:"Did I speak my affirmation?",k:"sp_aff"},
-                  {q:"Did I embody today's scripture?",k:"sp_scrip"},
-                  {q:"Grounded or reactive today?",k:"sp_gnd"},
-                  {q:"What emotion did I avoid?",k:"sp_emo"},
+                  {q:"Was I present at church?",k:"sp_church"},
+                  {q:"Did I plan from wisdom or from anxiety?",k:"sp_wisdom"},
+                  {q:"What emotion did I carry into the week?",k:"sp_emo"},
                 ].map(item=>(
                   <div key={item.k} style={{marginBottom:8}}>
                     <div style={{fontSize:11,color:"#555",marginBottom:3}}>{item.q}</div>
@@ -593,12 +735,12 @@ Amen.`;
               </div>
 
               <div style={{background:"#0a0810",border:"1px solid #150d25",borderRadius:7,padding:13,marginBottom:8}}>
-                <div style={{fontSize:9,color:"#B47FFF",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>🎯 BUSINESS</div>
+                <div style={{fontSize:9,color:"#B47FFF",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>🎯 BUSINESS / PLANNING</div>
                 {[
-                  ["eodbi_auto","Automation Sprint advanced"],
-                  ["eodbi_pj","PJ Star delivered"],
-                  ["eodbi_founder","Operated as FOUNDER (not manager)"],
-                  ["eodbi_rev","Revenue moved or relationship advanced"],
+                  ["eodbi_fin","Monthly financial tracking completed"],
+                  ["eodbi_plan","Plan the Week session fully completed"],
+                  ["eodbi_auto","Assistant Brief System built + Esther briefed"],
+                  ["eodbi_sync","Joshua × Esther weekly sync done"],
                 ].map(([k,label])=>(
                   <div key={k} className="ci" onClick={()=>setCheck(k)}>
                     <div className="cb" style={{background:checks[k]?"#B47FFF":"transparent",borderColor:checks[k]?"#B47FFF":"#222"}}>
@@ -609,7 +751,6 @@ Amen.`;
                 ))}
               </div>
 
-              {/* Scores */}
               <div style={{background:"#0d0d0a",border:"1px solid #222200",borderRadius:7,padding:13,marginBottom:8}}>
                 <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📊 DISCIPLINE SCORE</div>
                 {[["Focus","focus"],["Health","health"],["Emotional Regulation","emotion"],["Strategic Execution","strategy"]].map(([label,key])=>(
@@ -632,9 +773,9 @@ Amen.`;
               </div>
 
               <div style={{background:"#090d09",border:"2px solid #47FFB4",borderRadius:7,padding:13}}>
-                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🔒 TOMORROW LOCK-IN</div>
-                <div style={{fontSize:9,color:"#2a2a2a",marginBottom:6}}>ONE move. Not a list.</div>
-                <textarea rows={2} placeholder="Tomorrow I will non-negotiably..." value={notes.tomorrow||""} onChange={e=>setNote("tomorrow",e.target.value)}/>
+                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🔒 MONDAY LOCK-IN</div>
+                <div style={{fontSize:9,color:"#2a2a2a",marginBottom:6}}>ONE move. The single most important thing Monday must deliver.</div>
+                <textarea rows={2} placeholder="Monday I will non-negotiably..." value={notes.tomorrow||""} onChange={e=>setNote("tomorrow",e.target.value)}/>
               </div>
             </div>}
 
@@ -664,14 +805,13 @@ Amen.`;
                 </div>
                 <div style={{fontSize:9,color:"#333",textAlign:"right",lineHeight:2}}>
                   <div>{allDays.length} days logged</div>
-                  <div>{dl} days to Sept 14</div>
+                  <div>{daysLeft} days to Sept 14</div>
                 </div>
               </div>
 
-              {/* Score bar chart */}
               {last7.length > 0 && (
                 <div className="card" style={{marginBottom:12}}>
-                  <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>Discipline Score — Last {last7.length} Days</div>
+                  <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>Score — Last {last7.length} Days</div>
                   <div style={{display:"flex",gap:5,alignItems:"flex-end",height:55}}>
                     {last7.map(([dk,d])=>{
                       const s=d?.scores;
@@ -691,7 +831,6 @@ Amen.`;
                 </div>
               )}
 
-              {/* Past entries */}
               <div style={{fontSize:9,color:"#333",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Past Entries</div>
               {allDays.length <= 1
                 ? <div style={{fontSize:11,color:"#2a2a2a",textAlign:"center",padding:"30px 0"}}>No past entries yet. Come back tomorrow.</div>
@@ -707,7 +846,6 @@ Amen.`;
                             <div style={{fontSize:11,color:"#777"}}>{lbl}</div>
                             {d?.notes?.tomorrow && <div style={{fontSize:9,color:"#444",marginTop:2,fontStyle:"italic"}}>Lock-in: "{d.notes.tomorrow}"</div>}
                             {d?.notes?.journal && <div style={{fontSize:8,color:"#2e2e2e"}}>📝 journal saved</div>}
-                            {d?.notes?.dreams  && <div style={{fontSize:8,color:"#2e2e2e"}}>🌙 dream logged</div>}
                           </div>
                           <div style={{textAlign:"right"}}>
                             <div style={{fontFamily:"'Bebas Neue'",fontSize:22,color:parseFloat(da)>=7?"#47FFB4":parseFloat(da)>=5?"#FFD147":"#FF4747"}}>{da}</div>
@@ -719,24 +857,93 @@ Amen.`;
                   })
               }
 
-              {allDays.length >= 3 && (
-                <div style={{marginTop:14,background:"#080f0d",border:"1px solid #1a3325",borderRadius:6,padding:13}}>
-                  <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:7}}>🧠 JÄFO Pattern Notes</div>
-                  <div style={{fontSize:11,color:"#555",lineHeight:1.9}}>
-                    {parseFloat(avg7("emotion"))<parseFloat(avg7("focus")) && <div>→ Emotional regulation running below focus. Watch for stress-eating and late nights when deadlines hit.</div>}
-                    {parseFloat(avg7("health"))<7 && <div>→ Health avg below 7. Gym gets skipped when business pressure rises. Protect the block first.</div>}
-                    {streak>=3 && <div>→ <span style={{color:"#E8FF47"}}>{streak}-day streak.</span> Protect it. Momentum compounds.</div>}
-                    {streak===0 && <div>→ No current streak. Re-anchor tomorrow. One session resets the clock.</div>}
-                  </div>
+              {/* ── EXPORT — embedded in Patterns ── */}
+              <div style={{height:1,background:"linear-gradient(to right,#47FFB4,transparent)",margin:"20px 0",opacity:.15}}/>
+              <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>💾 Export Your Data</div>
+
+              <div style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>Full Data (JSON)</div>
+                <div style={{fontSize:9,color:"#333",marginBottom:10}}>Everything — paste into Claude for weekly pattern analysis.</div>
+                <button onClick={()=>{
+                  const data = loadData();
+                  const lnks = JSON.parse(localStorage.getItem("jafo_links")||"[]");
+                  const full = { jafo_entries: data, saved_links: lnks, exported_at: new Date().toISOString() };
+                  const blob = new Blob([JSON.stringify(full,null,2)],{type:"application/json"});
+                  const u = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href=u; a.download=`jafo-data-${new Date().toISOString().split("T")[0]}.json`;
+                  a.click(); URL.revokeObjectURL(u);
+                }} style={{background:"#47FFB4",color:"#080808",border:"none",borderRadius:3,padding:"10px 16px",fontSize:9,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:700,cursor:"pointer",width:"100%"}}>
+                  ⬇ Download JSON
+                </button>
+              </div>
+
+              <div style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#E8FF47",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>Readable Weekly Summary (TXT)</div>
+                <div style={{fontSize:9,color:"#333",marginBottom:10}}>Clean human-readable file. Print, share, or paste into notes.</div>
+                <button onClick={()=>{
+                  const data = loadData();
+                  const days = Object.entries(data).filter(([k])=>k.match(/^\d{4}-\d{2}-\d{2}$/)).sort(([a],[b])=>a>b?1:-1);
+                  let txt = "JÄFO — Weekly Summary\n";
+                  txt += `Exported: ${new Date().toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}\n`;
+                  txt += `Days logged: ${days.length}\n\n${"═".repeat(50)}\n\n`;
+                  days.forEach(([dk,d])=>{
+                    const label=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+                    const s=d?.scores;
+                    const av=s?((s.focus+s.health+s.emotion+s.strategy)/4).toFixed(1):"—";
+                    txt+=`📅 ${label}\nDiscipline: ${av}/10  (Focus:${s?.focus||"—"} Health:${s?.health||"—"} Emotion:${s?.emotion||"—"} Execution:${s?.strategy||"—"})\n`;
+                    if(d?.notes?.journal)  txt+=`Journal: ${d.notes.journal}\n`;
+                    if(d?.notes?.truth)    txt+=`Real Truth: ${d.notes.truth}\n`;
+                    if(d?.notes?.tomorrow) txt+=`Lock-In: ${d.notes.tomorrow}\n`;
+                    if(d?.notes?.dreams)   txt+=`Dreams: ${d.notes.dreams}\n`;
+                    if(d?.notes?.bodynote) txt+=`Body: ${d.notes.bodynote}\n`;
+                    if(d?.notes?.learned)  txt+=`Learned: ${d.notes.learned}\n`;
+                    txt+="\n";
+                  });
+                  const blob=new Blob([txt],{type:"text/plain"});
+                  const u=URL.createObjectURL(blob);
+                  const a=document.createElement("a");
+                  a.href=u; a.download=`jafo-summary-${new Date().toISOString().split("T")[0]}.txt`;
+                  a.click(); URL.revokeObjectURL(u);
+                }} style={{background:"#E8FF47",color:"#080808",border:"none",borderRadius:3,padding:"10px 16px",fontSize:9,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:700,cursor:"pointer",width:"100%"}}>
+                  ⬇ Download Summary TXT
+                </button>
+              </div>
+
+              <div style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>Saved Links (TXT)</div>
+                <div style={{fontSize:9,color:"#333",marginBottom:10}}>Your full reading/watching list.</div>
+                <button onClick={()=>{
+                  const lnks=JSON.parse(localStorage.getItem("jafo_links")||"[]");
+                  if(!lnks.length){alert("No links saved yet.");return;}
+                  let txt="JÄFO — Saved Links\n"+`Exported: ${new Date().toLocaleDateString()}\n\n`;
+                  const unread=lnks.filter(l=>!l.done), done=lnks.filter(l=>l.done);
+                  if(unread.length){ txt+=`TO READ/WATCH (${unread.length})\n${"─".repeat(30)}\n`; unread.forEach(l=>{txt+=`[${l.cat}] ${l.title}\n${l.url}\nSaved: ${l.saved}\n\n`;}); }
+                  if(done.length){ txt+=`COMPLETED (${done.length})\n${"─".repeat(30)}\n`; done.forEach(l=>{txt+=`✓ ${l.title}\n${l.url}\n\n`;}); }
+                  const blob=new Blob([txt],{type:"text/plain"});
+                  const u=URL.createObjectURL(blob);
+                  const a=document.createElement("a");
+                  a.href=u; a.download=`jafo-links-${new Date().toISOString().split("T")[0]}.txt`;
+                  a.click(); URL.revokeObjectURL(u);
+                }} style={{background:"#FF6B35",color:"#080808",border:"none",borderRadius:3,padding:"10px 16px",fontSize:9,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:700,cursor:"pointer",width:"100%"}}>
+                  ⬇ Download Links TXT
+                </button>
+              </div>
+
+              <div style={{background:"#0a0a0a",border:"1px solid #111",borderRadius:5,padding:11,marginTop:4}}>
+                <div style={{fontSize:9,color:"#222",lineHeight:2}}>
+                  Days logged: <span style={{color:"#47FFB4"}}>{Object.keys(loadData()).filter(k=>k.match(/^\d{4}-\d{2}-\d{2}$/)).length}</span> &nbsp;·&nbsp;
+                  Links saved: <span style={{color:"#FF6B35"}}>{JSON.parse(localStorage.getItem("jafo_links")||"[]").length}</span> &nbsp;·&nbsp;
+                  Device only — never sent to any server.
                 </div>
-              )}
+              </div>
+
             </div>}
 
           </div>
 
-          {/* FOOTER */}
-          <div style={{borderTop:"1px solid #0d0d0d",padding:"10px 16px",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:6,paddingBottom:"max(10px, env(safe-area-inset-bottom))"}}>
-            <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:3,textTransform:"uppercase"}}>JÄFO · AI Chief of Staff</div>
+          <div style={{borderTop:"1px solid #0d0d0d",padding:"10px 16px",display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6,paddingBottom:"max(10px,env(safe-area-inset-bottom))"}}>
+            <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:3,textTransform:"uppercase"}}>JÄFO · Sunday March 1 2026</div>
             <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:2,textTransform:"uppercase"}}>Energy · Revenue · Never Ego</div>
           </div>
         </div>
@@ -745,7 +952,6 @@ Amen.`;
 
     ReactDOM.render(<App/>, document.getElementById("root"));
   </script>
-
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(()=>{});
