@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -26,130 +25,127 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-```
-// ── MONDAY MARCH 2 — LIVE CALENDAR DATA ──────────────────────────────────
-const CALENDAR = [
-  {
-    id:"pray", time:"5:30 AM – 6:00 AM", title:"Wake Up & Pray",
-    subtitle:"Recurring · Morning anchor", type:"SACRED", color:"#FFD147", emoji:"🙏",
-    desc:"5:30 AM. Early start. Everything is downstream of this 30 minutes. Before the phone, before the brief, before the week has any say — God first. This sets the frequency for the whole day."
-  },
-  {
-    id:"jafo", time:"6:00 AM – 6:30 AM", title:"JÄFO Brief Session",
-    subtitle:"Morning intelligence · Daily", type:"DO", color:"#47C4FF", emoji:"🤖",
-    desc:"Read the brief. Load your context. Step into Monday knowing exactly what you're doing and why. This 30 minutes is what separates a reactive day from a directed one."
-  },
-  {
-    id:"strength", time:"6:30 AM – 7:15 AM", title:"Strength Training #1",
-    subtitle:"March starts today · Week 1", type:"BODY", color:"#E8FF47", emoji:"💪",
-    desc:"This is the one you said you've been missing all month. March 2 is where that changes. Show up. The session doesn't need to be perfect — it needs to happen. That's the only rule today."
-  },
-  {
-    id:"walk", time:"7:15 AM – 8:00 AM", title:"Walk — 2 Miles",
-    subtitle:"Active recovery · Post-strength", type:"BODY", color:"#E8FF47", emoji:"🚶🏾",
-    desc:"2 miles post-strength. Lighter than yesterday's Sunday walk. This is flush and reset, not cardio. Easy pace."
-  },
-  {
-    id:"stretch", time:"8:00 AM – 8:30 AM", title:"Stretch & Core",
-    subtitle:"Post-walk recovery · Calves · Hamstrings · Hip flexors", type:"BODY", color:"#47FFB4", emoji:"🧘🏾",
-    desc:"You said you needed to figure out a post-walk stretch — you put it on the calendar. 5 min stretch: calves, hamstrings, hip flexors. 10 min core: planks, dead bugs, hollow holds. Simple. Maintenance not performance."
-  },
-  {
-    id:"journal", time:"8:30 AM – 9:00 AM", title:"Journaling",
-    subtitle:"Morning reflection · Recurring", type:"SACRED", color:"#FFD147", emoji:"📓",
-    desc:"First entry of March. You've been thinking deeply about this season — identity, what you're building, what it means. Let the page have it. No filter. This is the private work that powers everything public."
-  },
-  {
-    id:"standup", time:"10:00 AM – 10:45 AM", title:"Weekly Marketing Stand-up",
-    subtitle:"Joshua + Esther · 45 min", type:"MEETING", color:"#B47FFF", emoji:"📣",
-    desc:"Week 1 of March. Set the tone. Agenda: JP Star activation (campaign goes live today) · FAVE report status · Cavemen pitch readiness · ATIDE social assets · Esther's top 3 deliverables for the week. Output: Esther pins week priority order to Slack by 11 AM.",
-    detail:"JP Star comms sent to client. Confirm Esther has everything for week 1 activation. First performance update to client: Friday March 6."
-  },
-  {
-    id:"copy", time:"11:00 AM – 12:00 PM", title:"Caption & Copy Review",
-    subtitle:"Deep work · Solo · No interruptions", type:"DO", color:"#47C4FF", emoji:"✍️",
-    desc:"Protected solo block. JRS newsletter first draft (take last night's outline → full draft). ATIDE social media captions for the week. JP Star campaign copy review and approval. Feedback to Esther by 1 PM.",
-    detail:"Output: Approved captions in spreadsheet Notes column. Newsletter first draft saved."
-  },
-  {
-    id:"lunch", time:"12:00 PM – 1:00 PM", title:"Lunch",
-    subtitle:"Midday fuel", type:"BODY", color:"#47FFB4", emoji:"🍽️",
-    desc:"Full hour. Eat properly. Don't work through this — you have a heavy afternoon of meetings and deep work ahead. You need fuel."
-  },
-  {
-    id:"jrs", time:"1:00 PM – 2:00 PM", title:"JRS Weekly Ops Sync",
-    subtitle:"Joshua + Esther · Weekly", type:"MEETING", color:"#B47FFF", emoji:"🎵",
-    desc:"March 14 event — tickets, venue, logistics, promotion plan this week. March 29 listening session status. April listenings — dates to target. JRS newsletter — first edition outline. Season assets + ATIDE relaunch status. Vinyl curation for this month — follow up with dad about records.",
-  },
-  {
-    id:"dad", time:"2:00 PM – 2:30 PM", title:"Dad Call — Vinyl Records",
-    subtitle:"Quick call · Personal", type:"PEOPLE", color:"#FF47A3", emoji:"📞",
-    desc:"Which records does he have that you want? When is he next travelling — what's the handoff plan? Alternative: start sourcing locally if timeline doesn't work. Keep it short and warm."
-  },
-  {
-    id:"campaigns", time:"2:30 PM – 3:30 PM", title:"Active Campaign Check-ins",
-    subtitle:"Joshua + Esther + Korede · 60 min", type:"MEETING", color:"#B47FFF", emoji:"📊",
-    desc:"FAVE: report gone out? Any client follow-up? · JP Star: week 1 activation checklist — what's live, in progress, blocked? Radio outreach to Beat FM, Cool FM, City FM, UFM, Yanga FM started? Influencer onboarding status? · Cavemen: Tuesday meeting on HOLD — confirmed availability? Pitch ready?",
-    detail:"Output: Korede sends campaign status summary to group by 5 PM."
-  },
-  {
-    id:"deepwork", time:"3:30 PM – 4:30 PM", title:"Deep Work — JRS March 14 Prep",
-    subtitle:"Solo · Protected · No calls", type:"DO", color:"#47C4FF", emoji:"🎧",
-    desc:"Event concept and experience design — vibe, intention, how guests move through it. Guest list curation — who gets the personal touch from Joshua. Logistics checklist — venue, sound, food, photography. Content & promo for this week.",
-    detail:"Output: One-page event brief ready to hand to Esther for execution tracking."
-  },
-  {
-    id:"brand", time:"4:30 PM – 5:30 PM", title:"Personal Brand — Content",
-    subtitle:"Solo thinking block · No agenda from anyone else", type:"DO", color:"#FF6B35", emoji:"🧠",
-    desc:"Update @JoshiAhazie → @JoshuaAhazie across all platforms. Then: Substack — what would it be? Map out your first 3 posts (the positioning piece, something with texture and truth, the industry take). Article brainstorm — 3 to 5 pieces you've been meaning to write. Which one could you write this week in 90 minutes?",
-    detail:"Output: Substack 3-post plan + article brainstorm list saved as a note."
-  },
-  {
-    id:"invest", time:"5:30 PM – 6:00 PM", title:"Investment Portfolio Review",
-    subtitle:"Weekly · Monday", type:"DO", color:"#47FFB4", emoji:"📈",
-    desc:"Update actuals. Check CABA vs exit plan — any price action this week? What's the one investment research focus for March? Savings targets on track after yesterday's financial tracking?"
-  },
-  {
-    id:"cardio", time:"6:00 PM – 6:30 PM", title:"Cardio — 2 Miles",
-    subtitle:"Evening run · Second movement block", type:"BODY", color:"#E8FF47", emoji:"🏃🏾",
-    desc:"Second movement block. Evening cardio. This is the fat loss work — consistent, daily, non-negotiable. After a full day of meetings and deep work, this is also a mental reset before dinner."
-  },
-  {
-    id:"hobby", time:"6:30 PM – 7:00 PM", title:"Hobby & Play",
-    subtitle:"Protected · Non-negotiable", type:"SACRED", color:"#FF47A3", emoji:"🎶",
-    desc:"30 minutes that belong to you. No business. No decisions. Whatever restores you — music, reading, just existing. The system is built to protect this. Don't skip it."
-  },
-  {
-    id:"dinner", time:"7:00 PM – 8:00 PM", title:"Dinner",
-    subtitle:"Hard stop · No food after 8:30 PM", type:"BODY", color:"#47FFB4", emoji:"🍽️",
-    desc:"Eat by 7. Kitchen closes 8:30 PM sharp. This is the daily discipline that drives the Sept 14 goal. Guard it."
-  },
-  {
-    id:"eod", time:"9:00 PM – 9:30 PM", title:"Executive EOD Sync",
-    subtitle:"Joshua + Esther · Daily", type:"MEETING", color:"#FF47A3", emoji:"👤",
-    desc:"Close the day with Esther. What got done, what moved, what's pending tomorrow. Set her up for Tuesday. This is the 30 minutes that makes tomorrow's morning brief possible."
-  },
-  {
-    id:"endday", time:"9:30 PM – 10:00 PM", title:"End Day with God — Prayer & Reflection",
-    subtitle:"Review · Bible study · Journal · Pray", type:"SACRED", color:"#FFD147", emoji:"✝️",
-    desc:"Review the day spiritually. Revisit Bible study notes. Journal reflections. Pray before sleeping. Close Monday the way you opened it — with God."
-  },
-];
+    // ── MONDAY MARCH 2 — LIVE CALENDAR DATA ──────────────────────────────────
+    const CALENDAR = [
+      {
+        id:"pray", time:"5:30 AM – 6:00 AM", title:"Wake Up & Pray",
+        subtitle:"Recurring · Morning anchor", type:"SACRED", color:"#FFD147", emoji:"🙏",
+        desc:"5:30 AM. Early start. Everything is downstream of this 30 minutes. Before the phone, before the brief, before the week has any say — God first. This sets the frequency for the whole day."
+      },
+      {
+        id:"jafo", time:"6:00 AM – 6:30 AM", title:"JÄFO Brief Session",
+        subtitle:"Morning intelligence · Daily", type:"DO", color:"#47C4FF", emoji:"🤖",
+        desc:"Read the brief. Load your context. Step into Monday knowing exactly what you're doing and why. This 30 minutes is what separates a reactive day from a directed one."
+      },
+      {
+        id:"strength", time:"6:30 AM – 7:15 AM", title:"Strength Training #1",
+        subtitle:"March starts today · Week 1", type:"BODY", color:"#E8FF47", emoji:"💪",
+        desc:"This is the one you said you've been missing all month. March 2 is where that changes. Show up. The session doesn't need to be perfect — it needs to happen. That's the only rule today."
+      },
+      {
+        id:"walk", time:"7:15 AM – 8:00 AM", title:"Walk — 2 Miles",
+        subtitle:"Active recovery · Post-strength", type:"BODY", color:"#E8FF47", emoji:"🚶🏾",
+        desc:"2 miles post-strength. Lighter than yesterday's Sunday walk. This is flush and reset, not cardio. Easy pace."
+      },
+      {
+        id:"stretch", time:"8:00 AM – 8:30 AM", title:"Stretch & Core",
+        subtitle:"Post-walk recovery · Calves · Hamstrings · Hip flexors", type:"BODY", color:"#47FFB4", emoji:"🧘🏾",
+        desc:"You said you needed to figure out a post-walk stretch — you put it on the calendar. 5 min stretch: calves, hamstrings, hip flexors. 10 min core: planks, dead bugs, hollow holds. Simple. Maintenance not performance."
+      },
+      {
+        id:"journal", time:"8:30 AM – 9:00 AM", title:"Journaling",
+        subtitle:"Morning reflection · Recurring", type:"SACRED", color:"#FFD147", emoji:"📓",
+        desc:"First entry of March. You've been thinking deeply about this season — identity, what you're building, what it means. Let the page have it. No filter. This is the private work that powers everything public."
+      },
+      {
+        id:"standup", time:"10:00 AM – 10:45 AM", title:"Weekly Marketing Stand-up",
+        subtitle:"Joshua + Esther · 45 min", type:"MEETING", color:"#B47FFF", emoji:"📣",
+        desc:"Week 1 of March. Set the tone. Agenda: JP Star activation (campaign goes live today) · FAVE report status · Cavemen pitch readiness · ATIDE social assets · Esther's top 3 deliverables for the week. Output: Esther pins week priority order to Slack by 11 AM.",
+        detail:"JP Star comms sent to client. Confirm Esther has everything for week 1 activation. First performance update to client: Friday March 6."
+      },
+      {
+        id:"copy", time:"11:00 AM – 12:00 PM", title:"Caption & Copy Review",
+        subtitle:"Deep work · Solo · No interruptions", type:"DO", color:"#47C4FF", emoji:"✍️",
+        desc:"Protected solo block. JRS newsletter first draft (take last night's outline → full draft). ATIDE social media captions for the week. JP Star campaign copy review and approval. Feedback to Esther by 1 PM.",
+        detail:"Output: Approved captions in spreadsheet Notes column. Newsletter first draft saved."
+      },
+      {
+        id:"lunch", time:"12:00 PM – 1:00 PM", title:"Lunch",
+        subtitle:"Midday fuel", type:"BODY", color:"#47FFB4", emoji:"🍽️",
+        desc:"Full hour. Eat properly. Don't work through this — you have a heavy afternoon of meetings and deep work ahead. You need fuel."
+      },
+      {
+        id:"jrs", time:"1:00 PM – 2:00 PM", title:"JRS Weekly Ops Sync",
+        subtitle:"Joshua + Esther · Weekly", type:"MEETING", color:"#B47FFF", emoji:"🎵",
+        desc:"March 14 event — tickets, venue, logistics, promotion plan this week. March 29 listening session status. April listenings — dates to target. JRS newsletter — first edition outline. Season assets + ATIDE relaunch status. Vinyl curation for this month — follow up with dad about records.",
+      },
+      {
+        id:"dad", time:"2:00 PM – 2:30 PM", title:"Dad Call — Vinyl Records",
+        subtitle:"Quick call · Personal", type:"PEOPLE", color:"#FF47A3", emoji:"📞",
+        desc:"Which records does he have that you want? When is he next travelling — what's the handoff plan? Alternative: start sourcing locally if timeline doesn't work. Keep it short and warm."
+      },
+      {
+        id:"campaigns", time:"2:30 PM – 3:30 PM", title:"Active Campaign Check-ins",
+        subtitle:"Joshua + Esther + Korede · 60 min", type:"MEETING", color:"#B47FFF", emoji:"📊",
+        desc:"FAVE: report gone out? Any client follow-up? · JP Star: week 1 activation checklist — what's live, in progress, blocked? Radio outreach to Beat FM, Cool FM, City FM, UFM, Yanga FM started? Influencer onboarding status? · Cavemen: Tuesday meeting on HOLD — confirmed availability? Pitch ready?",
+        detail:"Output: Korede sends campaign status summary to group by 5 PM."
+      },
+      {
+        id:"deepwork", time:"3:30 PM – 4:30 PM", title:"Deep Work — JRS March 14 Prep",
+        subtitle:"Solo · Protected · No calls", type:"DO", color:"#47C4FF", emoji:"🎧",
+        desc:"Event concept and experience design — vibe, intention, how guests move through it. Guest list curation — who gets the personal touch from Joshua. Logistics checklist — venue, sound, food, photography. Content & promo for this week.",
+        detail:"Output: One-page event brief ready to hand to Esther for execution tracking."
+      },
+      {
+        id:"brand", time:"4:30 PM – 5:30 PM", title:"Personal Brand — Content",
+        subtitle:"Solo thinking block · No agenda from anyone else", type:"DO", color:"#FF6B35", emoji:"🧠",
+        desc:"Update @JoshiAhazie → @JoshuaAhazie across all platforms. Then: Substack — what would it be? Map out your first 3 posts (the positioning piece, something with texture and truth, the industry take). Article brainstorm — 3 to 5 pieces you've been meaning to write. Which one could you write this week in 90 minutes?",
+        detail:"Output: Substack 3-post plan + article brainstorm list saved as a note."
+      },
+      {
+        id:"invest", time:"5:30 PM – 6:00 PM", title:"Investment Portfolio Review",
+        subtitle:"Weekly · Monday", type:"DO", color:"#47FFB4", emoji:"📈",
+        desc:"Update actuals. Check CABA vs exit plan — any price action this week? What's the one investment research focus for March? Savings targets on track after yesterday's financial tracking?"
+      },
+      {
+        id:"cardio", time:"6:00 PM – 6:30 PM", title:"Cardio — 2 Miles",
+        subtitle:"Evening run · Second movement block", type:"BODY", color:"#E8FF47", emoji:"🏃🏾",
+        desc:"Second movement block. Evening cardio. This is the fat loss work — consistent, daily, non-negotiable. After a full day of meetings and deep work, this is also a mental reset before dinner."
+      },
+      {
+        id:"hobby", time:"6:30 PM – 7:00 PM", title:"Hobby & Play",
+        subtitle:"Protected · Non-negotiable", type:"SACRED", color:"#FF47A3", emoji:"🎶",
+        desc:"30 minutes that belong to you. No business. No decisions. Whatever restores you — music, reading, just existing. The system is built to protect this. Don't skip it."
+      },
+      {
+        id:"dinner", time:"7:00 PM – 8:00 PM", title:"Dinner",
+        subtitle:"Hard stop · No food after 8:30 PM", type:"BODY", color:"#47FFB4", emoji:"🍽️",
+        desc:"Eat by 7. Kitchen closes 8:30 PM sharp. This is the daily discipline that drives the Sept 14 goal. Guard it."
+      },
+      {
+        id:"eod", time:"9:00 PM – 9:30 PM", title:"Executive EOD Sync",
+        subtitle:"Joshua + Esther · Daily", type:"MEETING", color:"#FF47A3", emoji:"👤",
+        desc:"Close the day with Esther. What got done, what moved, what's pending tomorrow. Set her up for Tuesday. This is the 30 minutes that makes tomorrow's morning brief possible."
+      },
+      {
+        id:"endday", time:"9:30 PM – 10:00 PM", title:"End Day with God — Prayer & Reflection",
+        subtitle:"Review · Bible study · Journal · Pray", type:"SACRED", color:"#FFD147", emoji:"✝️",
+        desc:"Review the day spiritually. Revisit Bible study notes. Journal reflections. Pray before sleeping. Close Monday the way you opened it — with God."
+      },
+    ];
 
-const SCRIPTURES = [
-  { ref:"Proverbs 4:7", text:"Wisdom is the principal thing; therefore get wisdom. And in all your getting, get understanding.", embodiment:"Every decision today is an act of stewardship over the understanding God gave you. Ask before you act." },
-  { ref:"Psalm 1:3", text:"He shall be like a tree planted by the rivers of water, that brings forth its fruit in its season.", embodiment:"You are in a planting season. Systems, habits, discipline. The fruit is coming. Don't demand harvest before the roots are deep." },
-  { ref:"Isaiah 40:31", text:"But those who wait on the Lord shall renew their strength; they shall mount up with wings like eagles.", embodiment:"When you feel overwhelmed mid-sprint — pause. That is not a sign to push harder. Wait. Then proceed with clarity." },
-  { ref:"Philippians 4:6–7", text:"Be anxious for nothing, but in everything by prayer and supplication, with thanksgiving, let your requests be made known to God.", embodiment:"Before your first task, before your phone — present it to God. Let His peace guard your mind today." },
-  { ref:"Proverbs 21:5", text:"The plans of the diligent lead surely to plenty, but those of everyone who is hasty, surely to poverty.", embodiment:"Don't rush today's work. Done well today means months of leverage ahead." },
-  { ref:"Joshua 1:9", text:"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", embodiment:"Your name is Joshua. You were born to lead into the next territory. Step forward where today asks you to be bold." },
-  { ref:"Romans 12:2", text:"Do not be conformed to this world, but be transformed by the renewing of your mind.", embodiment:"Every learning block, every podcast, every chapter is renewing your mind. Protect that time. The transformation happens in daily repetition." },
-];
+    const SCRIPTURES = [
+      { ref:"Proverbs 4:7", text:"Wisdom is the principal thing; therefore get wisdom. And in all your getting, get understanding.", embodiment:"Every decision today is an act of stewardship over the understanding God gave you. Ask before you act." },
+      { ref:"Psalm 1:3", text:"He shall be like a tree planted by the rivers of water, that brings forth its fruit in its season.", embodiment:"You are in a planting season. Systems, habits, discipline. The fruit is coming. Don't demand harvest before the roots are deep." },
+      { ref:"Isaiah 40:31", text:"But those who wait on the Lord shall renew their strength; they shall mount up with wings like eagles.", embodiment:"When you feel overwhelmed mid-sprint — pause. That is not a sign to push harder. Wait. Then proceed with clarity." },
+      { ref:"Philippians 4:6–7", text:"Be anxious for nothing, but in everything by prayer and supplication, with thanksgiving, let your requests be made known to God.", embodiment:"Before your first task, before your phone — present it to God. Let His peace guard your mind today." },
+      { ref:"Proverbs 21:5", text:"The plans of the diligent lead surely to plenty, but those of everyone who is hasty, surely to poverty.", embodiment:"Don't rush today's work. Done well today means months of leverage ahead." },
+      { ref:"Joshua 1:9", text:"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", embodiment:"Your name is Joshua. You were born to lead into the next territory. Step forward where today asks you to be bold." },
+      { ref:"Romans 12:2", text:"Do not be conformed to this world, but be transformed by the renewing of your mind.", embodiment:"Every learning block, every podcast, every chapter is renewing your mind. Protect that time. The transformation happens in daily repetition." },
+    ];
 
-const AFFIRMATION = `With humility and hope, I evoke divine discernment for every decision I will make today.
-```
-
-May the wisdom from above guide each choice, and may the Lord’s presence be the beacon that illuminates my life.
+    const AFFIRMATION = `With humility and hope, I evoke divine discernment for every decision I will make today.
+May the wisdom from above guide each choice, and may the Lord's presence be the beacon that illuminates my life.
 
 In the name of Jesus — I reject confusion, hesitation, and doubt that may obscure my vision.
 Deliver me, Lord, from distractions and false voices that seek to lead me astray.
@@ -165,1029 +161,1026 @@ I implore Your generosity in my life.
 May new horizons open before me, filled with Your grace and contentment.
 Amen.`;
 
-```
-const MEALS = {
-  breakfast: { name:"Egg Sauce & Beef", items:"2–3 eggs in tomato/pepper sauce · sliced beef · bread or plantain on the side", time:"9:00 AM", why:"High protein after Strength Training + Walk. Tomato base is anti-inflammatory. You've already done 2.5 hrs of movement by 9 AM — this is earned fuel." },
-  lunch:     { name:"Grilled Chicken & Ofada Rice", items:"Small portion ofada rice · grilled chicken thighs · sliced cucumber + tomato", time:"12:00 PM", why:"Complex carbs to carry you through a heavy afternoon of meetings. Grilled not fried. Ofada is lower GI than white rice — better for the Sept 14 goal. Keep the portion honest." },
-  dinner:    { name:"Bitter Leaf Soup & Small Swallow", items:"Ofe onugbu · assorted protein (goat/stockfish) · small portion fufu or eba", time:"7:00 PM", why:"Soul food that doesn't wreck the goal. Bitter leaf is anti-inflammatory and metabolism-supporting. Small swallow. Kitchen closes 8:30 PM — this is the discipline that drives the Sept 14 number." },
-};
-
-const SECTIONS = [
-  { id:"today",    emoji:"📅", label:"TODAY"    },
-  { id:"body",     emoji:"💪", label:"BODY"     },
-  { id:"spirit",   emoji:"🔥", label:"SPIRIT"   },
-  { id:"mind",     emoji:"⚡", label:"MIND"     },
-  { id:"business", emoji:"🎯", label:"BUSINESS" },
-  { id:"energy",   emoji:"🛡️", label:"ENERGY"   },
-  { id:"eod",      emoji:"🌙", label:"EOD"      },
-  { id:"patterns", emoji:"📊", label:"PATTERNS" },
-];
-
-const ACCENT = {
-  today:"#E8FF47", body:"#E8FF47", spirit:"#FF6B35",
-  mind:"#47C4FF", business:"#B47FFF", energy:"#47FFB4",
-  eod:"#FFD147", patterns:"#47FFB4"
-};
-
-const BIRTHDAY = new Date("2026-09-14");
-const daysLeft = Math.ceil((BIRTHDAY - new Date()) / 86400000);
-
-// Sunday scripture
-const scripture = SCRIPTURES[0]; // Proverbs 4:7 — wisdom for a planning day
-
-// ── STORAGE ───────────────────────────────────────────────────────────────
-const STORE_KEY = "jafo_v4";
-const todayKey  = () => "2026-03-01";
-
-function loadData() {
-  try { return JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); }
-  catch { return {}; }
-}
-function saveData(d) {
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(d)); } catch {}
-}
-
-// ── APP ───────────────────────────────────────────────────────────────────
-// ── LINKS TAB COMPONENT ───────────────────────────────────────────────────
-const CATS      = ["Article","Video","Podcast","Tool","Research","Other"];
-const CAT_COLOR = { Article:"#47C4FF", Video:"#FF6B35", Podcast:"#B47FFF", Tool:"#E8FF47", Research:"#FF47A3", Other:"#666" };
-
-function LinksTab() {
-  const [url,    setUrl]    = useState("");
-  const [title,  setTitle]  = useState("");
-  const [cat,    setCat]    = useState("Article");
-  const [links,  setLinks]  = useState(() => {
-    try { return JSON.parse(localStorage.getItem("jafo_links")||"[]"); } catch { return []; }
-  });
-
-  const persist = (updated) => {
-    localStorage.setItem("jafo_links", JSON.stringify(updated));
-    setLinks(updated);
-  };
-
-  const save = () => {
-    if(!url.trim()) return;
-    const newLink = {
-      id: Date.now(),
-      url: url.trim(),
-      title: title.trim() || url.trim(),
-      cat,
-      saved: new Date().toLocaleDateString("en-US",{month:"short",day:"numeric"}),
-      done: false
+    const MEALS = {
+      breakfast: { name:"Egg Sauce & Beef", items:"2–3 eggs in tomato/pepper sauce · sliced beef · bread or plantain on the side", time:"9:00 AM", why:"High protein after Strength Training + Walk. Tomato base is anti-inflammatory. You've already done 2.5 hrs of movement by 9 AM — this is earned fuel." },
+      lunch:     { name:"Grilled Chicken & Ofada Rice", items:"Small portion ofada rice · grilled chicken thighs · sliced cucumber + tomato", time:"12:00 PM", why:"Complex carbs to carry you through a heavy afternoon of meetings. Grilled not fried. Ofada is lower GI than white rice — better for the Sept 14 goal. Keep the portion honest." },
+      dinner:    { name:"Bitter Leaf Soup & Small Swallow", items:"Ofe onugbu · assorted protein (goat/stockfish) · small portion fufu or eba", time:"7:00 PM", why:"Soul food that doesn't wreck the goal. Bitter leaf is anti-inflammatory and metabolism-supporting. Small swallow. Kitchen closes 8:30 PM — this is the discipline that drives the Sept 14 number." },
     };
-    persist([newLink, ...links]);
-    setUrl(""); setTitle("");
-  };
 
-  const toggle = (id) => persist(links.map(l => l.id===id ? {...l,done:!l.done} : l));
-  const remove = (id) => persist(links.filter(l => l.id!==id));
+    const SECTIONS = [
+      { id:"today",    emoji:"📅", label:"TODAY"    },
+      { id:"body",     emoji:"💪", label:"BODY"     },
+      { id:"spirit",   emoji:"🔥", label:"SPIRIT"   },
+      { id:"mind",     emoji:"⚡", label:"MIND"     },
+      { id:"business", emoji:"🎯", label:"BUSINESS" },
+      { id:"energy",   emoji:"🛡️", label:"ENERGY"   },
+      { id:"eod",      emoji:"🌙", label:"EOD"      },
+      { id:"patterns", emoji:"📊", label:"PATTERNS" },
+    ];
 
-  const unread = links.filter(l => !l.done);
-  const done   = links.filter(l =>  l.done);
+    const ACCENT = {
+      today:"#E8FF47", body:"#E8FF47", spirit:"#FF6B35",
+      mind:"#47C4FF", business:"#B47FFF", energy:"#47FFB4",
+      eod:"#FFD147", patterns:"#47FFB4"
+    };
 
-  return (
-    <div>
-      <div className="st" style={{color:"#FF6B35"}}>LINKS</div>
-      <div className="sub">Read later · Watch later · Save for reference.</div>
+    const BIRTHDAY = new Date("2026-09-14");
+    const daysLeft = Math.ceil((BIRTHDAY - new Date()) / 86400000);
 
-      {/* Input */}
-      <div style={{background:"#0d0d0d",border:"1px solid #1e1e1e",borderRadius:7,padding:14,marginBottom:14}}>
-        <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>+ Save a Link</div>
-        <input type="text" placeholder="Paste URL here..." value={url} onChange={e=>setUrl(e.target.value)} style={{marginBottom:7}}/>
-        <input type="text" placeholder="Title or description (optional)..." value={title} onChange={e=>setTitle(e.target.value)} style={{marginBottom:10}}/>
-        <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>
-          {CATS.map(c=>(
-            <button key={c} onClick={()=>setCat(c)}
-              style={{background:cat===c?CAT_COLOR[c]+"22":"transparent",border:`1px solid ${cat===c?CAT_COLOR[c]:"#222"}`,borderRadius:3,padding:"4px 10px",fontSize:9,color:cat===c?CAT_COLOR[c]:"#444",cursor:"pointer",fontFamily:"inherit",letterSpacing:1,textTransform:"uppercase"}}>
-              {c}
-            </button>
-          ))}
-        </div>
-        <button onClick={save}
-          style={{background:"#FF6B35",color:"#080808",border:"none",borderRadius:3,padding:"10px 18px",fontSize:10,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:600,cursor:"pointer",width:"100%"}}>
-          Save Link
-        </button>
-      </div>
+    // Sunday scripture
+    const scripture = SCRIPTURES[0]; // Proverbs 4:7 — wisdom for a planning day
 
-      {/* Unread */}
-      {unread.length > 0 && (
+    // ── STORAGE ───────────────────────────────────────────────────────────────
+    const STORE_KEY = "jafo_v4";
+    const todayKey  = () => "2026-03-02";
+
+    function loadData() {
+      try { return JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); }
+      catch { return {}; }
+    }
+    function saveData(d) {
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(d)); } catch {}
+    }
+
+    // ── APP ───────────────────────────────────────────────────────────────────
+    // ── LINKS TAB COMPONENT ───────────────────────────────────────────────────
+    const CATS      = ["Article","Video","Podcast","Tool","Research","Other"];
+    const CAT_COLOR = { Article:"#47C4FF", Video:"#FF6B35", Podcast:"#B47FFF", Tool:"#E8FF47", Research:"#FF47A3", Other:"#666" };
+
+    function LinksTab() {
+      const [url,    setUrl]    = useState("");
+      const [title,  setTitle]  = useState("");
+      const [cat,    setCat]    = useState("Article");
+      const [links,  setLinks]  = useState(() => {
+        try { return JSON.parse(localStorage.getItem("jafo_links")||"[]"); } catch { return []; }
+      });
+
+      const persist = (updated) => {
+        localStorage.setItem("jafo_links", JSON.stringify(updated));
+        setLinks(updated);
+      };
+
+      const save = () => {
+        if(!url.trim()) return;
+        const newLink = {
+          id: Date.now(),
+          url: url.trim(),
+          title: title.trim() || url.trim(),
+          cat,
+          saved: new Date().toLocaleDateString("en-US",{month:"short",day:"numeric"}),
+          done: false
+        };
+        persist([newLink, ...links]);
+        setUrl(""); setTitle("");
+      };
+
+      const toggle = (id) => persist(links.map(l => l.id===id ? {...l,done:!l.done} : l));
+      const remove = (id) => persist(links.filter(l => l.id!==id));
+
+      const unread = links.filter(l => !l.done);
+      const done   = links.filter(l =>  l.done);
+
+      return (
         <div>
-          <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>
-            To Read/Watch — {unread.length} item{unread.length!==1?"s":""}
-          </div>
-          {unread.map(l=>(
-            <div key={l.id} style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:6,padding:12,marginBottom:7}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
-                <div style={{flex:1,minWidth:0}}>
-                  <span className="tag" style={{background:CAT_COLOR[l.cat]+"18",color:CAT_COLOR[l.cat],marginBottom:5,display:"inline-block"}}>{l.cat}</span>
-                  <div style={{fontSize:12,color:"#E0DFD8",lineHeight:1.5,marginBottom:3,wordBreak:"break-word"}}>{l.title}</div>
-                  <div style={{fontSize:9,color:"#555",wordBreak:"break-all"}}>{l.url.length>60?l.url.slice(0,60)+"...":l.url}</div>
-                  <div style={{fontSize:8,color:"#555",marginTop:3}}>Saved {l.saved}</div>
-                </div>
-                <div style={{display:"flex",flexDirection:"column",gap:5,flexShrink:0}}>
-                  <a href={l.url} target="_blank" rel="noreferrer"
-                    style={{background:"#1a1a1a",color:"#E0DFD8",border:"none",borderRadius:2,padding:"5px 9px",fontSize:8,cursor:"pointer",fontFamily:"inherit",letterSpacing:1,textDecoration:"none",textAlign:"center"}}>
-                    OPEN
-                  </a>
-                  <button onClick={()=>toggle(l.id)}
-                    style={{background:"#47FFB422",color:"#47FFB4",border:"1px solid #47FFB430",borderRadius:2,padding:"5px 9px",fontSize:8,cursor:"pointer",fontFamily:"inherit",letterSpacing:1}}>
-                    DONE
-                  </button>
-                  <button onClick={()=>remove(l.id)}
-                    style={{background:"transparent",color:"#555",border:"1px solid #1a1a1a",borderRadius:2,padding:"5px 9px",fontSize:8,cursor:"pointer",fontFamily:"inherit",letterSpacing:1}}>
-                    DEL
-                  </button>
-                </div>
-              </div>
+          <div className="st" style={{color:"#FF6B35"}}>LINKS</div>
+          <div className="sub">Read later · Watch later · Save for reference.</div>
+
+          {/* Input */}
+          <div style={{background:"#0d0d0d",border:"1px solid #1e1e1e",borderRadius:7,padding:14,marginBottom:14}}>
+            <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>+ Save a Link</div>
+            <input type="text" placeholder="Paste URL here..." value={url} onChange={e=>setUrl(e.target.value)} style={{marginBottom:7}}/>
+            <input type="text" placeholder="Title or description (optional)..." value={title} onChange={e=>setTitle(e.target.value)} style={{marginBottom:10}}/>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>
+              {CATS.map(c=>(
+                <button key={c} onClick={()=>setCat(c)}
+                  style={{background:cat===c?CAT_COLOR[c]+"22":"transparent",border:`1px solid ${cat===c?CAT_COLOR[c]:"#222"}`,borderRadius:3,padding:"4px 10px",fontSize:9,color:cat===c?CAT_COLOR[c]:"#444",cursor:"pointer",fontFamily:"inherit",letterSpacing:1,textTransform:"uppercase"}}>
+                  {c}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
-
-      {/* Done */}
-      {done.length > 0 && (
-        <div style={{marginTop:16}}>
-          <div style={{fontSize:9,color:"#1e1e1e",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Completed — {done.length}</div>
-          {done.map(l=>(
-            <div key={l.id} style={{background:"#0a0a0a",border:"1px solid #111",borderRadius:6,padding:10,marginBottom:5,display:"flex",justifyContent:"space-between",alignItems:"center",gap:8}}>
-              <span style={{fontSize:9,color:"#1e1e1e",textDecoration:"line-through",flex:1,minWidth:0}}>{l.title}</span>
-              <button onClick={()=>remove(l.id)} style={{background:"transparent",color:"#222",border:"none",fontSize:10,cursor:"pointer",padding:"2px 6px"}}>✕</button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {links.length === 0 && (
-        <div style={{textAlign:"center",padding:"40px 0",fontSize:11,color:"#555"}}>
-          No links saved yet.<br/>Paste a URL above to start your reading list.
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ── APP (main) ────────────────────────────────────────────────────────────
-function App() {
-  const [tab, setTab] = useState("today");
-  const [all, setAll] = useState(() => {
-    const d = loadData();
-    const k = todayKey();
-    if (!d[k]) d[k] = { notes:{}, checks:{}, scores:{focus:7,health:7,emotion:7,strategy:7}, esther:{priority:"",context:"",flag:""} };
-    return d;
-  });
-  const [saved,       setSaved]       = useState(false);
-  const [affOpen,     setAffOpen]     = useState(false);
-  const [learnDone,   setLearnDone]   = useState({});
-  const [estherSent,  setEstherSent]  = useState(false);
-  const saveRef = useRef(null);
-
-  const tk = todayKey();
-  const td = all[tk] || { notes:{}, checks:{}, scores:{focus:7,health:7,emotion:7,strategy:7}, esther:{priority:"",context:"",flag:""} };
-
-  useEffect(() => {
-    clearTimeout(saveRef.current);
-    saveRef.current = setTimeout(() => { saveData(all); setSaved(true); setTimeout(()=>setSaved(false),1800); }, 600);
-  }, [all]);
-
-  const setNote  = (k,v) => setAll(p => { const n={...p}; n[tk]={...n[tk],notes:{...n[tk].notes,[k]:v}}; return n; });
-  const setCheck = (k)   => setAll(p => { const n={...p}; n[tk]={...n[tk],checks:{...n[tk].checks,[k]:!n[tk].checks[k]}}; return n; });
-  const setScore = (k,v) => setAll(p => { const n={...p}; n[tk]={...n[tk],scores:{...n[tk].scores,[k]:v}}; return n; });
-  const setEst   = (k,v) => setAll(p => { const n={...p}; n[tk]={...n[tk],esther:{...n[tk].esther,[k]:v}}; return n; });
-
-  const checks = td.checks||{};
-  const notes  = td.notes||{};
-  const scores = td.scores||{focus:7,health:7,emotion:7,strategy:7};
-  const esther = td.esther||{priority:"",context:"",flag:""};
-  const avg    = (Object.values(scores).reduce((a,b)=>a+b,0)/4).toFixed(1);
-  const ac     = ACCENT[tab]||"#E8FF47";
-
-  const allDays = Object.entries(all).filter(([k])=>k.match(/^\d{4}-\d{2}-\d{2}$/)).sort(([a],[b])=>a>b?1:-1);
-  const last7   = allDays.slice(-7);
-  const avg7 = (key) => { const v=last7.map(([,d])=>d?.scores?.[key]).filter(Number); return v.length?(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1):"—"; };
-  const streak  = (() => { let s=0; for(let i=allDays.length-1;i>=0;i--){ if(allDays[i][1]?.checks?.["eodb_workout"]) s++; else break; } return s; })();
-
-  const css = `
-    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-    body{font-family:'DM Mono','Courier New',monospace;background:#080808;color:#E0DFD8;min-height:100vh;}
-    ::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:#1e1e1e;}
-    textarea,input[type=text]{outline:none;background:#0d0d0d;border:1px solid #1e1e1e;color:#E0DFD8;border-radius:4px;padding:9px 11px;font-family:inherit;font-size:13px;resize:vertical;width:100%;line-height:1.7;}
-    textarea:focus,input[type=text]:focus{border-color:${ac};}
-    input[type=range]{-webkit-appearance:none;width:100%;height:3px;border-radius:2px;background:#1e1e1e;}
-    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:${ACCENT.eod};cursor:pointer;}
-    .nb{background:none;border:none;cursor:pointer;padding:8px 10px;border-radius:3px;font-family:inherit;font-size:9px;letter-spacing:1.5px;transition:all .15s;text-transform:uppercase;white-space:nowrap;}
-    .nb.on{color:#080808;font-weight:600;}
-    .nb:not(.on){color:#3a3a3a;}
-    .ci{display:flex;align-items:flex-start;gap:11px;padding:8px 0;border-bottom:1px solid #111;cursor:pointer;}
-    .cb{width:17px;height:17px;border:1.5px solid #252525;border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;}
-    .card{background:#0d0d0d;border:1px solid #171717;border-radius:6px;padding:15px;margin-bottom:10px;}
-    .st{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;line-height:1;}
-    .sub{font-size:9px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-top:2px;margin-bottom:18px;}
-    .tag{display:inline-block;padding:2px 7px;border-radius:2px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;}
-    .meal{background:#0c0c0c;border:1px solid #151515;border-radius:5px;padding:12px 14px;margin:6px 0;}
-    .sbtn{border:none;border-radius:3px;padding:11px 20px;font-family:inherit;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-weight:600;}
-    .stat{background:#0d0d0d;border:1px solid #171717;border-radius:5px;padding:13px;text-align:center;}
-    .hist{padding:12px 6px;border-bottom:1px solid #0f0f0f;}
-    .fade{animation:fi .2s ease;}
-    @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-    .lbtn{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:4px;padding:11px 13px;cursor:pointer;display:flex;gap:10px;align-items:center;margin-bottom:7px;}
-  `;
-
-  return (
-    <div style={{fontFamily:"'DM Mono','Courier New',monospace",background:"#080808",minHeight:"100vh",color:"#E0DFD8"}}>
-      <style>{css}</style>
-
-      {/* HEADER */}
-      <div style={{padding:"env(safe-area-inset-top,16px) 18px 0",borderBottom:"1px solid #0f0f0f",background:"#080808",position:"sticky",top:0,zIndex:100}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",paddingTop:"max(16px,env(safe-area-inset-top))"}}>
-          <div>
-            <div style={{fontSize:8,letterSpacing:3,color:"#444",textTransform:"uppercase"}}>JÄFO · AI Chief of Staff</div>
-            <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:36,letterSpacing:4,lineHeight:1,color:"#E0DFD8"}}>FOUNDER DAY</div>
-            <div style={{fontSize:8,color:"#555",marginTop:1}}>Monday, March 2 2026 · Lagos</div>
-          </div>
-          <div style={{textAlign:"right"}}>
-            <div style={{fontSize:8,color:"#555",letterSpacing:2,textTransform:"uppercase"}}>Discipline</div>
-            <div style={{fontFamily:"'Bebas Neue'",fontSize:42,color:ac,lineHeight:1}}>{avg}</div>
-            <div style={{fontSize:8,color:"#252525"}}>/ 10.0</div>
-            <div style={{fontSize:8,color:ac,marginTop:2}}>⏳ {daysLeft}d · Sept 14</div>
-            {saved && <div style={{fontSize:7,color:"#2a4a2a",letterSpacing:1}}>✓ SAVED</div>}
-          </div>
-        </div>
-        <div style={{marginTop:6,height:1,background:"#0f0f0f",borderRadius:1,overflow:"hidden"}}>
-          <div style={{height:"100%",width:`${Math.max(2,100-(daysLeft/200)*100)}%`,background:ac,transition:"width 1s"}}/>
-        </div>
-        <div style={{display:"flex",gap:2,marginTop:10,overflowX:"auto",paddingBottom:8,WebkitOverflowScrolling:"touch"}}>
-          {SECTIONS.map(s=>(
-            <button key={s.id} className={`nb ${tab===s.id?"on":""}`}
-              style={tab===s.id?{background:ACCENT[s.id]}:{}}
-              onClick={()=>setTab(s.id)}>
-              {s.emoji} {s.label}
+            <button onClick={save}
+              style={{background:"#FF6B35",color:"#080808",border:"none",borderRadius:3,padding:"10px 18px",fontSize:10,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:600,cursor:"pointer",width:"100%"}}>
+              Save Link
             </button>
-          ))}
-        </div>
-      </div>
-
-      {/* CONTENT */}
-      <div style={{maxWidth:780,margin:"0 auto",padding:"20px 16px 80px"}} className="fade" key={tab}>
-
-        {/* ── TODAY ── */}
-        {tab==="today" && <div>
-          <div className="st" style={{color:"#E8FF47"}}>TODAY'S MAP</div>
-          <div className="sub">JÄFO Intelligence · Monday March 2 · 20 events</div>
-
-          {/* JÄFO Monday briefing note */}
-          <div style={{background:"#080f0d",border:"1px solid #47FFB430",borderRadius:8,padding:14,marginBottom:14}}>
-            <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>🧠 JÄFO Monday Brief</div>
-            <div style={{fontSize:12,color:"#666",lineHeight:1.9}}>
-              <strong style={{color:"#E0DFD8"}}>The woman on the street said it twice: "March into March victoriously."</strong> That wasn't random. You filed it. Now it's Monday and the month is in your hands. This is the day the fight becomes visible.
-              <br/><br/>
-              Yesterday you wrote something worth carrying into every meeting today: <em style={{color:"#FF6B35"}}>a triggered leader limits their own destiny.</em> That's not just theology — that's operational. In the stand-up, in the campaign check-in, in the moment something doesn't go your way — notice whether you're choosing or reacting. That's the work underneath the work.
-              <br/><br/>
-              <strong style={{color:"#FF4747"}}>Heavy meeting day</strong> — Marketing stand-up, JRS Ops, Campaign check-ins with Korede. The deep work blocks (Caption & Copy 11 AM, JRS March 14 Prep 3:30 PM, Personal Brand 4:30 PM) are where the real value lives. Protect them when meetings run long.
-              <br/><br/>
-              <strong style={{color:"#47C4FF"}}>JP Star activates today.</strong> Execution starts. Esther needs everything by stand-up. First performance update to client: Friday March 6.
-              <br/><br/>
-              <strong style={{color:"#FF47A3"}}>For Esther sync tonight (9 PM):</strong> FAVE report confirmed · Cavemen meeting status · Korede campaign summary by 5 PM.
-            </div>
           </div>
 
-          {estherSent && esther.priority && (
-            <div style={{background:"#0f0810",border:"1px solid #FF47A3",borderRadius:6,padding:12,marginBottom:12}}>
-              <div style={{fontSize:9,color:"#FF47A3",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>📌 From Esther</div>
-              <div style={{fontSize:12,color:"#E0DFD8",marginBottom:2}}>{esther.priority}</div>
-              {esther.context && <div style={{fontSize:11,color:"#666",marginBottom:2}}>{esther.context}</div>}
-              {esther.flag && <div style={{fontSize:11,color:"#FF47A3"}}>⚑ {esther.flag}</div>}
+          {/* Unread */}
+          {unread.length > 0 && (
+            <div>
+              <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>
+                To Read/Watch — {unread.length} item{unread.length!==1?"s":""}
+              </div>
+              {unread.map(l=>(
+                <div key={l.id} style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:6,padding:12,marginBottom:7}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:8}}>
+                    <div style={{flex:1,minWidth:0}}>
+                      <span className="tag" style={{background:CAT_COLOR[l.cat]+"18",color:CAT_COLOR[l.cat],marginBottom:5,display:"inline-block"}}>{l.cat}</span>
+                      <div style={{fontSize:12,color:"#E0DFD8",lineHeight:1.5,marginBottom:3,wordBreak:"break-word"}}>{l.title}</div>
+                      <div style={{fontSize:9,color:"#555",wordBreak:"break-all"}}>{l.url.length>60?l.url.slice(0,60)+"...":l.url}</div>
+                      <div style={{fontSize:8,color:"#555",marginTop:3}}>Saved {l.saved}</div>
+                    </div>
+                    <div style={{display:"flex",flexDirection:"column",gap:5,flexShrink:0}}>
+                      <a href={l.url} target="_blank" rel="noreferrer"
+                        style={{background:"#1a1a1a",color:"#E0DFD8",border:"none",borderRadius:2,padding:"5px 9px",fontSize:8,cursor:"pointer",fontFamily:"inherit",letterSpacing:1,textDecoration:"none",textAlign:"center"}}>
+                        OPEN
+                      </a>
+                      <button onClick={()=>toggle(l.id)}
+                        style={{background:"#47FFB422",color:"#47FFB4",border:"1px solid #47FFB430",borderRadius:2,padding:"5px 9px",fontSize:8,cursor:"pointer",fontFamily:"inherit",letterSpacing:1}}>
+                        DONE
+                      </button>
+                      <button onClick={()=>remove(l.id)}
+                        style={{background:"transparent",color:"#555",border:"1px solid #1a1a1a",borderRadius:2,padding:"5px 9px",fontSize:8,cursor:"pointer",fontFamily:"inherit",letterSpacing:1}}>
+                        DEL
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
-          {CALENDAR.map(ev=>(
-            <div key={ev.id} style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:6,padding:14,marginBottom:7}}>
-              <div style={{display:"flex",gap:12,alignItems:"flex-start"}}>
-                <div style={{fontSize:20,flexShrink:0}}>{ev.emoji}</div>
-                <div style={{flex:1}}>
-                  <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:5}}>
-                    <div>
-                      <div style={{fontSize:9,color:ev.color,letterSpacing:1.5,textTransform:"uppercase"}}>{ev.time}</div>
-                      <div style={{fontSize:13,color:"#E0DFD8"}}>{ev.title}</div>
-                      <div style={{fontSize:9,color:"#666",marginTop:1}}>{ev.subtitle}</div>
+          {/* Done */}
+          {done.length > 0 && (
+            <div style={{marginTop:16}}>
+              <div style={{fontSize:9,color:"#1e1e1e",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Completed — {done.length}</div>
+              {done.map(l=>(
+                <div key={l.id} style={{background:"#0a0a0a",border:"1px solid #111",borderRadius:6,padding:10,marginBottom:5,display:"flex",justifyContent:"space-between",alignItems:"center",gap:8}}>
+                  <span style={{fontSize:9,color:"#1e1e1e",textDecoration:"line-through",flex:1,minWidth:0}}>{l.title}</span>
+                  <button onClick={()=>remove(l.id)} style={{background:"transparent",color:"#222",border:"none",fontSize:10,cursor:"pointer",padding:"2px 6px"}}>✕</button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {links.length === 0 && (
+            <div style={{textAlign:"center",padding:"40px 0",fontSize:11,color:"#555"}}>
+              No links saved yet.<br/>Paste a URL above to start your reading list.
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // ── APP (main) ────────────────────────────────────────────────────────────
+    function App() {
+      const [tab, setTab] = useState("today");
+      const [all, setAll] = useState(() => {
+        const d = loadData();
+        const k = todayKey();
+        if (!d[k]) d[k] = { notes:{}, checks:{}, scores:{focus:7,health:7,emotion:7,strategy:7}, esther:{priority:"",context:"",flag:""} };
+        return d;
+      });
+      const [saved,       setSaved]       = useState(false);
+      const [affOpen,     setAffOpen]     = useState(false);
+      const [learnDone,   setLearnDone]   = useState({});
+      const [estherSent,  setEstherSent]  = useState(false);
+      const saveRef = useRef(null);
+
+      const tk = todayKey();
+      const td = all[tk] || { notes:{}, checks:{}, scores:{focus:7,health:7,emotion:7,strategy:7}, esther:{priority:"",context:"",flag:""} };
+
+      useEffect(() => {
+        clearTimeout(saveRef.current);
+        saveRef.current = setTimeout(() => { saveData(all); setSaved(true); setTimeout(()=>setSaved(false),1800); }, 600);
+      }, [all]);
+
+      const setNote  = (k,v) => setAll(p => { const n={...p}; n[tk]={...n[tk],notes:{...n[tk].notes,[k]:v}}; return n; });
+      const setCheck = (k)   => setAll(p => { const n={...p}; n[tk]={...n[tk],checks:{...n[tk].checks,[k]:!n[tk].checks[k]}}; return n; });
+      const setScore = (k,v) => setAll(p => { const n={...p}; n[tk]={...n[tk],scores:{...n[tk].scores,[k]:v}}; return n; });
+      const setEst   = (k,v) => setAll(p => { const n={...p}; n[tk]={...n[tk],esther:{...n[tk].esther,[k]:v}}; return n; });
+
+      const checks = td.checks||{};
+      const notes  = td.notes||{};
+      const scores = td.scores||{focus:7,health:7,emotion:7,strategy:7};
+      const esther = td.esther||{priority:"",context:"",flag:""};
+      const avg    = (Object.values(scores).reduce((a,b)=>a+b,0)/4).toFixed(1);
+      const ac     = ACCENT[tab]||"#E8FF47";
+
+      const allDays = Object.entries(all).filter(([k])=>k.match(/^\d{4}-\d{2}-\d{2}$/)).sort(([a],[b])=>a>b?1:-1);
+      const last7   = allDays.slice(-7);
+      const avg7 = (key) => { const v=last7.map(([,d])=>d?.scores?.[key]).filter(Number); return v.length?(v.reduce((a,b)=>a+b,0)/v.length).toFixed(1):"—"; };
+      const streak  = (() => { let s=0; for(let i=allDays.length-1;i>=0;i--){ if(allDays[i][1]?.checks?.["eodb_workout"]) s++; else break; } return s; })();
+
+      const css = `
+        *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+        body{font-family:'DM Mono','Courier New',monospace;background:#080808;color:#E0DFD8;min-height:100vh;}
+        ::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:#1e1e1e;}
+        textarea,input[type=text]{outline:none;background:#0d0d0d;border:1px solid #1e1e1e;color:#E0DFD8;border-radius:4px;padding:9px 11px;font-family:inherit;font-size:13px;resize:vertical;width:100%;line-height:1.7;}
+        textarea:focus,input[type=text]:focus{border-color:${ac};}
+        input[type=range]{-webkit-appearance:none;width:100%;height:3px;border-radius:2px;background:#1e1e1e;}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:${ACCENT.eod};cursor:pointer;}
+        .nb{background:none;border:none;cursor:pointer;padding:8px 10px;border-radius:3px;font-family:inherit;font-size:9px;letter-spacing:1.5px;transition:all .15s;text-transform:uppercase;white-space:nowrap;}
+        .nb.on{color:#080808;font-weight:600;}
+        .nb:not(.on){color:#3a3a3a;}
+        .ci{display:flex;align-items:flex-start;gap:11px;padding:8px 0;border-bottom:1px solid #111;cursor:pointer;}
+        .cb{width:17px;height:17px;border:1.5px solid #252525;border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+        .card{background:#0d0d0d;border:1px solid #171717;border-radius:6px;padding:15px;margin-bottom:10px;}
+        .st{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;line-height:1;}
+        .sub{font-size:9px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-top:2px;margin-bottom:18px;}
+        .tag{display:inline-block;padding:2px 7px;border-radius:2px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;}
+        .meal{background:#0c0c0c;border:1px solid #151515;border-radius:5px;padding:12px 14px;margin:6px 0;}
+        .sbtn{border:none;border-radius:3px;padding:11px 20px;font-family:inherit;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-weight:600;}
+        .stat{background:#0d0d0d;border:1px solid #171717;border-radius:5px;padding:13px;text-align:center;}
+        .hist{padding:12px 6px;border-bottom:1px solid #0f0f0f;}
+        .fade{animation:fi .2s ease;}
+        @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+        .lbtn{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:4px;padding:11px 13px;cursor:pointer;display:flex;gap:10px;align-items:center;margin-bottom:7px;}
+      `;
+
+      return (
+        <div style={{fontFamily:"'DM Mono','Courier New',monospace",background:"#080808",minHeight:"100vh",color:"#E0DFD8"}}>
+          <style>{css}</style>
+
+          {/* HEADER */}
+          <div style={{padding:"env(safe-area-inset-top,16px) 18px 0",borderBottom:"1px solid #0f0f0f",background:"#080808",position:"sticky",top:0,zIndex:100}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",paddingTop:"max(16px,env(safe-area-inset-top))"}}>
+              <div>
+                <div style={{fontSize:8,letterSpacing:3,color:"#444",textTransform:"uppercase"}}>JÄFO · AI Chief of Staff</div>
+                <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:36,letterSpacing:4,lineHeight:1,color:"#E0DFD8"}}>FOUNDER DAY</div>
+                <div style={{fontSize:8,color:"#555",marginTop:1}}>Monday, March 2 2026 · Lagos</div>
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:8,color:"#555",letterSpacing:2,textTransform:"uppercase"}}>Discipline</div>
+                <div style={{fontFamily:"'Bebas Neue'",fontSize:42,color:ac,lineHeight:1}}>{avg}</div>
+                <div style={{fontSize:8,color:"#252525"}}>/ 10.0</div>
+                <div style={{fontSize:8,color:ac,marginTop:2}}>⏳ {daysLeft}d · Sept 14</div>
+                {saved && <div style={{fontSize:7,color:"#2a4a2a",letterSpacing:1}}>✓ SAVED</div>}
+              </div>
+            </div>
+            <div style={{marginTop:6,height:1,background:"#0f0f0f",borderRadius:1,overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${Math.max(2,100-(daysLeft/200)*100)}%`,background:ac,transition:"width 1s"}}/>
+            </div>
+            <div style={{display:"flex",gap:2,marginTop:10,overflowX:"auto",paddingBottom:8,WebkitOverflowScrolling:"touch"}}>
+              {SECTIONS.map(s=>(
+                <button key={s.id} className={`nb ${tab===s.id?"on":""}`}
+                  style={tab===s.id?{background:ACCENT[s.id]}:{}}
+                  onClick={()=>setTab(s.id)}>
+                  {s.emoji} {s.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* CONTENT */}
+          <div style={{maxWidth:780,margin:"0 auto",padding:"20px 16px 80px"}} className="fade" key={tab}>
+
+            {/* ── TODAY ── */}
+            {tab==="today" && <div>
+              <div className="st" style={{color:"#E8FF47"}}>TODAY'S MAP</div>
+              <div className="sub">JÄFO Intelligence · Monday March 2 · 20 events</div>
+
+              {/* JÄFO Monday briefing note */}
+              <div style={{background:"#080f0d",border:"1px solid #47FFB430",borderRadius:8,padding:14,marginBottom:14}}>
+                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>🧠 JÄFO Monday Brief</div>
+                <div style={{fontSize:12,color:"#666",lineHeight:1.9}}>
+                  <strong style={{color:"#E0DFD8"}}>The woman on the street said it twice: "March into March victoriously."</strong> That wasn't random. You filed it. Now it's Monday and the month is in your hands. This is the day the fight becomes visible.
+                  <br/><br/>
+                  Yesterday you wrote something worth carrying into every meeting today: <em style={{color:"#FF6B35"}}>a triggered leader limits their own destiny.</em> That's not just theology — that's operational. In the stand-up, in the campaign check-in, in the moment something doesn't go your way — notice whether you're choosing or reacting. That's the work underneath the work.
+                  <br/><br/>
+                  <strong style={{color:"#FF4747"}}>Heavy meeting day</strong> — Marketing stand-up, JRS Ops, Campaign check-ins with Korede. The deep work blocks (Caption & Copy 11 AM, JRS March 14 Prep 3:30 PM, Personal Brand 4:30 PM) are where the real value lives. Protect them when meetings run long.
+                  <br/><br/>
+                  <strong style={{color:"#47C4FF"}}>JP Star activates today.</strong> Execution starts. Esther needs everything by stand-up. First performance update to client: Friday March 6.
+                  <br/><br/>
+                  <strong style={{color:"#FF47A3"}}>For Esther sync tonight (9 PM):</strong> FAVE report confirmed · Cavemen meeting status · Korede campaign summary by 5 PM.
+                </div>
+              </div>
+
+              {estherSent && esther.priority && (
+                <div style={{background:"#0f0810",border:"1px solid #FF47A3",borderRadius:6,padding:12,marginBottom:12}}>
+                  <div style={{fontSize:9,color:"#FF47A3",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>📌 From Esther</div>
+                  <div style={{fontSize:12,color:"#E0DFD8",marginBottom:2}}>{esther.priority}</div>
+                  {esther.context && <div style={{fontSize:11,color:"#666",marginBottom:2}}>{esther.context}</div>}
+                  {esther.flag && <div style={{fontSize:11,color:"#FF47A3"}}>⚑ {esther.flag}</div>}
+                </div>
+              )}
+
+              {CALENDAR.map(ev=>(
+                <div key={ev.id} style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:6,padding:14,marginBottom:7}}>
+                  <div style={{display:"flex",gap:12,alignItems:"flex-start"}}>
+                    <div style={{fontSize:20,flexShrink:0}}>{ev.emoji}</div>
+                    <div style={{flex:1}}>
+                      <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:5}}>
+                        <div>
+                          <div style={{fontSize:9,color:ev.color,letterSpacing:1.5,textTransform:"uppercase"}}>{ev.time}</div>
+                          <div style={{fontSize:13,color:"#E0DFD8"}}>{ev.title}</div>
+                          <div style={{fontSize:9,color:"#666",marginTop:1}}>{ev.subtitle}</div>
+                        </div>
+                        <span className="tag" style={{background:ev.color+"18",color:ev.color,height:"fit-content"}}>{ev.type}</span>
+                      </div>
+                      <div style={{fontSize:10,color:"#555",marginTop:7,borderLeft:`2px solid ${ev.color}25`,paddingLeft:8}}>{ev.desc}</div>
+                      {ev.detail && <div style={{fontSize:9,color:"#666",marginTop:4,paddingLeft:10}}>→ {ev.detail}</div>}
                     </div>
-                    <span className="tag" style={{background:ev.color+"18",color:ev.color,height:"fit-content"}}>{ev.type}</span>
                   </div>
-                  <div style={{fontSize:10,color:"#555",marginTop:7,borderLeft:`2px solid ${ev.color}25`,paddingLeft:8}}>{ev.desc}</div>
-                  {ev.detail && <div style={{fontSize:9,color:"#666",marginTop:4,paddingLeft:10}}>→ {ev.detail}</div>}
-                </div>
-              </div>
-              <div className="ci" onClick={()=>setCheck("ev_"+ev.id)}>
-                <div className="cb" style={{background:checks["ev_"+ev.id]?ev.color:"transparent",borderColor:checks["ev_"+ev.id]?ev.color:"#252525"}}>
-                  {checks["ev_"+ev.id]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                </div>
-                <div style={{fontSize:9,color:"#555"}}>Mark complete</div>
-              </div>
-            </div>
-          ))}
-        </div>}
-
-        {/* ── BODY ── */}
-        {tab==="body" && <div>
-          <div className="st" style={{color:"#E8FF47"}}>BODY</div>
-          <div className="sub">Monday — Strength #1 · Walk · Stretch · Cardio. Four blocks. All count.</div>
-
-          <div style={{background:"#0c0c08",border:"1px solid #E8FF4720",borderRadius:6,padding:12,marginBottom:12,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
-            <div>
-              <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Days to Birthday</div>
-              <div style={{fontFamily:"'Bebas Neue'",fontSize:32,color:"#E8FF47"}}>{daysLeft} DAYS</div>
-            </div>
-            <div style={{textAlign:"right",fontSize:10,color:"#777",lineHeight:2}}>
-              <div>Now: 225–234 lbs</div>
-              <div>Goal: 220–225 lbs</div>
-              <div>Streak: <span style={{color:"#E8FF47"}}>{streak}d</span></div>
-            </div>
-          </div>
-
-          <div style={{background:"#0c0c08",border:"1px solid #E8FF4725",borderRadius:7,padding:15,marginBottom:10}}>
-            <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Monday Training</div>
-            <div style={{fontFamily:"'Bebas Neue'",fontSize:30,color:"#E8FF47",marginTop:2}}>Strength #1 + Walk + Cardio</div>
-            <div style={{height:1,background:"linear-gradient(to right,#E8FF47,transparent)",margin:"10px 0",opacity:.18}}/>
-            <div style={{fontSize:11,color:"#555",lineHeight:1.9}}>
-              <strong style={{color:"#E8FF47"}}>6:30 AM — Strength Training #1</strong> · First session of March. Show up regardless of how it feels. Done beats perfect.<br/>
-              <strong style={{color:"#E8FF47"}}>7:15 AM — Walk 2 Miles</strong> · Post-strength flush. Easy pace. This is recovery, not cardio.<br/>
-              <strong style={{color:"#47FFB4"}}>8:00 AM — Stretch & Core</strong> · Calves, hamstrings, hip flexors (legs took a beating this weekend). 10 min core after.<br/>
-              <strong style={{color:"#E8FF47"}}>6:00 PM — Cardio 2 Miles</strong> · Evening run. Fat loss work. Non-negotiable.
-            </div>
-          </div>
-
-          {Object.values(MEALS).map((m,i)=>(
-            <div key={i} className="meal">
-              <div style={{fontSize:9,color:"#E8FF47",letterSpacing:1.5,textTransform:"uppercase"}}>{m.time}</div>
-              <div style={{fontSize:13,color:"#E0DFD8",margin:"3px 0 2px"}}>{m.name}</div>
-              <div style={{fontSize:11,color:"#555"}}>{m.items}</div>
-              <div style={{fontSize:9,color:"#555",marginTop:3}}>→ {m.why}</div>
-            </div>
-          ))}
-
-          <div style={{display:"flex",gap:8,marginTop:10,flexWrap:"wrap"}}>
-            {[
-              {c:"#47FFB4",bg:"#0a1410",label:"💧 Water",val:"3.5 L"},
-              {c:"#FF4747",bg:"#120d0d",label:"🚫 Avoid",val:"After 8:30 PM"},
-              {c:"#B47FFF",bg:"#0e0a14",label:"✅ Cheat",val:"1x weekly"},
-            ].map(b=>(
-              <div key={b.label} style={{flex:1,minWidth:100,background:b.bg,border:`1px solid ${b.c}20`,borderRadius:5,padding:10}}>
-                <div style={{fontSize:9,color:b.c,letterSpacing:2,textTransform:"uppercase"}}>{b.label}</div>
-                <div style={{fontFamily:"'Bebas Neue'",fontSize:16,color:b.c,marginTop:2}}>{b.val}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="card" style={{marginTop:10}}>
-            <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Body note / how you're feeling:</div>
-            <textarea rows={2} placeholder="Energy level, soreness, sleep quality last night..." value={notes.bodynote||""} onChange={e=>setNote("bodynote",e.target.value)}/>
-          </div>
-        </div>}
-
-        {/* ── SPIRIT ── */}
-        {tab==="spirit" && <div>
-          <div className="st" style={{color:"#FF6B35"}}>SPIRIT</div>
-          <div className="sub">Monday — the week starts in the spirit before it starts in the calendar.</div>
-
-          <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginBottom:10}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-              <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase"}}>🙏 Daily Affirmation — Speak Aloud</div>
-              <button onClick={()=>setAffOpen(!affOpen)} style={{background:"none",border:"1px solid #2a1a10",borderRadius:2,color:"#FF6B35",fontSize:8,cursor:"pointer",padding:"3px 7px",fontFamily:"inherit",letterSpacing:1,textTransform:"uppercase"}}>
-                {affOpen?"Close":"Open"}
-              </button>
-            </div>
-            {affOpen
-              ? AFFIRMATION.split("\n").map((line,i)=>(
-                  <div key={i} style={{padding:"2px 0",fontSize:12,color:line.startsWith("In the name")||line.startsWith("Amen")?"#E0DFD8":"#666",fontStyle:line.startsWith("In the name")||line.startsWith("Amen")?"normal":"italic",fontFamily:"'Playfair Display',serif",lineHeight:1.9}}>
-                    {line||<br/>}
-                  </div>
-                ))
-              : <div style={{fontSize:12,color:"#555",fontStyle:"italic",fontFamily:"'Playfair Display',serif"}}>"With humility and hope, I evoke divine discernment..."</div>
-            }
-            <div className="ci" style={{marginTop:8}} onClick={()=>setCheck("aff_spoken")}>
-              <div className="cb" style={{background:checks.aff_spoken?"#FF6B35":"transparent",borderColor:checks.aff_spoken?"#FF6B35":"#252525"}}>
-                {checks.aff_spoken&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-              </div>
-              <div style={{fontSize:9,color:checks.aff_spoken?"#FF6B35":"#333"}}>I spoke this aloud today</div>
-            </div>
-          </div>
-
-          <div className="card" style={{marginBottom:10}}>
-            <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>🪞 Identity · This Season</div>
-            <div style={{fontSize:13,color:"#E0DFD8",lineHeight:1.8,fontFamily:"'Playfair Display',serif"}}>
-              "I am becoming <em style={{color:"#FF6B35"}}>known to myself.</em> Not perfect — known. I have something steady underneath the emotion. I know who I am. I know what I value. I know how I want to show up. And from that place, I can choose rather than react."
-            </div>
-          </div>
-
-          <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginBottom:10}}>
-            <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>📖 {scripture.ref} — Monday's Word</div>
-            <div style={{fontSize:14,color:"#E0DFD8",lineHeight:1.7,fontStyle:"italic",fontFamily:"'Playfair Display',serif",marginBottom:10}}>"{scripture.text}"</div>
-            <div style={{height:1,background:"linear-gradient(to right,#FF6B35,transparent)",margin:"10px 0",opacity:.18}}/>
-            <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Monday embodiment</div>
-            <div style={{fontSize:11,color:"#666",lineHeight:1.8,marginBottom:8}}>
-              Three things from Pastor Jerry Flowers that came together on Sunday and they don't expire today:<br/><br/>
-              <em style={{color:"#FF6B35"}}>Jesus heals the parts we don't have ease with.</em> Sit with that question this week — where is there no ease? Don't rush the answer.<br/><br/>
-              <em style={{color:"#FF6B35"}}>Your freedom is for a higher cause.</em> What you're building isn't just for you. The clarity, the financial freedom, the version of yourself emerging — it's to serve. That reframe changes everything about how you approach today's work.<br/><br/>
-              <em style={{color:"#FF6B35"}}>A triggered leader limits their own destiny.</em> Healing is stewardship. The more you heal on the inside, the more He gets glory through your life on the outside. This isn't just personal growth — it's preparation.
-            </div>
-            <textarea rows={2} placeholder="What is God saying to me specifically this Monday?" value={notes.embody||""} onChange={e=>setNote("embody",e.target.value)}/>
-            <div className="ci" style={{marginTop:8}} onClick={()=>setCheck("embody_lived")}>
-              <div className="cb" style={{background:checks.embody_lived?"#FF6B35":"transparent",borderColor:checks.embody_lived?"#FF6B35":"#252525"}}>
-                {checks.embody_lived&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-              </div>
-              <div style={{fontSize:9,color:checks.embody_lived?"#FF6B35":"#666"}}>I carried this word into my day</div>
-            </div>
-          </div>
-
-          <div className="card" style={{marginBottom:10}}>
-            <div style={{fontSize:9,color:"#B47FFF",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🌙 This Season</div>
-            <div style={{fontSize:11,color:"#666",lineHeight:1.9,marginBottom:10}}>
-              The job in January. The distance with your brother. The relationship ending. The stripping away of things that were propping up an identity that wasn't fully yours yet. You wrote it yourself: <em style={{color:"#E0DFD8"}}>something is being built.</em>
-              <br/><br/>
-              This adjustment season is not negative. It is necessary. And you are fighting — learning things you haven't prioritised before, choosing abstinence, letting go, pursuing purity in the real sense. None of that comes without resistance.
-              <br/><br/>
-              <strong style={{color:"#B47FFF"}}>"The fight has been fixed. I am going to overcome. The only way I lose is if I stop fighting. And I'm not stopping."</strong>
-            </div>
-          </div>
-
-          <div className="card">
-            <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>✍️ Monday Journal Prompt</div>
-            <div style={{fontSize:13,color:"#E0DFD8",lineHeight:1.7,marginBottom:8,fontStyle:"italic",fontFamily:"'Playfair Display',serif"}}>
-              "Pastor Flowers asked: where in your life is there no ease? You said you didn't want to rush the answer. You've had a night to sleep on it. What's coming up?"
-            </div>
-            <textarea rows={5} placeholder="Write freely. No editing. Just truth..." value={notes.journal||""} onChange={e=>setNote("journal",e.target.value)}/>
-          </div>
-
-          {/* BIBLE STUDY */}
-          <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginTop:10}}>
-            <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>📖 Weekly Bible Study — 1 Hour</div>
-            <div style={{fontSize:10,color:"#666",marginBottom:14,lineHeight:1.6}}>Verses chosen for this season. Read slowly. Sit with one before moving to the next. The goal is not to finish — it's to be changed.</div>
-
-            {[
-              {
-                ref:"Psalm 139:23–24",
-                text:"Search me, God, and know my heart; test me and know my anxious thoughts. See if there is any offensive way in me, and lead me in the way everlasting.",
-                note:"You wrote that you don't yet fully know yourself. This is where you start — not with self-analysis, but with invitation. Let Him search first."
-              },
-              {
-                ref:"Proverbs 4:23",
-                text:"Above all else, guard your heart, for everything you do flows from it.",
-                note:"A triggered leader limits their destiny — because everything flows from the heart. What's in it right now? What needs guarding?"
-              },
-              {
-                ref:"Romans 12:2",
-                text:"Do not conform to the pattern of this world, but be transformed by the renewing of your mind. Then you will be able to test and approve what God's will is — his good, pleasing and perfect will.",
-                note:"Transformation isn't an event. It's the accumulation of moments where you choose differently. This season is that accumulation."
-              },
-              {
-                ref:"Isaiah 43:18–19",
-                text:"Forget the former things; do not dwell on the past. See, I am doing a new thing! Now it springs up; do you not perceive it? I am making a way in the wilderness and streams in the wasteland.",
-                note:"The stripping away — the job, the relationship, the identity that wasn't fully yours yet — this is the wilderness. And He is making a way in it."
-              },
-              {
-                ref:"James 1:2–4",
-                text:"Consider it pure joy, my brothers and sisters, whenever you face trials of many kinds, because you know that the testing of your faith produces perseverance. Let perseverance finish its work so that you may be mature and complete, not lacking anything.",
-                note:"This adjustment season is not punishment. It is preparation. James 1 is the theology underneath that truth."
-              },
-            ].map((v,i)=>(
-              <div key={v.ref} style={{marginBottom:16,paddingBottom:16,borderBottom:i<4?"1px solid #1e1e1e":"none"}}>
-                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>{v.ref}</div>
-                <div style={{fontSize:13,color:"#E0DFD8",fontStyle:"italic",fontFamily:"'Playfair Display',serif",lineHeight:1.8,marginBottom:8}}>"{v.text}"</div>
-                <div style={{fontSize:10,color:"#555",lineHeight:1.7,borderLeft:"2px solid #FF6B3530",paddingLeft:10}}>{v.note}</div>
-                <div className="ci" style={{marginTop:10}} onClick={()=>setCheck("bible_"+v.ref)}>
-                  <div className="cb" style={{background:checks["bible_"+v.ref]?"#FF6B35":"transparent",borderColor:checks["bible_"+v.ref]?"#FF6B35":"#252525"}}>
-                    {checks["bible_"+v.ref]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                  </div>
-                  <div style={{fontSize:9,color:checks["bible_"+v.ref]?"#FF6B35":"#555"}}>I sat with this verse</div>
-                </div>
-              </div>
-            ))}
-
-            <textarea rows={3} placeholder="What did God say to me in study today..." value={notes.biblenote||""} onChange={e=>setNote("biblenote",e.target.value)}/>
-          </div>
-        </div>}
-
-        {/* ── MIND ── */}
-        {tab==="mind" && <div>
-          <div className="st" style={{color:"#47C4FF"}}>MIND</div>
-          <div className="sub">Monday — feed the mind daily, without exception.</div>
-
-          {/* DAILY READING HABIT */}
-          <div style={{background:"#080e11",border:"1px solid #47C4FF30",borderRadius:8,padding:15,marginBottom:12}}>
-            <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📚 Daily Reading — Non-Negotiable</div>
-            <div style={{fontSize:10,color:"#666",marginBottom:12}}>Every day. Not when you feel like it. The mind compounds the same way money does.</div>
-            {[
-              {key:"read_book",    label:"📖 1 Chapter of a book", note:"Any chapter. Keep it moving."},
-              {key:"read_news",    label:"📰 Newspaper / Current affairs", note:"Stay informed. Know what world you're operating in."},
-              {key:"read_industry",label:"🎵 Music / Culture / Industry read", note:"1 article or newsletter relevant to what you're building."},
-              {key:"read_invest",  label:"📈 Investment / Financial read", note:"Markets, macro, one thing that sharpens your investor lens."},
-              {key:"read_bible",   label:"✝️ Bible Study / Devotion", note:"Not optional. The foundation everything else stands on."},
-            ].map(item=>(
-              <div key={item.key} style={{marginBottom:10}}>
-                <div className="ci" onClick={()=>setCheck(item.key)}>
-                  <div className="cb" style={{background:checks[item.key]?"#47C4FF":"transparent",borderColor:checks[item.key]?"#47C4FF":"#252525"}}>
-                    {checks[item.key]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                  </div>
-                  <div>
-                    <div style={{fontSize:11,color:checks[item.key]?"#2a2a2a":"#E0DFD8",textDecoration:checks[item.key]?"line-through":"none"}}>{item.label}</div>
-                    <div style={{fontSize:9,color:"#555",marginTop:1}}>{item.note}</div>
+                  <div className="ci" onClick={()=>setCheck("ev_"+ev.id)}>
+                    <div className="cb" style={{background:checks["ev_"+ev.id]?ev.color:"transparent",borderColor:checks["ev_"+ev.id]?ev.color:"#252525"}}>
+                      {checks["ev_"+ev.id]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:9,color:"#555"}}>Mark complete</div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>}
 
-          {/* WHAT DID YOU LEARN TODAY */}
-          <div className="card" style={{border:"1px solid #47C4FF20"}}>
-            <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>💡 What Did You Learn Today?</div>
-            <div style={{fontSize:10,color:"#666",marginBottom:8}}>One thing. Could be from a book, a meeting, a conversation, a moment of quiet. Write it down before it dissolves.</div>
-            <textarea rows={3} placeholder="Today I learned..." value={notes.learned||""} onChange={e=>setNote("learned",e.target.value)}/>
-          </div>
+            {/* ── BODY ── */}
+            {tab==="body" && <div>
+              <div className="st" style={{color:"#E8FF47"}}>BODY</div>
+              <div className="sub">Monday — Strength #1 · Walk · Stretch · Cardio. Four blocks. All count.</div>
 
-          {/* DEEP WORK BLOCKS */}
-          <div style={{background:"#080e11",border:"1px solid #47C4FF25",borderRadius:8,padding:15,marginBottom:12,marginTop:10}}>
-            <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>⚡ Today's Deep Work Blocks</div>
-
-            <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>11:00 AM — Caption & Copy Review</div>
-            {[
-              "JRS newsletter: outline → first full draft (tone: personal, soulful, curatorial)",
-              "ATIDE social captions for the week — review assets from designer",
-              "JP Star campaign copy — review and approve anything going out this week",
-              "Feedback to Esther by 1 PM",
-            ].map(item=>(
-              <div key={item} className="ci" onClick={()=>setCheck("copy_"+item)}>
-                <div className="cb" style={{background:checks["copy_"+item]?"#47C4FF":"transparent",borderColor:checks["copy_"+item]?"#47C4FF":"#252525"}}>
-                  {checks["copy_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                </div>
-                <div style={{fontSize:10,color:checks["copy_"+item]?"#2a2a2a":"#666",textDecoration:checks["copy_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-              </div>
-            ))}
-
-            <div style={{height:1,background:"linear-gradient(to right,#47C4FF,transparent)",margin:"12px 0",opacity:.12}}/>
-
-            <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>3:30 PM — JRS March 14 Listening Session Prep</div>
-            {[
-              "Event concept & experience design — vibe, flow, what moment do guests leave with?",
-              "Guest list — curate intentionally, who gets personal touch from Joshua?",
-              "Logistics checklist — venue, sound, food, photography confirmed?",
-              "Content & promo — what goes out this week? What's captured on the night?",
-              "Output: one-page event brief ready for Esther",
-            ].map(item=>(
-              <div key={item} className="ci" onClick={()=>setCheck("jrs14_"+item)}>
-                <div className="cb" style={{background:checks["jrs14_"+item]?"#47C4FF":"transparent",borderColor:checks["jrs14_"+item]?"#47C4FF":"#252525"}}>
-                  {checks["jrs14_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                </div>
-                <div style={{fontSize:10,color:checks["jrs14_"+item]?"#2a2a2a":"#666",textDecoration:checks["jrs14_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-              </div>
-            ))}
-
-            <div style={{height:1,background:"linear-gradient(to right,#47C4FF,transparent)",margin:"12px 0",opacity:.12}}/>
-
-            <div style={{fontSize:9,color:"#FF6B35",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>4:30 PM — Personal Brand & Content</div>
-            {[
-              "Update @JoshiAhazie → @JoshuaAhazie across Instagram, Twitter/X, LinkedIn, TikTok",
-              "Substack brainstorm — map out first 3 post concepts (positioning · truth · industry take)",
-              "Article brainstorm — 3 to 5 pieces you've been meaning to write, one title + one-line premise each",
-              "Which one could you write this week if you had 90 minutes?",
-              "Output: Substack 3-post plan + article list saved as a note",
-            ].map(item=>(
-              <div key={item} className="ci" onClick={()=>setCheck("brand_"+item)}>
-                <div className="cb" style={{background:checks["brand_"+item]?"#FF6B35":"transparent",borderColor:checks["brand_"+item]?"#FF6B35":"#252525"}}>
-                  {checks["brand_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                </div>
-                <div style={{fontSize:10,color:checks["brand_"+item]?"#2a2a2a":"#666",textDecoration:checks["brand_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* THE ONE THING */}
-          <div className="card" style={{border:"2px solid #47C4FF30"}}>
-            <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>🎯 THE ONE THING — Today</div>
-            <div style={{fontSize:10,color:"#666",marginBottom:8}}>If today were a success, what single thing would have to be true?</div>
-            <textarea rows={2} placeholder="Today is a success if..." value={notes.onethinq||""} onChange={e=>setNote("onethinq",e.target.value)}/>
-          </div>
-
-          {/* ── LINKS — embedded in Mind ── */}
-          <div style={{height:1,background:"linear-gradient(to right,#47C4FF,transparent)",margin:"20px 0",opacity:.15}}/>
-          <LinksTab/>
-
-        </div>}
-
-        {/* ── BUSINESS ── */}
-        {tab==="business" && <div>
-          <div className="st" style={{color:"#B47FFF"}}>BUSINESS</div>
-          <div className="sub">Monday — execute. Every task below has a tier.</div>
-
-          {/* TIER 1 — DO TODAY */}
-          <div style={{background:"#0f0814",border:"2px solid #FF474740",borderRadius:8,padding:14,marginBottom:10}}>
-            <div style={{fontSize:9,color:"#FF4747",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>🔴 TIER 1 — Must happen today</div>
-
-            <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>JP Star Campaign</div>
-            {[
-              "Campaign activates TODAY — confirm Esther has everything needed for Week 1",
-              "Communicate execution plan to client team (what we're doing and when)",
-              "Confirm JP Star pricing change: USD → NGN (Esther to execute)",
-              "Korede sends campaign status summary to group by 5 PM",
-              "Confirm Week 1 radio outreach started: Beat FM, Cool FM, City FM, UFM, Yanga FM",
-            ].map(item=>(
-              <div key={item} className="ci" onClick={()=>setCheck("t1jp_"+item)}>
-                <div className="cb" style={{background:checks["t1jp_"+item]?"#FF4747":"transparent",borderColor:checks["t1jp_"+item]?"#FF4747":"#252525"}}>
-                  {checks["t1jp_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                </div>
-                <div style={{fontSize:10,color:checks["t1jp_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1jp_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-              </div>
-            ))}
-
-            <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
-            <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>FAVE Report</div>
-            {[
-              "Confirm FAVE report has gone out to client today (Esther owns this)",
-              "Flag any client follow-up needed after receipt",
-            ].map(item=>(
-              <div key={item} className="ci" onClick={()=>setCheck("t1fave_"+item)}>
-                <div className="cb" style={{background:checks["t1fave_"+item]?"#FF4747":"transparent",borderColor:checks["t1fave_"+item]?"#FF4747":"#252525"}}>
-                  {checks["t1fave_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                </div>
-                <div style={{fontSize:10,color:checks["t1fave_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1fave_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-              </div>
-            ))}
-
-            <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
-            <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>ATIDE</div>
-            {[
-              "Pay salaries — confirm amounts and execute",
-              "Set week deliverables for internal team + client projects (from Marketing stand-up 10 AM)",
-            ].map(item=>(
-              <div key={item} className="ci" onClick={()=>setCheck("t1atide_"+item)}>
-                <div className="cb" style={{background:checks["t1atide_"+item]?"#FF4747":"transparent",borderColor:checks["t1atide_"+item]?"#FF4747":"#252525"}}>
-                  {checks["t1atide_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                </div>
-                <div style={{fontSize:10,color:checks["t1atide_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1atide_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* TIER 2 — THIS WEEK */}
-          <div style={{background:"#0c0c08",border:"1px solid #FFD14730",borderRadius:8,padding:14,marginBottom:10}}>
-            <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>🟡 TIER 2 — Move this week</div>
-
-            <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>Cavemen</div>
-            {[
-              "Tuesday meeting on HOLD — confirm availability from their team",
-              "Pitch + budget for Dami single + Backyard Music EP — confirm it's ready to present",
-              "Once confirmed: decide who preps and who presents",
-              "Close Cavemen this week",
-            ].map(item=>(
-              <div key={item} className="ci" onClick={()=>setCheck("t2cav_"+item)}>
-                <div className="cb" style={{background:checks["t2cav_"+item]?"#FFD147":"transparent",borderColor:checks["t2cav_"+item]?"#FFD147":"#252525"}}>
-                  {checks["t2cav_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                </div>
-                <div style={{fontSize:10,color:checks["t2cav_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2cav_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-              </div>
-            ))}
-
-            <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
-            <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>JRS</div>
-            {[
-              "Newsletter: outline → first full draft (Caption & Copy block 11 AM)",
-              "March 14 listening session — one-page event brief ready for Esther (Deep Work 3:30 PM)",
-              "Season poster — confirm status and who owns it",
-              "March 29 listening session — status check",
-            ].map(item=>(
-              <div key={item} className="ci" onClick={()=>setCheck("t2jrs_"+item)}>
-                <div className="cb" style={{background:checks["t2jrs_"+item]?"#FFD147":"transparent",borderColor:checks["t2jrs_"+item]?"#FFD147":"#252525"}}>
-                  {checks["t2jrs_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                </div>
-                <div style={{fontSize:10,color:checks["t2jrs_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2jrs_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-              </div>
-            ))}
-
-            <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
-            <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>Personal Brand</div>
-            {[
-              "Update @JoshiAhazie → @JoshuaAhazie across all platforms (4:30 PM block)",
-              "Substack 3-post plan mapped out",
-              "Article brainstorm — 3 to 5 titles + one-line premise each",
-            ].map(item=>(
-              <div key={item} className="ci" onClick={()=>setCheck("t2brand_"+item)}>
-                <div className="cb" style={{background:checks["t2brand_"+item]?"#FFD147":"transparent",borderColor:checks["t2brand_"+item]?"#FFD147":"#252525"}}>
-                  {checks["t2brand_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
-                </div>
-                <div style={{fontSize:10,color:checks["t2brand_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2brand_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* TIER 3 — WATCH */}
-          <div style={{background:"#0a0a0a",border:"1px solid #1e1e1e",borderRadius:8,padding:14,marginBottom:10}}>
-            <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>⚪ TIER 3 — Keep on radar</div>
-            <div style={{fontSize:11,color:"#555",lineHeight:2}}>
-              Pipeline: eyes open for new clients this week — ATIDE needs revenue momentum<br/>
-              Investment: CABA price action · research focus for March (from Portfolio Review 5:30 PM)<br/>
-              JP Star: First performance update to client — Friday March 6 (Esther owns)<br/>
-              Vinyl curation: follow up with dad after today's call
-            </div>
-          </div>
-
-          <div className="card" style={{marginTop:4}}>
-            <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>📝 Notes / Decisions</div>
-            <textarea rows={3} placeholder="Any decisions made, blockers, or flags from today's meetings..." value={notes.weekbiz||""} onChange={e=>setNote("weekbiz",e.target.value)}/>
-          </div>
-        </div>}
-
-        {/* ── ENERGY ── */}
-        {tab==="energy" && <div>
-          <div className="st" style={{color:"#47FFB4"}}>ENERGY</div>
-          <div className="sub">Monday — 5:30 AM start, 20 events. Know your friction zones before they hit.</div>
-          <div style={{background:"#080f0d",border:"1px solid #1a3325",borderRadius:8,padding:14,marginBottom:10}}>
-            {[
-              {risk:"5:30 AM wake-up feeling impossible",         fix:"You set this. Alarm on, phone across the room. Strength Training #1 is at 6:30 AM — missing the wake-up means missing the workout. March starts today.",icon:"⏰"},
-              {risk:"Meetings running into deep work blocks",      fix:"Marketing stand-up ends 10:45 AM. Caption & Copy starts 11 AM sharp. Do not let stand-up bleed. Set a timer at 10:40 AM.",icon:"📣"},
-              {risk:"Campaign check-in going over (2:30–3:30 PM)",fix:"Hard stop at 3:30 PM — Deep Work on March 14 prep starts immediately. Korede has his action: campaign summary by 5 PM. Your job ends at 3:30.",icon:"📊"},
-              {risk:"Personal Brand block getting skipped (4:30 PM)",fix:"This is the block most likely to get sacrificed. It's not optional — your handle update, Substack map, and article brainstorm live here. Protect it like a client meeting.",icon:"🧠"},
-              {risk:"Evening cardio skipped after a heavy day",    fix:"6 PM cardio is 2 miles. 20–25 minutes. Non-negotiable. This is the fat loss work. A heavy meeting day is not an excuse — it's exactly when you need the reset.",icon:"🏃🏾"},
-              {risk:"Late eating after dinner (8:30 PM cut-off)",  fix:"Dinner is 7 PM. EOD sync is 9 PM. Do not eat between sync and bedtime. Kitchen is closed.",icon:"🍽️"},
-              {risk:"Scrolling instead of journaling before bed",  fix:"After EOD sync: Bible study, journal, pray. In that order. Phone goes down before End Day with God block at 9:30 PM.",icon:"✝️"},
-            ].map(item=>(
-              <div key={item.risk} style={{display:"flex",gap:10,padding:"10px 0",borderBottom:"1px solid #0e0e0e",alignItems:"flex-start"}}>
-                <div style={{fontSize:15,flexShrink:0}}>{item.icon}</div>
+              <div style={{background:"#0c0c08",border:"1px solid #E8FF4720",borderRadius:6,padding:12,marginBottom:12,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
                 <div>
-                  <div style={{fontSize:11,color:"#FF4747",marginBottom:2}}>{item.risk}</div>
-                  <div style={{fontSize:9,color:"#3a3a3a",lineHeight:1.6}}>→ {item.fix}</div>
+                  <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Days to Birthday</div>
+                  <div style={{fontFamily:"'Bebas Neue'",fontSize:32,color:"#E8FF47"}}>{daysLeft} DAYS</div>
+                </div>
+                <div style={{textAlign:"right",fontSize:10,color:"#777",lineHeight:2}}>
+                  <div>Now: 225–234 lbs</div>
+                  <div>Goal: 220–225 lbs</div>
+                  <div>Streak: <span style={{color:"#E8FF47"}}>{streak}d</span></div>
                 </div>
               </div>
-            ))}
-          </div>
-          <div className="card">
-            <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Your override plan today:</div>
-            <textarea rows={3} placeholder="What might pull you off today, and what's your one override?" value={notes.energy||""} onChange={e=>setNote("energy",e.target.value)}/>
-          </div>
-        </div>}
 
-        {/* ── EOD ── */}
-        {tab==="eod" && <div>
-          <div className="st" style={{color:"#FFD147"}}>EOD REVIEW</div>
-          <div className="sub">Monday close · No hiding · 9:30 PM.</div>
-
-          <div style={{background:"#0e0c08",border:"1px solid #252000",borderRadius:7,padding:13,marginBottom:8}}>
-            <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>💪 BODY</div>
-            {[
-              ["eodb_strength","Completed Strength Training #1"],
-              ["eodb_walk",   "Completed 2-mile morning walk"],
-              ["eodb_stretch","Did post-walk stretch & core"],
-              ["eodb_cardio", "Completed evening cardio (2 miles)"],
-              ["eodb_eat",    "Ate aligned — no late eating"],
-              ["eodb_water",  "Hit 3.5L hydration"],
-              ["eodb_fast",   "No food after 8:30 PM"],
-              ["eodb_sleep",  "In bed by 10:30 PM"],
-            ].map(([k,label])=>(
-              <div key={k} className="ci" onClick={()=>setCheck(k)}>
-                <div className="cb" style={{background:checks[k]?"#FFD147":"transparent",borderColor:checks[k]?"#FFD147":"#222"}}>
-                  {checks[k]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+              <div style={{background:"#0c0c08",border:"1px solid #E8FF4725",borderRadius:7,padding:15,marginBottom:10}}>
+                <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Monday Training</div>
+                <div style={{fontFamily:"'Bebas Neue'",fontSize:30,color:"#E8FF47",marginTop:2}}>Strength #1 + Walk + Cardio</div>
+                <div style={{height:1,background:"linear-gradient(to right,#E8FF47,transparent)",margin:"10px 0",opacity:.18}}/>
+                <div style={{fontSize:11,color:"#555",lineHeight:1.9}}>
+                  <strong style={{color:"#E8FF47"}}>6:30 AM — Strength Training #1</strong> · First session of March. Show up regardless of how it feels. Done beats perfect.<br/>
+                  <strong style={{color:"#E8FF47"}}>7:15 AM — Walk 2 Miles</strong> · Post-strength flush. Easy pace. This is recovery, not cardio.<br/>
+                  <strong style={{color:"#47FFB4"}}>8:00 AM — Stretch & Core</strong> · Calves, hamstrings, hip flexors (legs took a beating this weekend). 10 min core after.<br/>
+                  <strong style={{color:"#E8FF47"}}>6:00 PM — Cardio 2 Miles</strong> · Evening run. Fat loss work. Non-negotiable.
                 </div>
-                <div style={{fontSize:11,color:checks[k]?"#3a3a3a":"#666",textDecoration:checks[k]?"line-through":"none"}}>{label}</div>
               </div>
-            ))}
-          </div>
 
-          <div style={{background:"#0e0a08",border:"1px solid #251500",borderRadius:7,padding:13,marginBottom:8}}>
-            <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>🔥 SPIRIT</div>
-            {[
-              {q:"Did I choose or react today — where specifically?",k:"sp_aff"},
-              {q:"Where did I feel a trigger today? What was underneath it?",k:"sp_identity"},
-              {q:"Where did I sense God in the day?",k:"sp_god"},
-              {q:"Did I end the day with prayer?",k:"sp_prayer"},
-            ].map(item=>(
-              <div key={item.k} style={{marginBottom:8}}>
-                <div style={{fontSize:11,color:"#555",marginBottom:3}}>{item.q}</div>
-                <textarea rows={1} style={{minHeight:36}} placeholder="Honest answer..." value={notes[item.k]||""} onChange={e=>setNote(item.k,e.target.value)}/>
-              </div>
-            ))}
-          </div>
-
-          <div style={{background:"#0a0810",border:"1px solid #150d25",borderRadius:7,padding:13,marginBottom:8}}>
-            <div style={{fontSize:9,color:"#B47FFF",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>🎯 BUSINESS</div>
-            {[
-              ["eodbi_jpstar",  "JP Star activation confirmed — Esther has everything"],
-              ["eodbi_fave",    "FAVE report sent to client"],
-              ["eodbi_salaries","ATIDE salaries paid"],
-              ["eodbi_standup", "Marketing stand-up completed — Esther's week priority list pinned"],
-              ["eodbi_copy",    "Caption & Copy approved — newsletter first draft saved"],
-              ["eodbi_jrs14",   "JRS March 14 event brief ready for Esther"],
-              ["eodbi_korede",  "Korede campaign summary received by 5 PM"],
-              ["eodbi_sync",    "EOD sync with Esther completed"],
-            ].map(([k,label])=>(
-              <div key={k} className="ci" onClick={()=>setCheck(k)}>
-                <div className="cb" style={{background:checks[k]?"#B47FFF":"transparent",borderColor:checks[k]?"#B47FFF":"#222"}}>
-                  {checks[k]&&<span style={{fontSize:8,color:"#fff"}}>✓</span>}
+              {Object.values(MEALS).map((m,i)=>(
+                <div key={i} className="meal">
+                  <div style={{fontSize:9,color:"#E8FF47",letterSpacing:1.5,textTransform:"uppercase"}}>{m.time}</div>
+                  <div style={{fontSize:13,color:"#E0DFD8",margin:"3px 0 2px"}}>{m.name}</div>
+                  <div style={{fontSize:11,color:"#555"}}>{m.items}</div>
+                  <div style={{fontSize:9,color:"#555",marginTop:3}}>→ {m.why}</div>
                 </div>
-                <div style={{fontSize:11,color:checks[k]?"#333":"#666",textDecoration:checks[k]?"line-through":"none"}}>{label}</div>
-              </div>
-            ))}
-          </div>
+              ))}
 
-          <div style={{background:"#0d0d0a",border:"1px solid #222200",borderRadius:7,padding:13,marginBottom:8}}>
-            <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📊 DISCIPLINE SCORE</div>
-            {[["Focus","focus"],["Health","health"],["Emotional Regulation","emotion"],["Strategic Execution","strategy"]].map(([label,key])=>(
-              <div key={key} style={{marginBottom:11}}>
-                <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
-                  <div style={{fontSize:11,color:"#555"}}>{label}</div>
-                  <div style={{fontFamily:"'Bebas Neue'",fontSize:20,color:"#FFD147"}}>{scores[key]}</div>
+              <div style={{display:"flex",gap:8,marginTop:10,flexWrap:"wrap"}}>
+                {[
+                  {c:"#47FFB4",bg:"#0a1410",label:"💧 Water",val:"3.5 L"},
+                  {c:"#FF4747",bg:"#120d0d",label:"🚫 Avoid",val:"After 8:30 PM"},
+                  {c:"#B47FFF",bg:"#0e0a14",label:"✅ Cheat",val:"1x weekly"},
+                ].map(b=>(
+                  <div key={b.label} style={{flex:1,minWidth:100,background:b.bg,border:`1px solid ${b.c}20`,borderRadius:5,padding:10}}>
+                    <div style={{fontSize:9,color:b.c,letterSpacing:2,textTransform:"uppercase"}}>{b.label}</div>
+                    <div style={{fontFamily:"'Bebas Neue'",fontSize:16,color:b.c,marginTop:2}}>{b.val}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="card" style={{marginTop:10}}>
+                <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Body note / how you're feeling:</div>
+                <textarea rows={2} placeholder="Energy level, soreness, sleep quality last night..." value={notes.bodynote||""} onChange={e=>setNote("bodynote",e.target.value)}/>
+              </div>
+            </div>}
+
+            {/* ── SPIRIT ── */}
+            {tab==="spirit" && <div>
+              <div className="st" style={{color:"#FF6B35"}}>SPIRIT</div>
+              <div className="sub">Monday — the week starts in the spirit before it starts in the calendar.</div>
+
+              <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginBottom:10}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+                  <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase"}}>🙏 Daily Affirmation — Speak Aloud</div>
+                  <button onClick={()=>setAffOpen(!affOpen)} style={{background:"none",border:"1px solid #2a1a10",borderRadius:2,color:"#FF6B35",fontSize:8,cursor:"pointer",padding:"3px 7px",fontFamily:"inherit",letterSpacing:1,textTransform:"uppercase"}}>
+                    {affOpen?"Close":"Open"}
+                  </button>
                 </div>
-                <input type="range" min={1} max={10} value={scores[key]} onChange={e=>setScore(key,+e.target.value)}/>
-              </div>
-            ))}
-            <div style={{textAlign:"center",marginTop:6}}>
-              <div style={{fontFamily:"'Bebas Neue'",fontSize:44,color:"#FFD147",lineHeight:1}}>{avg}<span style={{fontSize:18,color:"#252525"}}> / 10</span></div>
-            </div>
-          </div>
-
-          <div style={{background:"#0d0809",border:"1px solid #251018",borderRadius:7,padding:13,marginBottom:8}}>
-            <div style={{fontSize:9,color:"#FF47A3",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🪞 REAL TRUTH</div>
-            <div style={{fontSize:10,color:"#666",marginBottom:8}}>Did I choose or react today? Where is there still no ease?</div>
-            <textarea rows={3} placeholder="The story I told myself was... The truth is..." value={notes.truth||""} onChange={e=>setNote("truth",e.target.value)}/>
-          </div>
-
-          <div style={{background:"#090d09",border:"2px solid #47FFB4",borderRadius:7,padding:13}}>
-            <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🔒 MONDAY LOCK-IN</div>
-            <div style={{fontSize:9,color:"#555",marginBottom:6}}>ONE move. Not business — the one thing the man needs to do tomorrow.</div>
-            <textarea rows={2} placeholder="Tomorrow I will non-negotiably..." value={notes.tomorrow||""} onChange={e=>setNote("tomorrow",e.target.value)}/>
-          </div>
-        </div>}
-
-        {/* ── PATTERNS ── */}
-        {tab==="patterns" && <div>
-          <div className="st" style={{color:"#47FFB4"}}>PATTERNS</div>
-          <div className="sub">JÄFO Intelligence · {allDays.length} days logged</div>
-
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}}>
-            {[
-              {label:"Focus 7d",val:avg7("focus"),color:"#47C4FF"},
-              {label:"Health 7d",val:avg7("health"),color:"#E8FF47"},
-              {label:"Emotion 7d",val:avg7("emotion"),color:"#FF6B35"},
-              {label:"Execution 7d",val:avg7("strategy"),color:"#B47FFF"},
-            ].map(s=>(
-              <div key={s.label} className="stat">
-                <div style={{fontSize:9,color:"#666",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>{s.label}</div>
-                <div style={{fontFamily:"'Bebas Neue'",fontSize:34,color:s.val==="—"?"#222":s.color}}>{s.val}</div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{background:"#0c0c08",border:"1px solid #E8FF4715",borderRadius:6,padding:12,marginBottom:12,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <div>
-              <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Workout Streak</div>
-              <div style={{fontFamily:"'Bebas Neue'",fontSize:30,color:"#E8FF47"}}>{streak} DAYS</div>
-            </div>
-            <div style={{fontSize:9,color:"#666",textAlign:"right",lineHeight:2}}>
-              <div>{allDays.length} days logged</div>
-              <div>{daysLeft} days to Sept 14</div>
-            </div>
-          </div>
-
-          {last7.length > 0 && (
-            <div className="card" style={{marginBottom:12}}>
-              <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>Score — Last {last7.length} Days</div>
-              <div style={{display:"flex",gap:5,alignItems:"flex-end",height:55}}>
-                {last7.map(([dk,d])=>{
-                  const s=d?.scores;
-                  const da=s?((s.focus+s.health+s.emotion+s.strategy)/4):0;
-                  const h=Math.round((da/10)*55);
-                  const isT=dk===tk;
-                  const lbl=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"});
-                  return (
-                    <div key={dk} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-                      <div style={{fontSize:8,color:isT?"#47FFB4":"#2a2a2a"}}>{da>0?da.toFixed(1):""}</div>
-                      <div style={{width:"100%",height:h,background:isT?"#47FFB4":"#1e3e2e",borderRadius:2,minHeight:2}}/>
-                      <div style={{fontSize:7,color:isT?"#47FFB4":"#2a2a2a",letterSpacing:1}}>{lbl}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Past Entries</div>
-          {allDays.length <= 1
-            ? <div style={{fontSize:11,color:"#555",textAlign:"center",padding:"30px 0"}}>No past entries yet. Come back tomorrow.</div>
-            : allDays.slice().reverse().filter(([k])=>k!==tk).map(([dk,d])=>{
-                const s=d?.scores;
-                const da=s?((s.focus+s.health+s.emotion+s.strategy)/4).toFixed(1):"—";
-                const lbl=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"});
-                const trained=d?.checks?.["eodb_workout"];
-                return (
-                  <div key={dk} className="hist">
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:5}}>
-                      <div>
-                        <div style={{fontSize:11,color:"#777"}}>{lbl}</div>
-                        {d?.notes?.tomorrow && <div style={{fontSize:9,color:"#777",marginTop:2,fontStyle:"italic"}}>Lock-in: "{d.notes.tomorrow}"</div>}
-                        {d?.notes?.journal && <div style={{fontSize:8,color:"#555"}}>📝 journal saved</div>}
+                {affOpen
+                  ? AFFIRMATION.split("\n").map((line,i)=>(
+                      <div key={i} style={{padding:"2px 0",fontSize:12,color:line.startsWith("In the name")||line.startsWith("Amen")?"#E0DFD8":"#666",fontStyle:line.startsWith("In the name")||line.startsWith("Amen")?"normal":"italic",fontFamily:"'Playfair Display',serif",lineHeight:1.9}}>
+                        {line||<br/>}
                       </div>
-                      <div style={{textAlign:"right"}}>
-                        <div style={{fontFamily:"'Bebas Neue'",fontSize:22,color:parseFloat(da)>=7?"#47FFB4":parseFloat(da)>=5?"#FFD147":"#FF4747"}}>{da}</div>
-                        {trained && <div style={{fontSize:8,color:"#E8FF47"}}>💪 trained</div>}
+                    ))
+                  : <div style={{fontSize:12,color:"#555",fontStyle:"italic",fontFamily:"'Playfair Display',serif"}}>"With humility and hope, I evoke divine discernment..."</div>
+                }
+                <div className="ci" style={{marginTop:8}} onClick={()=>setCheck("aff_spoken")}>
+                  <div className="cb" style={{background:checks.aff_spoken?"#FF6B35":"transparent",borderColor:checks.aff_spoken?"#FF6B35":"#252525"}}>
+                    {checks.aff_spoken&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                  </div>
+                  <div style={{fontSize:9,color:checks.aff_spoken?"#FF6B35":"#333"}}>I spoke this aloud today</div>
+                </div>
+              </div>
+
+              <div className="card" style={{marginBottom:10}}>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>🪞 Identity · This Season</div>
+                <div style={{fontSize:13,color:"#E0DFD8",lineHeight:1.8,fontFamily:"'Playfair Display',serif"}}>
+                  "I am becoming <em style={{color:"#FF6B35"}}>known to myself.</em> Not perfect — known. I have something steady underneath the emotion. I know who I am. I know what I value. I know how I want to show up. And from that place, I can choose rather than react."
+                </div>
+              </div>
+
+              <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginBottom:10}}>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>📖 {scripture.ref} — Monday's Word</div>
+                <div style={{fontSize:14,color:"#E0DFD8",lineHeight:1.7,fontStyle:"italic",fontFamily:"'Playfair Display',serif",marginBottom:10}}>"{scripture.text}"</div>
+                <div style={{height:1,background:"linear-gradient(to right,#FF6B35,transparent)",margin:"10px 0",opacity:.18}}/>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Monday embodiment</div>
+                <div style={{fontSize:11,color:"#666",lineHeight:1.8,marginBottom:8}}>
+                  Three things from Pastor Jerry Flowers that came together on Sunday and they don't expire today:<br/><br/>
+                  <em style={{color:"#FF6B35"}}>Jesus heals the parts we don't have ease with.</em> Sit with that question this week — where is there no ease? Don't rush the answer.<br/><br/>
+                  <em style={{color:"#FF6B35"}}>Your freedom is for a higher cause.</em> What you're building isn't just for you. The clarity, the financial freedom, the version of yourself emerging — it's to serve. That reframe changes everything about how you approach today's work.<br/><br/>
+                  <em style={{color:"#FF6B35"}}>A triggered leader limits their own destiny.</em> Healing is stewardship. The more you heal on the inside, the more He gets glory through your life on the outside. This isn't just personal growth — it's preparation.
+                </div>
+                <textarea rows={2} placeholder="What is God saying to me specifically this Monday?" value={notes.embody||""} onChange={e=>setNote("embody",e.target.value)}/>
+                <div className="ci" style={{marginTop:8}} onClick={()=>setCheck("embody_lived")}>
+                  <div className="cb" style={{background:checks.embody_lived?"#FF6B35":"transparent",borderColor:checks.embody_lived?"#FF6B35":"#252525"}}>
+                    {checks.embody_lived&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                  </div>
+                  <div style={{fontSize:9,color:checks.embody_lived?"#FF6B35":"#666"}}>I carried this word into my day</div>
+                </div>
+              </div>
+
+              <div className="card" style={{marginBottom:10}}>
+                <div style={{fontSize:9,color:"#B47FFF",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🌙 This Season</div>
+                <div style={{fontSize:11,color:"#666",lineHeight:1.9,marginBottom:10}}>
+                  The job in January. The distance with your brother. The relationship ending. The stripping away of things that were propping up an identity that wasn't fully yours yet. You wrote it yourself: <em style={{color:"#E0DFD8"}}>something is being built.</em>
+                  <br/><br/>
+                  This adjustment season is not negative. It is necessary. And you are fighting — learning things you haven't prioritised before, choosing abstinence, letting go, pursuing purity in the real sense. None of that comes without resistance.
+                  <br/><br/>
+                  <strong style={{color:"#B47FFF"}}>"The fight has been fixed. I am going to overcome. The only way I lose is if I stop fighting. And I'm not stopping."</strong>
+                </div>
+              </div>
+
+              <div className="card">
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>✍️ Monday Journal Prompt</div>
+                <div style={{fontSize:13,color:"#E0DFD8",lineHeight:1.7,marginBottom:8,fontStyle:"italic",fontFamily:"'Playfair Display',serif"}}>
+                  "Pastor Flowers asked: where in your life is there no ease? You said you didn't want to rush the answer. You've had a night to sleep on it. What's coming up?"
+                </div>
+                <textarea rows={5} placeholder="Write freely. No editing. Just truth..." value={notes.journal||""} onChange={e=>setNote("journal",e.target.value)}/>
+              </div>
+
+              {/* BIBLE STUDY */}
+              <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginTop:10}}>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>📖 Weekly Bible Study — 1 Hour</div>
+                <div style={{fontSize:10,color:"#666",marginBottom:14,lineHeight:1.6}}>Verses chosen for this season. Read slowly. Sit with one before moving to the next. The goal is not to finish — it's to be changed.</div>
+
+                {[
+                  {
+                    ref:"Psalm 139:23–24",
+                    text:"Search me, God, and know my heart; test me and know my anxious thoughts. See if there is any offensive way in me, and lead me in the way everlasting.",
+                    note:"You wrote that you don't yet fully know yourself. This is where you start — not with self-analysis, but with invitation. Let Him search first."
+                  },
+                  {
+                    ref:"Proverbs 4:23",
+                    text:"Above all else, guard your heart, for everything you do flows from it.",
+                    note:"A triggered leader limits their destiny — because everything flows from the heart. What's in it right now? What needs guarding?"
+                  },
+                  {
+                    ref:"Romans 12:2",
+                    text:"Do not conform to the pattern of this world, but be transformed by the renewing of your mind. Then you will be able to test and approve what God's will is — his good, pleasing and perfect will.",
+                    note:"Transformation isn't an event. It's the accumulation of moments where you choose differently. This season is that accumulation."
+                  },
+                  {
+                    ref:"Isaiah 43:18–19",
+                    text:"Forget the former things; do not dwell on the past. See, I am doing a new thing! Now it springs up; do you not perceive it? I am making a way in the wilderness and streams in the wasteland.",
+                    note:"The stripping away — the job, the relationship, the identity that wasn't fully yours yet — this is the wilderness. And He is making a way in it."
+                  },
+                  {
+                    ref:"James 1:2–4",
+                    text:"Consider it pure joy, my brothers and sisters, whenever you face trials of many kinds, because you know that the testing of your faith produces perseverance. Let perseverance finish its work so that you may be mature and complete, not lacking anything.",
+                    note:"This adjustment season is not punishment. It is preparation. James 1 is the theology underneath that truth."
+                  },
+                ].map((v,i)=>(
+                  <div key={v.ref} style={{marginBottom:16,paddingBottom:16,borderBottom:i<4?"1px solid #1e1e1e":"none"}}>
+                    <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>{v.ref}</div>
+                    <div style={{fontSize:13,color:"#E0DFD8",fontStyle:"italic",fontFamily:"'Playfair Display',serif",lineHeight:1.8,marginBottom:8}}>"{v.text}"</div>
+                    <div style={{fontSize:10,color:"#555",lineHeight:1.7,borderLeft:"2px solid #FF6B3530",paddingLeft:10}}>{v.note}</div>
+                    <div className="ci" style={{marginTop:10}} onClick={()=>setCheck("bible_"+v.ref)}>
+                      <div className="cb" style={{background:checks["bible_"+v.ref]?"#FF6B35":"transparent",borderColor:checks["bible_"+v.ref]?"#FF6B35":"#252525"}}>
+                        {checks["bible_"+v.ref]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                      </div>
+                      <div style={{fontSize:9,color:checks["bible_"+v.ref]?"#FF6B35":"#555"}}>I sat with this verse</div>
+                    </div>
+                  </div>
+                ))}
+
+                <textarea rows={3} placeholder="What did God say to me in study today..." value={notes.biblenote||""} onChange={e=>setNote("biblenote",e.target.value)}/>
+              </div>
+            </div>}
+
+            {/* ── MIND ── */}
+            {tab==="mind" && <div>
+              <div className="st" style={{color:"#47C4FF"}}>MIND</div>
+              <div className="sub">Monday — feed the mind daily, without exception.</div>
+
+              {/* DAILY READING HABIT */}
+              <div style={{background:"#080e11",border:"1px solid #47C4FF30",borderRadius:8,padding:15,marginBottom:12}}>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📚 Daily Reading — Non-Negotiable</div>
+                <div style={{fontSize:10,color:"#666",marginBottom:12}}>Every day. Not when you feel like it. The mind compounds the same way money does.</div>
+                {[
+                  {key:"read_book",    label:"📖 1 Chapter of a book", note:"Any chapter. Keep it moving."},
+                  {key:"read_news",    label:"📰 Newspaper / Current affairs", note:"Stay informed. Know what world you're operating in."},
+                  {key:"read_industry",label:"🎵 Music / Culture / Industry read", note:"1 article or newsletter relevant to what you're building."},
+                  {key:"read_invest",  label:"📈 Investment / Financial read", note:"Markets, macro, one thing that sharpens your investor lens."},
+                  {key:"read_bible",   label:"✝️ Bible Study / Devotion", note:"Not optional. The foundation everything else stands on."},
+                ].map(item=>(
+                  <div key={item.key} style={{marginBottom:10}}>
+                    <div className="ci" onClick={()=>setCheck(item.key)}>
+                      <div className="cb" style={{background:checks[item.key]?"#47C4FF":"transparent",borderColor:checks[item.key]?"#47C4FF":"#252525"}}>
+                        {checks[item.key]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                      </div>
+                      <div>
+                        <div style={{fontSize:11,color:checks[item.key]?"#2a2a2a":"#E0DFD8",textDecoration:checks[item.key]?"line-through":"none"}}>{item.label}</div>
+                        <div style={{fontSize:9,color:"#555",marginTop:1}}>{item.note}</div>
                       </div>
                     </div>
                   </div>
-                );
-              })
-          }
+                ))}
+              </div>
 
-          {/* ── EXPORT — embedded in Patterns ── */}
-          <div style={{height:1,background:"linear-gradient(to right,#47FFB4,transparent)",margin:"20px 0",opacity:.15}}/>
-          <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>💾 Export Your Data</div>
+              {/* WHAT DID YOU LEARN TODAY */}
+              <div className="card" style={{border:"1px solid #47C4FF20"}}>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>💡 What Did You Learn Today?</div>
+                <div style={{fontSize:10,color:"#666",marginBottom:8}}>One thing. Could be from a book, a meeting, a conversation, a moment of quiet. Write it down before it dissolves.</div>
+                <textarea rows={3} placeholder="Today I learned..." value={notes.learned||""} onChange={e=>setNote("learned",e.target.value)}/>
+              </div>
 
-          <div style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:7,padding:13,marginBottom:8}}>
-            <div style={{fontSize:9,color:"#47FFB4",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>Full Data (JSON)</div>
-            <div style={{fontSize:9,color:"#666",marginBottom:10}}>Everything — paste into Claude for weekly pattern analysis.</div>
-            <button onClick={()=>{
-              const data = loadData();
-              const lnks = JSON.parse(localStorage.getItem("jafo_links")||"[]");
-              const full = { jafo_entries: data, saved_links: lnks, exported_at: new Date().toISOString() };
-              const blob = new Blob([JSON.stringify(full,null,2)],{type:"application/json"});
-              const u = URL.createObjectURL(blob);
-              const a = document.createElement("a");
-              a.href=u; a.download=`jafo-data-${new Date().toISOString().split("T")[0]}.json`;
-              a.click(); URL.revokeObjectURL(u);
-            }} style={{background:"#47FFB4",color:"#080808",border:"none",borderRadius:3,padding:"10px 16px",fontSize:9,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:700,cursor:"pointer",width:"100%"}}>
-              ⬇ Download JSON
-            </button>
+              {/* DEEP WORK BLOCKS */}
+              <div style={{background:"#080e11",border:"1px solid #47C4FF25",borderRadius:8,padding:15,marginBottom:12,marginTop:10}}>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>⚡ Today's Deep Work Blocks</div>
+
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>11:00 AM — Caption & Copy Review</div>
+                {[
+                  "JRS newsletter: outline → first full draft (tone: personal, soulful, curatorial)",
+                  "ATIDE social captions for the week — review assets from designer",
+                  "JP Star campaign copy — review and approve anything going out this week",
+                  "Feedback to Esther by 1 PM",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("copy_"+item)}>
+                    <div className="cb" style={{background:checks["copy_"+item]?"#47C4FF":"transparent",borderColor:checks["copy_"+item]?"#47C4FF":"#252525"}}>
+                      {checks["copy_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:10,color:checks["copy_"+item]?"#2a2a2a":"#666",textDecoration:checks["copy_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                  </div>
+                ))}
+
+                <div style={{height:1,background:"linear-gradient(to right,#47C4FF,transparent)",margin:"12px 0",opacity:.12}}/>
+
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>3:30 PM — JRS March 14 Listening Session Prep</div>
+                {[
+                  "Event concept & experience design — vibe, flow, what moment do guests leave with?",
+                  "Guest list — curate intentionally, who gets personal touch from Joshua?",
+                  "Logistics checklist — venue, sound, food, photography confirmed?",
+                  "Content & promo — what goes out this week? What's captured on the night?",
+                  "Output: one-page event brief ready for Esther",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("jrs14_"+item)}>
+                    <div className="cb" style={{background:checks["jrs14_"+item]?"#47C4FF":"transparent",borderColor:checks["jrs14_"+item]?"#47C4FF":"#252525"}}>
+                      {checks["jrs14_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:10,color:checks["jrs14_"+item]?"#2a2a2a":"#666",textDecoration:checks["jrs14_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                  </div>
+                ))}
+
+                <div style={{height:1,background:"linear-gradient(to right,#47C4FF,transparent)",margin:"12px 0",opacity:.12}}/>
+
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>4:30 PM — Personal Brand & Content</div>
+                {[
+                  "Update @JoshiAhazie → @JoshuaAhazie across Instagram, Twitter/X, LinkedIn, TikTok",
+                  "Substack brainstorm — map out first 3 post concepts (positioning · truth · industry take)",
+                  "Article brainstorm — 3 to 5 pieces you've been meaning to write, one title + one-line premise each",
+                  "Which one could you write this week if you had 90 minutes?",
+                  "Output: Substack 3-post plan + article list saved as a note",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("brand_"+item)}>
+                    <div className="cb" style={{background:checks["brand_"+item]?"#FF6B35":"transparent",borderColor:checks["brand_"+item]?"#FF6B35":"#252525"}}>
+                      {checks["brand_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:10,color:checks["brand_"+item]?"#2a2a2a":"#666",textDecoration:checks["brand_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* THE ONE THING */}
+              <div className="card" style={{border:"2px solid #47C4FF30"}}>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>🎯 THE ONE THING — Today</div>
+                <div style={{fontSize:10,color:"#666",marginBottom:8}}>If today were a success, what single thing would have to be true?</div>
+                <textarea rows={2} placeholder="Today is a success if..." value={notes.onethinq||""} onChange={e=>setNote("onethinq",e.target.value)}/>
+              </div>
+
+              {/* ── LINKS — embedded in Mind ── */}
+              <div style={{height:1,background:"linear-gradient(to right,#47C4FF,transparent)",margin:"20px 0",opacity:.15}}/>
+              <LinksTab/>
+
+            </div>}
+
+            {/* ── BUSINESS ── */}
+            {tab==="business" && <div>
+              <div className="st" style={{color:"#B47FFF"}}>BUSINESS</div>
+              <div className="sub">Monday — execute. Every task below has a tier.</div>
+
+              {/* TIER 1 — DO TODAY */}
+              <div style={{background:"#0f0814",border:"2px solid #FF474740",borderRadius:8,padding:14,marginBottom:10}}>
+                <div style={{fontSize:9,color:"#FF4747",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>🔴 TIER 1 — Must happen today</div>
+
+                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>JP Star Campaign</div>
+                {[
+                  "Campaign activates TODAY — confirm Esther has everything needed for Week 1",
+                  "Communicate execution plan to client team (what we're doing and when)",
+                  "Confirm JP Star pricing change: USD → NGN (Esther to execute)",
+                  "Korede sends campaign status summary to group by 5 PM",
+                  "Confirm Week 1 radio outreach started: Beat FM, Cool FM, City FM, UFM, Yanga FM",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("t1jp_"+item)}>
+                    <div className="cb" style={{background:checks["t1jp_"+item]?"#FF4747":"transparent",borderColor:checks["t1jp_"+item]?"#FF4747":"#252525"}}>
+                      {checks["t1jp_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:10,color:checks["t1jp_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1jp_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                  </div>
+                ))}
+
+                <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
+                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>FAVE Report</div>
+                {[
+                  "Confirm FAVE report has gone out to client today (Esther owns this)",
+                  "Flag any client follow-up needed after receipt",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("t1fave_"+item)}>
+                    <div className="cb" style={{background:checks["t1fave_"+item]?"#FF4747":"transparent",borderColor:checks["t1fave_"+item]?"#FF4747":"#252525"}}>
+                      {checks["t1fave_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:10,color:checks["t1fave_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1fave_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                  </div>
+                ))}
+
+                <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
+                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>ATIDE</div>
+                {[
+                  "Pay salaries — confirm amounts and execute",
+                  "Set week deliverables for internal team + client projects (from Marketing stand-up 10 AM)",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("t1atide_"+item)}>
+                    <div className="cb" style={{background:checks["t1atide_"+item]?"#FF4747":"transparent",borderColor:checks["t1atide_"+item]?"#FF4747":"#252525"}}>
+                      {checks["t1atide_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:10,color:checks["t1atide_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1atide_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* TIER 2 — THIS WEEK */}
+              <div style={{background:"#0c0c08",border:"1px solid #FFD14730",borderRadius:8,padding:14,marginBottom:10}}>
+                <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>🟡 TIER 2 — Move this week</div>
+
+                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>Cavemen</div>
+                {[
+                  "Tuesday meeting on HOLD — confirm availability from their team",
+                  "Pitch + budget for Dami single + Backyard Music EP — confirm it's ready to present",
+                  "Once confirmed: decide who preps and who presents",
+                  "Close Cavemen this week",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("t2cav_"+item)}>
+                    <div className="cb" style={{background:checks["t2cav_"+item]?"#FFD147":"transparent",borderColor:checks["t2cav_"+item]?"#FFD147":"#252525"}}>
+                      {checks["t2cav_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:10,color:checks["t2cav_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2cav_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                  </div>
+                ))}
+
+                <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
+                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>JRS</div>
+                {[
+                  "Newsletter: outline → first full draft (Caption & Copy block 11 AM)",
+                  "March 14 listening session — one-page event brief ready for Esther (Deep Work 3:30 PM)",
+                  "Season poster — confirm status and who owns it",
+                  "March 29 listening session — status check",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("t2jrs_"+item)}>
+                    <div className="cb" style={{background:checks["t2jrs_"+item]?"#FFD147":"transparent",borderColor:checks["t2jrs_"+item]?"#FFD147":"#252525"}}>
+                      {checks["t2jrs_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:10,color:checks["t2jrs_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2jrs_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                  </div>
+                ))}
+
+                <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
+                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>Personal Brand</div>
+                {[
+                  "Update @JoshiAhazie → @JoshuaAhazie across all platforms (4:30 PM block)",
+                  "Substack 3-post plan mapped out",
+                  "Article brainstorm — 3 to 5 titles + one-line premise each",
+                ].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("t2brand_"+item)}>
+                    <div className="cb" style={{background:checks["t2brand_"+item]?"#FFD147":"transparent",borderColor:checks["t2brand_"+item]?"#FFD147":"#252525"}}>
+                      {checks["t2brand_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:10,color:checks["t2brand_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2brand_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* TIER 3 — WATCH */}
+              <div style={{background:"#0a0a0a",border:"1px solid #1e1e1e",borderRadius:8,padding:14,marginBottom:10}}>
+                <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>⚪ TIER 3 — Keep on radar</div>
+                <div style={{fontSize:11,color:"#555",lineHeight:2}}>
+                  Pipeline: eyes open for new clients this week — ATIDE needs revenue momentum<br/>
+                  Investment: CABA price action · research focus for March (from Portfolio Review 5:30 PM)<br/>
+                  JP Star: First performance update to client — Friday March 6 (Esther owns)<br/>
+                  Vinyl curation: follow up with dad after today's call
+                </div>
+              </div>
+
+              <div className="card" style={{marginTop:4}}>
+                <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>📝 Notes / Decisions</div>
+                <textarea rows={3} placeholder="Any decisions made, blockers, or flags from today's meetings..." value={notes.weekbiz||""} onChange={e=>setNote("weekbiz",e.target.value)}/>
+              </div>
+            </div>}
+
+            {/* ── ENERGY ── */}
+            {tab==="energy" && <div>
+              <div className="st" style={{color:"#47FFB4"}}>ENERGY</div>
+              <div className="sub">Monday — 5:30 AM start, 20 events. Know your friction zones before they hit.</div>
+              <div style={{background:"#080f0d",border:"1px solid #1a3325",borderRadius:8,padding:14,marginBottom:10}}>
+                {[
+                  {risk:"5:30 AM wake-up feeling impossible",         fix:"You set this. Alarm on, phone across the room. Strength Training #1 is at 6:30 AM — missing the wake-up means missing the workout. March starts today.",icon:"⏰"},
+                  {risk:"Meetings running into deep work blocks",      fix:"Marketing stand-up ends 10:45 AM. Caption & Copy starts 11 AM sharp. Do not let stand-up bleed. Set a timer at 10:40 AM.",icon:"📣"},
+                  {risk:"Campaign check-in going over (2:30–3:30 PM)",fix:"Hard stop at 3:30 PM — Deep Work on March 14 prep starts immediately. Korede has his action: campaign summary by 5 PM. Your job ends at 3:30.",icon:"📊"},
+                  {risk:"Personal Brand block getting skipped (4:30 PM)",fix:"This is the block most likely to get sacrificed. It's not optional — your handle update, Substack map, and article brainstorm live here. Protect it like a client meeting.",icon:"🧠"},
+                  {risk:"Evening cardio skipped after a heavy day",    fix:"6 PM cardio is 2 miles. 20–25 minutes. Non-negotiable. This is the fat loss work. A heavy meeting day is not an excuse — it's exactly when you need the reset.",icon:"🏃🏾"},
+                  {risk:"Late eating after dinner (8:30 PM cut-off)",  fix:"Dinner is 7 PM. EOD sync is 9 PM. Do not eat between sync and bedtime. Kitchen is closed.",icon:"🍽️"},
+                  {risk:"Scrolling instead of journaling before bed",  fix:"After EOD sync: Bible study, journal, pray. In that order. Phone goes down before End Day with God block at 9:30 PM.",icon:"✝️"},
+                ].map(item=>(
+                  <div key={item.risk} style={{display:"flex",gap:10,padding:"10px 0",borderBottom:"1px solid #0e0e0e",alignItems:"flex-start"}}>
+                    <div style={{fontSize:15,flexShrink:0}}>{item.icon}</div>
+                    <div>
+                      <div style={{fontSize:11,color:"#FF4747",marginBottom:2}}>{item.risk}</div>
+                      <div style={{fontSize:9,color:"#3a3a3a",lineHeight:1.6}}>→ {item.fix}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="card">
+                <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Your override plan today:</div>
+                <textarea rows={3} placeholder="What might pull you off today, and what's your one override?" value={notes.energy||""} onChange={e=>setNote("energy",e.target.value)}/>
+              </div>
+            </div>}
+
+            {/* ── EOD ── */}
+            {tab==="eod" && <div>
+              <div className="st" style={{color:"#FFD147"}}>EOD REVIEW</div>
+              <div className="sub">Monday close · No hiding · 9:30 PM.</div>
+
+              <div style={{background:"#0e0c08",border:"1px solid #252000",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>💪 BODY</div>
+                {[
+                  ["eodb_strength","Completed Strength Training #1"],
+                  ["eodb_walk",   "Completed 2-mile morning walk"],
+                  ["eodb_stretch","Did post-walk stretch & core"],
+                  ["eodb_cardio", "Completed evening cardio (2 miles)"],
+                  ["eodb_eat",    "Ate aligned — no late eating"],
+                  ["eodb_water",  "Hit 3.5L hydration"],
+                  ["eodb_fast",   "No food after 8:30 PM"],
+                  ["eodb_sleep",  "In bed by 10:30 PM"],
+                ].map(([k,label])=>(
+                  <div key={k} className="ci" onClick={()=>setCheck(k)}>
+                    <div className="cb" style={{background:checks[k]?"#FFD147":"transparent",borderColor:checks[k]?"#FFD147":"#222"}}>
+                      {checks[k]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:11,color:checks[k]?"#3a3a3a":"#666",textDecoration:checks[k]?"line-through":"none"}}>{label}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{background:"#0e0a08",border:"1px solid #251500",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>🔥 SPIRIT</div>
+                {[
+                  {q:"Did I choose or react today — where specifically?",k:"sp_aff"},
+                  {q:"Where did I feel a trigger today? What was underneath it?",k:"sp_identity"},
+                  {q:"Where did I sense God in the day?",k:"sp_god"},
+                  {q:"Did I end the day with prayer?",k:"sp_prayer"},
+                ].map(item=>(
+                  <div key={item.k} style={{marginBottom:8}}>
+                    <div style={{fontSize:11,color:"#555",marginBottom:3}}>{item.q}</div>
+                    <textarea rows={1} style={{minHeight:36}} placeholder="Honest answer..." value={notes[item.k]||""} onChange={e=>setNote(item.k,e.target.value)}/>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{background:"#0a0810",border:"1px solid #150d25",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#B47FFF",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>🎯 BUSINESS</div>
+                {[
+                  ["eodbi_jpstar",  "JP Star activation confirmed — Esther has everything"],
+                  ["eodbi_fave",    "FAVE report sent to client"],
+                  ["eodbi_salaries","ATIDE salaries paid"],
+                  ["eodbi_standup", "Marketing stand-up completed — Esther's week priority list pinned"],
+                  ["eodbi_copy",    "Caption & Copy approved — newsletter first draft saved"],
+                  ["eodbi_jrs14",   "JRS March 14 event brief ready for Esther"],
+                  ["eodbi_korede",  "Korede campaign summary received by 5 PM"],
+                  ["eodbi_sync",    "EOD sync with Esther completed"],
+                ].map(([k,label])=>(
+                  <div key={k} className="ci" onClick={()=>setCheck(k)}>
+                    <div className="cb" style={{background:checks[k]?"#B47FFF":"transparent",borderColor:checks[k]?"#B47FFF":"#222"}}>
+                      {checks[k]&&<span style={{fontSize:8,color:"#fff"}}>✓</span>}
+                    </div>
+                    <div style={{fontSize:11,color:checks[k]?"#333":"#666",textDecoration:checks[k]?"line-through":"none"}}>{label}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{background:"#0d0d0a",border:"1px solid #222200",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📊 DISCIPLINE SCORE</div>
+                {[["Focus","focus"],["Health","health"],["Emotional Regulation","emotion"],["Strategic Execution","strategy"]].map(([label,key])=>(
+                  <div key={key} style={{marginBottom:11}}>
+                    <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
+                      <div style={{fontSize:11,color:"#555"}}>{label}</div>
+                      <div style={{fontFamily:"'Bebas Neue'",fontSize:20,color:"#FFD147"}}>{scores[key]}</div>
+                    </div>
+                    <input type="range" min={1} max={10} value={scores[key]} onChange={e=>setScore(key,+e.target.value)}/>
+                  </div>
+                ))}
+                <div style={{textAlign:"center",marginTop:6}}>
+                  <div style={{fontFamily:"'Bebas Neue'",fontSize:44,color:"#FFD147",lineHeight:1}}>{avg}<span style={{fontSize:18,color:"#252525"}}> / 10</span></div>
+                </div>
+              </div>
+
+              <div style={{background:"#0d0809",border:"1px solid #251018",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#FF47A3",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🪞 REAL TRUTH</div>
+                <div style={{fontSize:10,color:"#666",marginBottom:8}}>Did I choose or react today? Where is there still no ease?</div>
+                <textarea rows={3} placeholder="The story I told myself was... The truth is..." value={notes.truth||""} onChange={e=>setNote("truth",e.target.value)}/>
+              </div>
+
+              <div style={{background:"#090d09",border:"2px solid #47FFB4",borderRadius:7,padding:13}}>
+                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🔒 MONDAY LOCK-IN</div>
+                <div style={{fontSize:9,color:"#555",marginBottom:6}}>ONE move. Not business — the one thing the man needs to do tomorrow.</div>
+                <textarea rows={2} placeholder="Tomorrow I will non-negotiably..." value={notes.tomorrow||""} onChange={e=>setNote("tomorrow",e.target.value)}/>
+              </div>
+            </div>}
+
+            {/* ── PATTERNS ── */}
+            {tab==="patterns" && <div>
+              <div className="st" style={{color:"#47FFB4"}}>PATTERNS</div>
+              <div className="sub">JÄFO Intelligence · {allDays.length} days logged</div>
+
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}}>
+                {[
+                  {label:"Focus 7d",val:avg7("focus"),color:"#47C4FF"},
+                  {label:"Health 7d",val:avg7("health"),color:"#E8FF47"},
+                  {label:"Emotion 7d",val:avg7("emotion"),color:"#FF6B35"},
+                  {label:"Execution 7d",val:avg7("strategy"),color:"#B47FFF"},
+                ].map(s=>(
+                  <div key={s.label} className="stat">
+                    <div style={{fontSize:9,color:"#666",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>{s.label}</div>
+                    <div style={{fontFamily:"'Bebas Neue'",fontSize:34,color:s.val==="—"?"#222":s.color}}>{s.val}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{background:"#0c0c08",border:"1px solid #E8FF4715",borderRadius:6,padding:12,marginBottom:12,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <div>
+                  <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Workout Streak</div>
+                  <div style={{fontFamily:"'Bebas Neue'",fontSize:30,color:"#E8FF47"}}>{streak} DAYS</div>
+                </div>
+                <div style={{fontSize:9,color:"#666",textAlign:"right",lineHeight:2}}>
+                  <div>{allDays.length} days logged</div>
+                  <div>{daysLeft} days to Sept 14</div>
+                </div>
+              </div>
+
+              {last7.length > 0 && (
+                <div className="card" style={{marginBottom:12}}>
+                  <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>Score — Last {last7.length} Days</div>
+                  <div style={{display:"flex",gap:5,alignItems:"flex-end",height:55}}>
+                    {last7.map(([dk,d])=>{
+                      const s=d?.scores;
+                      const da=s?((s.focus+s.health+s.emotion+s.strategy)/4):0;
+                      const h=Math.round((da/10)*55);
+                      const isT=dk===tk;
+                      const lbl=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"});
+                      return (
+                        <div key={dk} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
+                          <div style={{fontSize:8,color:isT?"#47FFB4":"#2a2a2a"}}>{da>0?da.toFixed(1):""}</div>
+                          <div style={{width:"100%",height:h,background:isT?"#47FFB4":"#1e3e2e",borderRadius:2,minHeight:2}}/>
+                          <div style={{fontSize:7,color:isT?"#47FFB4":"#2a2a2a",letterSpacing:1}}>{lbl}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Past Entries</div>
+              {allDays.length <= 1
+                ? <div style={{fontSize:11,color:"#555",textAlign:"center",padding:"30px 0"}}>No past entries yet. Come back tomorrow.</div>
+                : allDays.slice().reverse().filter(([k])=>k!==tk).map(([dk,d])=>{
+                    const s=d?.scores;
+                    const da=s?((s.focus+s.health+s.emotion+s.strategy)/4).toFixed(1):"—";
+                    const lbl=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"});
+                    const trained=d?.checks?.["eodb_workout"];
+                    return (
+                      <div key={dk} className="hist">
+                        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:5}}>
+                          <div>
+                            <div style={{fontSize:11,color:"#777"}}>{lbl}</div>
+                            {d?.notes?.tomorrow && <div style={{fontSize:9,color:"#777",marginTop:2,fontStyle:"italic"}}>Lock-in: "{d.notes.tomorrow}"</div>}
+                            {d?.notes?.journal && <div style={{fontSize:8,color:"#555"}}>📝 journal saved</div>}
+                          </div>
+                          <div style={{textAlign:"right"}}>
+                            <div style={{fontFamily:"'Bebas Neue'",fontSize:22,color:parseFloat(da)>=7?"#47FFB4":parseFloat(da)>=5?"#FFD147":"#FF4747"}}>{da}</div>
+                            {trained && <div style={{fontSize:8,color:"#E8FF47"}}>💪 trained</div>}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+              }
+
+              {/* ── EXPORT — embedded in Patterns ── */}
+              <div style={{height:1,background:"linear-gradient(to right,#47FFB4,transparent)",margin:"20px 0",opacity:.15}}/>
+              <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>💾 Export Your Data</div>
+
+              <div style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>Full Data (JSON)</div>
+                <div style={{fontSize:9,color:"#666",marginBottom:10}}>Everything — paste into Claude for weekly pattern analysis.</div>
+                <button onClick={()=>{
+                  const data = loadData();
+                  const lnks = JSON.parse(localStorage.getItem("jafo_links")||"[]");
+                  const full = { jafo_entries: data, saved_links: lnks, exported_at: new Date().toISOString() };
+                  const blob = new Blob([JSON.stringify(full,null,2)],{type:"application/json"});
+                  const u = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href=u; a.download=`jafo-data-${new Date().toISOString().split("T")[0]}.json`;
+                  a.click(); URL.revokeObjectURL(u);
+                }} style={{background:"#47FFB4",color:"#080808",border:"none",borderRadius:3,padding:"10px 16px",fontSize:9,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:700,cursor:"pointer",width:"100%"}}>
+                  ⬇ Download JSON
+                </button>
+              </div>
+
+              <div style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#E8FF47",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>Readable Weekly Summary (TXT)</div>
+                <div style={{fontSize:9,color:"#666",marginBottom:10}}>Clean human-readable file. Print, share, or paste into notes.</div>
+                <button onClick={()=>{
+                  const data = loadData();
+                  const days = Object.entries(data).filter(([k])=>k.match(/^\d{4}-\d{2}-\d{2}$/)).sort(([a],[b])=>a>b?1:-1);
+                  let txt = "JÄFO — Weekly Summary\n";
+                  txt += `Exported: ${new Date().toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}\n`;
+                  txt += `Days logged: ${days.length}\n\n${"═".repeat(50)}\n\n`;
+                  days.forEach(([dk,d])=>{
+                    const label=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+                    const s=d?.scores;
+                    const av=s?((s.focus+s.health+s.emotion+s.strategy)/4).toFixed(1):"—";
+                    txt+=`📅 ${label}\nDiscipline: ${av}/10  (Focus:${s?.focus||"—"} Health:${s?.health||"—"} Emotion:${s?.emotion||"—"} Execution:${s?.strategy||"—"})\n`;
+                    if(d?.notes?.journal)  txt+=`Journal: ${d.notes.journal}\n`;
+                    if(d?.notes?.truth)    txt+=`Real Truth: ${d.notes.truth}\n`;
+                    if(d?.notes?.tomorrow) txt+=`Lock-In: ${d.notes.tomorrow}\n`;
+                    if(d?.notes?.dreams)   txt+=`Dreams: ${d.notes.dreams}\n`;
+                    if(d?.notes?.bodynote) txt+=`Body: ${d.notes.bodynote}\n`;
+                    if(d?.notes?.learned)  txt+=`Learned: ${d.notes.learned}\n`;
+                    txt+="\n";
+                  });
+                  const blob=new Blob([txt],{type:"text/plain"});
+                  const u=URL.createObjectURL(blob);
+                  const a=document.createElement("a");
+                  a.href=u; a.download=`jafo-summary-${new Date().toISOString().split("T")[0]}.txt`;
+                  a.click(); URL.revokeObjectURL(u);
+                }} style={{background:"#E8FF47",color:"#080808",border:"none",borderRadius:3,padding:"10px 16px",fontSize:9,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:700,cursor:"pointer",width:"100%"}}>
+                  ⬇ Download Summary TXT
+                </button>
+              </div>
+
+              <div style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:7,padding:13,marginBottom:8}}>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>Saved Links (TXT)</div>
+                <div style={{fontSize:9,color:"#666",marginBottom:10}}>Your full reading/watching list.</div>
+                <button onClick={()=>{
+                  const lnks=JSON.parse(localStorage.getItem("jafo_links")||"[]");
+                  if(!lnks.length){alert("No links saved yet.");return;}
+                  let txt="JÄFO — Saved Links\n"+`Exported: ${new Date().toLocaleDateString()}\n\n`;
+                  const unread=lnks.filter(l=>!l.done), done=lnks.filter(l=>l.done);
+                  if(unread.length){ txt+=`TO READ/WATCH (${unread.length})\n${"─".repeat(30)}\n`; unread.forEach(l=>{txt+=`[${l.cat}] ${l.title}\n${l.url}\nSaved: ${l.saved}\n\n`;}); }
+                  if(done.length){ txt+=`COMPLETED (${done.length})\n${"─".repeat(30)}\n`; done.forEach(l=>{txt+=`✓ ${l.title}\n${l.url}\n\n`;}); }
+                  const blob=new Blob([txt],{type:"text/plain"});
+                  const u=URL.createObjectURL(blob);
+                  const a=document.createElement("a");
+                  a.href=u; a.download=`jafo-links-${new Date().toISOString().split("T")[0]}.txt`;
+                  a.click(); URL.revokeObjectURL(u);
+                }} style={{background:"#FF6B35",color:"#080808",border:"none",borderRadius:3,padding:"10px 16px",fontSize:9,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:700,cursor:"pointer",width:"100%"}}>
+                  ⬇ Download Links TXT
+                </button>
+              </div>
+
+              <div style={{background:"#0a0a0a",border:"1px solid #111",borderRadius:5,padding:11,marginTop:4}}>
+                <div style={{fontSize:9,color:"#555",lineHeight:2}}>
+                  Days logged: <span style={{color:"#47FFB4"}}>{Object.keys(loadData()).filter(k=>k.match(/^\d{4}-\d{2}-\d{2}$/)).length}</span> &nbsp;·&nbsp;
+                  Links saved: <span style={{color:"#FF6B35"}}>{JSON.parse(localStorage.getItem("jafo_links")||"[]").length}</span> &nbsp;·&nbsp;
+                  Device only — never sent to any server.
+                </div>
+              </div>
+
+            </div>}
+
           </div>
 
-          <div style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:7,padding:13,marginBottom:8}}>
-            <div style={{fontSize:9,color:"#E8FF47",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>Readable Weekly Summary (TXT)</div>
-            <div style={{fontSize:9,color:"#666",marginBottom:10}}>Clean human-readable file. Print, share, or paste into notes.</div>
-            <button onClick={()=>{
-              const data = loadData();
-              const days = Object.entries(data).filter(([k])=>k.match(/^\d{4}-\d{2}-\d{2}$/)).sort(([a],[b])=>a>b?1:-1);
-              let txt = "JÄFO — Weekly Summary\n";
-              txt += `Exported: ${new Date().toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}\n`;
-              txt += `Days logged: ${days.length}\n\n${"═".repeat(50)}\n\n`;
-              days.forEach(([dk,d])=>{
-                const label=new Date(dk+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
-                const s=d?.scores;
-                const av=s?((s.focus+s.health+s.emotion+s.strategy)/4).toFixed(1):"—";
-                txt+=`📅 ${label}\nDiscipline: ${av}/10  (Focus:${s?.focus||"—"} Health:${s?.health||"—"} Emotion:${s?.emotion||"—"} Execution:${s?.strategy||"—"})\n`;
-                if(d?.notes?.journal)  txt+=`Journal: ${d.notes.journal}\n`;
-                if(d?.notes?.truth)    txt+=`Real Truth: ${d.notes.truth}\n`;
-                if(d?.notes?.tomorrow) txt+=`Lock-In: ${d.notes.tomorrow}\n`;
-                if(d?.notes?.dreams)   txt+=`Dreams: ${d.notes.dreams}\n`;
-                if(d?.notes?.bodynote) txt+=`Body: ${d.notes.bodynote}\n`;
-                if(d?.notes?.learned)  txt+=`Learned: ${d.notes.learned}\n`;
-                txt+="\n";
-              });
-              const blob=new Blob([txt],{type:"text/plain"});
-              const u=URL.createObjectURL(blob);
-              const a=document.createElement("a");
-              a.href=u; a.download=`jafo-summary-${new Date().toISOString().split("T")[0]}.txt`;
-              a.click(); URL.revokeObjectURL(u);
-            }} style={{background:"#E8FF47",color:"#080808",border:"none",borderRadius:3,padding:"10px 16px",fontSize:9,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:700,cursor:"pointer",width:"100%"}}>
-              ⬇ Download Summary TXT
-            </button>
+          <div style={{borderTop:"1px solid #0d0d0d",padding:"10px 16px",display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6,paddingBottom:"max(10px,env(safe-area-inset-bottom))"}}>
+            <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:3,textTransform:"uppercase"}}>JÄFO · Monday March 2 2026</div>
+            <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:2,textTransform:"uppercase"}}>Energy · Revenue · Never Ego</div>
           </div>
+        </div>
+      );
+    }
 
-          <div style={{background:"#0d0d0d",border:"1px solid #171717",borderRadius:7,padding:13,marginBottom:8}}>
-            <div style={{fontSize:9,color:"#FF6B35",letterSpacing:1.5,textTransform:"uppercase",marginBottom:3}}>Saved Links (TXT)</div>
-            <div style={{fontSize:9,color:"#666",marginBottom:10}}>Your full reading/watching list.</div>
-            <button onClick={()=>{
-              const lnks=JSON.parse(localStorage.getItem("jafo_links")||"[]");
-              if(!lnks.length){alert("No links saved yet.");return;}
-              let txt="JÄFO — Saved Links\n"+`Exported: ${new Date().toLocaleDateString()}\n\n`;
-              const unread=lnks.filter(l=>!l.done), done=lnks.filter(l=>l.done);
-              if(unread.length){ txt+=`TO READ/WATCH (${unread.length})\n${"─".repeat(30)}\n`; unread.forEach(l=>{txt+=`[${l.cat}] ${l.title}\n${l.url}\nSaved: ${l.saved}\n\n`;}); }
-              if(done.length){ txt+=`COMPLETED (${done.length})\n${"─".repeat(30)}\n`; done.forEach(l=>{txt+=`✓ ${l.title}\n${l.url}\n\n`;}); }
-              const blob=new Blob([txt],{type:"text/plain"});
-              const u=URL.createObjectURL(blob);
-              const a=document.createElement("a");
-              a.href=u; a.download=`jafo-links-${new Date().toISOString().split("T")[0]}.txt`;
-              a.click(); URL.revokeObjectURL(u);
-            }} style={{background:"#FF6B35",color:"#080808",border:"none",borderRadius:3,padding:"10px 16px",fontSize:9,letterSpacing:1.5,textTransform:"uppercase",fontFamily:"inherit",fontWeight:700,cursor:"pointer",width:"100%"}}>
-              ⬇ Download Links TXT
-            </button>
-          </div>
-
-          <div style={{background:"#0a0a0a",border:"1px solid #111",borderRadius:5,padding:11,marginTop:4}}>
-            <div style={{fontSize:9,color:"#555",lineHeight:2}}>
-              Days logged: <span style={{color:"#47FFB4"}}>{Object.keys(loadData()).filter(k=>k.match(/^\d{4}-\d{2}-\d{2}$/)).length}</span> &nbsp;·&nbsp;
-              Links saved: <span style={{color:"#FF6B35"}}>{JSON.parse(localStorage.getItem("jafo_links")||"[]").length}</span> &nbsp;·&nbsp;
-              Device only — never sent to any server.
-            </div>
-          </div>
-
-        </div>}
-
-      </div>
-
-      <div style={{borderTop:"1px solid #0d0d0d",padding:"10px 16px",display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6,paddingBottom:"max(10px,env(safe-area-inset-bottom))"}}>
-        <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:3,textTransform:"uppercase"}}>JÄFO · Monday March 2 2026</div>
-        <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:2,textTransform:"uppercase"}}>Energy · Revenue · Never Ego</div>
-      </div>
-    </div>
-  );
-}
-
-ReactDOM.render(<App/>, document.getElementById("root"));
-```
-
+    ReactDOM.render(<App/>, document.getElementById("root"));
   </script>
   <script>
     if ('serviceWorker' in navigator) {
