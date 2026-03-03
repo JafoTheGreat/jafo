@@ -441,15 +441,6 @@ Amen.`;
                 <textarea rows={2} placeholder="Add your own..." value={notes.onethinq||""} onChange={e=>setNote("onethinq",e.target.value)}/>
               </div>
 
-              <div className="card" style={{border:"1px solid #47C4FF15",marginBottom:12}}>
-                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>🗂 Daily Word Bank</div>
-                <div style={{fontSize:10,color:"#555",marginBottom:10,lineHeight:1.6}}>Key words, ideas, or concepts from today worth pondering or revisiting.</div>
-                {(notes.wordbank||"").split("\n").filter(Boolean).map((word,i)=>(
-                  <div key={i} style={{display:"inline-block",background:"#47C4FF18",border:"1px solid #47C4FF30",borderRadius:3,padding:"3px 10px",margin:"3px 4px 3px 0",fontSize:11,color:"#47C4FF"}}>{word}</div>
-                ))}
-                <textarea rows={3} placeholder={"One word or phrase per line...\nexample: Stewardship\nexample: Architect not executor"} value={notes.wordbank||""} onChange={e=>setNote("wordbank",e.target.value)} style={{marginTop:8}}/>
-              </div>
-
               <div style={{background:"#080e11",border:"1px solid #47C4FF30",borderRadius:8,padding:15,marginBottom:12}}>
                 <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📚 Daily Reading — Non-Negotiable</div>
                 {[
@@ -474,6 +465,15 @@ Amen.`;
               <div className="card" style={{border:"1px solid #47C4FF20"}}>
                 <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>💡 What Did You Learn Today?</div>
                 <textarea rows={3} placeholder="Today I learned..." value={notes.learned||""} onChange={e=>setNote("learned",e.target.value)}/>
+              </div>
+
+              <div className="card" style={{border:"1px solid #47C4FF15",marginBottom:12}}>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>🗂 Daily Word Bank</div>
+                <div style={{fontSize:10,color:"#555",marginBottom:10,lineHeight:1.6}}>Key words, ideas, or concepts worth pondering or revisiting.</div>
+                {(notes.wordbank||"").split("\n").filter(Boolean).map((word,i)=>(
+                  <div key={i} style={{display:"inline-block",background:"#47C4FF18",border:"1px solid #47C4FF30",borderRadius:3,padding:"3px 10px",margin:"3px 4px 3px 0",fontSize:11,color:"#47C4FF"}}>{word}</div>
+                ))}
+                <textarea rows={3} placeholder={"One word or phrase per line...\nexample: Stewardship\nexample: Architect not executor"} value={notes.wordbank||""} onChange={e=>setNote("wordbank",e.target.value)} style={{marginTop:8}}/>
               </div>
 
               <div style={{background:"#080e11",border:"1px solid #47C4FF25",borderRadius:8,padding:15,marginBottom:12,marginTop:10}}>
