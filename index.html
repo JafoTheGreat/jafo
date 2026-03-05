@@ -25,51 +25,52 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-    // ── WEDNESDAY MARCH 4 — LIVE CALENDAR DATA ───────────────────────────────
+    // ── THURSDAY MARCH 5 — LIVE CALENDAR DATA ───────────────────────────────
     const CALENDAR = [
-      { id:"pray",      time:"5:30 AM – 6:00 AM",  title:"Wake Up & Pray",                         subtitle:"Recurring · Morning anchor",                    type:"SACRED",  color:"#FFD147", emoji:"🙏",
-        desc:"Before the phone. Before the brief. Before Wednesday has any say — God first. This 30 minutes sets the frequency for everything downstream." },
-      { id:"journal",   time:"6:00 AM – 6:30 AM",  title:"Journaling",                             subtitle:"Morning reflection · Recurring",                 type:"SACRED",  color:"#FFD147", emoji:"📓",
-        desc:"Round up any voice notes or raw entries from yesterday. Capture this morning's honest state — energy, what you're carrying, what's live. Close with the one thing you're committing to today. Keep it moving — training starts at 7." },
-      { id:"strength",  time:"7:00 AM – 7:45 AM",  title:"Strength Training #2",                   subtitle:"Back flagged — stretch first, non-negotiable",   type:"BODY",    color:"#E8FF47", emoji:"💪",
-        desc:"Stretch before you touch a weight. You noted the back — as soon as you stretched yesterday it was fine, but it will compound if you skip it. 45 minutes. Show up clean." },
-      { id:"cardio",    time:"7:45 AM – 8:15 AM",  title:"Cardio — 2 Miles",                       subtitle:"Morning movement block",                         type:"BODY",    color:"#E8FF47", emoji:"🏃🏾",
-        desc:"30 minutes. 2 miles. Fat loss work and a mental reset before a full creative day. Non-negotiable." },
-      { id:"jp",        time:"8:30 AM – 9:00 AM",  title:"JP Star — Task Overview & Execution",    subtitle:"Solo deep work · 30 min",                        type:"DO",      color:"#47C4FF", emoji:"🎵",
-        desc:"Focused review block. Confirm what's on track / stalled / needs a decision today. Draft the radio brief — confirm target stations and interview/support package (budget cap ₦750k max). Intro email: Korede → Casey + radio plugger today.",
-        detail:"Exit: campaign status clear, radio brief ready, intro email drafted." },
-      { id:"atide",     time:"9:00 AM – 10:00 AM", title:"ATIDE Rebrand — Social Media Plan Review", subtitle:"Solo · Sign off or list changes",               type:"DO",      color:"#47C4FF", emoji:"🏗️",
-        desc:"The revised plan is done — Mar 17 launch, five videos integrated. Read it fresh. Check the 30-Day Calendar — dates, post order, video sequencing. Note final edits clearly (Dubem for assets, Korede for copy). Confirm landing page brief ready — newsletter opt-in + inquiry form with budget field, live Day 1.",
-        detail:"Exit: plan signed off or specific change list done. Nothing vague." },
-      { id:"jrs",       time:"10:00 AM – 11:00 AM", title:"JRS Social Media Plan Review",          subtitle:"Write + post 004 announcement today",            type:"DO",      color:"#47C4FF", emoji:"🎧",
-        desc:"Two tasks. 1 — Review the JRS comms plan for Mar 14, confirm the sequence is scheduled. 2 — Write and post the first proper 004 announcement. Details: March 14 · 16by16, 16 Kofo Abayomi, VI · two sessions (Women In African Music 6:30–7:30 PM / Evolution of Alte 8–9 PM) · tickets ₦7,500 single / ₦10,000 both · complimentary wine Session 1. Tone: personal, soulful, curatorial — JRS voice, not a flyer caption.",
-        detail:"Exit: post written, reviewed, and live before 11 AM." },
-      { id:"breakfast", time:"11:00 AM – 11:30 AM", title:"Breakfast",                             subtitle:"Egg sauce · No phone · Eat properly",             type:"BODY",    color:"#47FFB4", emoji:"🍳",
-        desc:"Egg sauce. Sit down and eat. No phone, no work. Full afternoon of creative meetings ahead — this is fuel, not admin time." },
-      { id:"drive",     time:"11:30 AM – 12:00 PM", title:"Drive to 16by16",                       subtitle:"16 Kofo Abayomi St, Victoria Island",             type:"MOVE",    color:"#E0DFD8", emoji:"🚗",
-        desc:"30 minutes to VI. Come in with the social media plan for Prince — he needs to know where each video lands in the sequence." },
-      { id:"prince",    time:"12:00 PM – 2:00 PM",  title:"ATIDE Video 02 — Storyboard + Edit Session", subtitle:"With Prince · 16by16 · 2 hrs",             type:"MEETING", color:"#FF47A3", emoji:"🎬",
-        desc:"Part 1 (12:00–12:45): Walk Prince through V01–V05 brief. Storyboard V02 together — existing footage + new shots + motion pass. Confirm shoot date (Mar 10 or 11). Confirm V03 and V04 approach. Part 2 (12:45–1:45): Review V01 colour grade. Specific feedback only — what's working, what changes, one more round or locked? Align on timeline: V01 locked Mar 12, V02/V03/V04 locked Mar 15, all exports done Mar 16.",
-        detail:"HARD STOP 1:45 PM — Dubem session starts at 2. Confirm Prince has everything and set next check-in before you leave." },
-      { id:"lunch",     time:"1:30 PM",              title:"Snack",                                 subtitle:"Meat pie, sandwich, or grab at 16",               type:"BODY",    color:"#47FFB4", emoji:"🥪",
-        desc:"Keep it light — you're in creative mode 12–4, not a food window. Something small that keeps you going through the Dubem session." },
-      { id:"dubem",     time:"2:00 PM – 4:00 PM",   title:"Asset Creation + Dubem Creative Alignment", subtitle:"With Dubem · 16by16 · Retainer close at 3 PM", type:"MEETING", color:"#FF47A3", emoji:"🎨",
-        desc:"Part 1 (2:00–3:00): Walk Dubem through the finalised social media plan — what's coming, in what order, when. Brief launch week assets: brand statement graphic, landing page visuals, wave tease, services carousel. Each asset: dimensions, copy, deadline. No vague asks. Part 2 (3:00–3:45): The retainer conversation. Offer is sent — ₦150–200k/month, part-time, deliverable-based. Come in confident.",
-        detail:"Exit: assets briefed, retainer decision made or follow-up dated. Don't leave without one of those two." },
-      { id:"jazzhole",  time:"5:00 PM – 6:00 PM",   title:"Jazzhole / Piano",                      subtitle:"Decompression · Record hunting or piano",         type:"SACRED",  color:"#FF47A3", emoji:"🎵",
-        desc:"If Jazzhole has good energy: dig for records for Mar 14 — Women in African Music and Evolution of Alte. Trust your ear. If Jazzhole isn't the vibe: go home and play piano. Either way: decompression. Let the afternoon settle." },
-      { id:"calls",     time:"6:30 PM – 7:30 PM",   title:"Relationship Block",                     subtitle:"Yemi · Ruby · Beever · Nii Sai",                 type:"PEOPLE",  color:"#FF47A3", emoji:"📞",
-        desc:"Call Yemi — your former lawyer and good friend. Tell him how things are going, ask for advice during this phase, speak sincerely. He knows you and pushed you toward self-work. Also Ruby — you're tempted to go see him, but you already know the right call on a Wednesday. Call instead. Stay on your rails tonight." },
-      { id:"dinner",    time:"7:30 PM – 8:30 PM",   title:"Dinner — Amala · 100 Hours, Ikoyi",     subtitle:"100 Awolowo Rd · Kitchen closes 8:30 PM",        type:"BODY",    color:"#47FFB4", emoji:"🍽️",
-        desc:"Amala at 100 Hours. Enjoy it. Eat well. Go home after. Kitchen closes 8:30 PM sharp — this is the discipline that drives the Sept 14 number." },
-      { id:"sermon",    time:"8:00 PM – 9:00 PM",   title:"Sermon",                                 subtitle:"30–40 min · No multitasking · Just receive",     type:"SACRED",  color:"#FFD147", emoji:"✝️",
-        desc:"Watch, listen, receive. No multitasking. Sit with it. Wednesday is when you need this the most." },
-      { id:"endday",    time:"9:30 PM – 10:00 PM",  title:"End Day with God — Prayer & Reflection", subtitle:"Review · Bible study · Journal · Pray",           type:"SACRED",  color:"#FFD147", emoji:"🙏",
-        desc:"Review the day spiritually. Revisit Bible study notes. Journal reflections. Pray before sleeping. Close Wednesday the way it needs to be closed — with God." },
+      { id:"pray",      time:"5:30 AM – 6:00 AM",   title:"Wake Up & Pray",                           subtitle:"Recurring · Morning anchor",                       type:"SACRED",  color:"#FFD147", emoji:"🙏",
+        desc:"Before the phone. Before the brief. Before Thursday has any say — God first. You slept 3–8AM. Five hours. You're not wrecked but you're not full. This 30 minutes sets the frequency. Don't skip it because you feel behind." },
+      { id:"journal",   time:"6:00 AM – 6:30 AM",   title:"Journaling",                               subtitle:"Morning reflection · Recurring",                    type:"SACRED",  color:"#FFD147", emoji:"📓",
+        desc:"Capture the honest state. You said strength and mind feel close to quitting — write that down, then write what the Fibonacci note actually said. You're not behind. You're early in the sequence. Close with today's one commitment." },
+      { id:"rel",       time:"9:30 AM – 10:00 AM",  title:"Relationship Block",                        subtitle:"Beever · Nii Sai · Fifi · Baboa · Maame — pick 1–2", type:"PEOPLE", color:"#FF47A3", emoji:"📞",
+        desc:"You don't know yet who you're calling — decide before you sit down. Not transactional calls. People. Names from the context doc: Beever, Nii Sai, Fifi, Baboa, Maame. One or two real conversations. No agenda other than the person. Connection is infrastructure, not a reward for finishing work." },
+      { id:"cardio",    time:"9:30 AM – 10:00 AM",  title:"Cardio — 4 Miles",                         subtitle:"Ogudu GRA Estate · Day 4 straight · Stretch first", type:"BODY",   color:"#E8FF47", emoji:"🏃🏾",
+        desc:"Four miles. Day four in a row. Stretch before you start — back still needs it. This walk is also mental reset time before the work blocks kick in. Note: calendar shows this overlapping with Relationship Block — move the walk earlier or fold calls into the walk if needed.",
+        detail:"Stretch first. Non-negotiable." },
+      { id:"workblock", time:"10:00 AM – 11:00 AM", title:"Work Block #1 — ATIDE & JRS Follow Ups",   subtitle:"Solo · Send Dubem retainer · Finalise JRS captions", type:"DO",     color:"#47C4FF", emoji:"💼",
+        desc:"Two tasks to ship in this block. 1 — Update Dubem retainer doc (April 1 start, first payment April) and send. 2 — Finalise JRS 004 post and captions. Both are near-done. Don't let near-done tasks float. Ship them both before 11 AM.",
+        detail:"Exit: Dubem offer sent. JRS 004 post and captions ready to go." },
+      { id:"strategy",  time:"11:00 AM – 11:30 AM", title:"300K Strategy Review",                     subtitle:"Solo · Extract what to lock in",                    type:"DO",      color:"#47C4FF", emoji:"📈",
+        desc:"You flagged this in the context doc. Read through the 300K strategy and extract what needs to be locked in right now. Don't just read — annotate. What's relevant to March? What needs a decision? What can Korede own?",
+        detail:"Exit: 2–3 clear actions identified from the strategy doc." },
+      { id:"lunch",     time:"11:30 AM – 12:00 PM", title:"Lunch — Amala + Beef",                     subtitle:"Eat properly · No phone",                          type:"BODY",    color:"#47FFB4", emoji:"🍲",
+        desc:"Amala and beef. Sit down, eat properly, no phone. You've got a heavy afternoon ahead — fuel matters. Moderate portion, you need sharp thinking at 1:30 PM." },
+      { id:"transfer",  time:"12:00 PM – 12:30 PM", title:"ATIDE Drawdown Transfer",                  subtitle:"Financial admin · Clear head required",            type:"DO",      color:"#B47FFF", emoji:"💸",
+        desc:"Do this clean. Have the figures ready before you open the app — know what's moving and why before you execute. Numbers need attention, not distraction." },
+      { id:"jrs004",    time:"12:30 PM – 1:30 PM",  title:"004 — Event Planning & Logistics Meeting", subtitle:"Meeting · toksyjo@gmail.com · 9 days out",         type:"MEETING", color:"#FF47A3", emoji:"🎧",
+        desc:"March 14 is 9 days out. This meeting locks the remaining logistics: sound, hosting, venue setup, ticket ops, any outstanding confirmations. Come in with a checklist — leave with zero open items. One other attendee on the invite (toksyjo).",
+        detail:"Exit: full logistics confirmed. Nothing outstanding that can bite you on the night." },
+      { id:"cavemen",   time:"1:30 PM – 3:00 PM",   title:"The Cavemen H1 2026 Pitch Prep",           subtitle:"Solo deep work · 90 min · Meeting is Friday",      type:"DO",      color:"#47C4FF", emoji:"🎯",
+        desc:"The strategy doc exists and it's strong. Your job in this 90 minutes: refine the timeline to current dates, draft a budget with clear ATIDE margins, and lock your pricing position. You're doing full-stack work for The Cavemen — strategy, content, radio, PR, ads, Lovett video, Jam Session. That scope deserves a number that reflects the value. Also: reach out to Prince today about Cavemen video treatments.",
+        detail:"Hard stop at 3:00 PM — Joyce arrives at 2:00 PM so this may need to flex. Prioritise pricing and budget above all else." },
+      { id:"joyce",     time:"2:00 PM – 6:00 PM",   title:"Time with Joyce",                          subtitle:"Your #1 personal priority today · 4 hrs",          type:"PEOPLE",  color:"#FF47A3", emoji:"🫂",
+        desc:"Four hours. This is your stated personal priority today — quality time with Joyce. She's one of the 2–3 people who actually sees you. Be present. Not a debrief of the day, not a business meeting. Just be with the person.",
+        detail:"Vendor–JA Sync at 4 PM is in this window — keep it tight (30 min max) and get back." },
+      { id:"vendor",    time:"4:00 PM – 4:30 PM",   title:"Vendor–JA Sync",                           subtitle:"30 min · Inside Joyce window · Keep it tight",     type:"MEETING", color:"#E0DFD8", emoji:"🤝",
+        desc:"This sits inside the Joyce time block. Keep it exactly 30 minutes — specific questions, specific decisions, done. Get back to Joyce after." },
+      { id:"walk",      time:"6:00 PM – 6:30 PM",   title:"Cardio — 2 Miles with Joyce",              subtitle:"Evening walk · Connection + movement",             type:"BODY",    color:"#E8FF47", emoji:"🏃🏾",
+        desc:"Two miles with Joyce. Movement and connection at the same time. Let it be easy and present — not a debrief, not a plan session. Just walk." },
+      { id:"dinner",    time:"6:45 PM – 7:45 PM",   title:"Dinner — Shawarma",                        subtitle:"Clean protein · Kitchen closes 8:30 PM",           type:"BODY",    color:"#47FFB4", emoji:"🌯",
+        desc:"Shawarma. Lighter and cleaner than heavy pasta. Enjoy it. Kitchen closes 8:30 PM sharp — this discipline compounds toward September 14." },
+      { id:"strength",  time:"7:45 PM – 8:30 PM",   title:"Strength Training #4",                     subtitle:"Evening session · Day 4 · Show up",                type:"BODY",    color:"#E8FF47", emoji:"💪",
+        desc:"Fourth day straight. Show up clean. You said you'd do strength in the evening — here it is, on the calendar. The sequence is compounding. Don't break it tonight." },
+      { id:"yoga",      time:"8:30 PM – 9:00 PM",   title:"Yoga & Breathing Exercise",                subtitle:"Decompress · Wind down before prayer",             type:"BODY",    color:"#E8FF47", emoji:"🧘🏾",
+        desc:"Wind down. Let the day settle. Breathe. The transition from training to prayer needs space — this is it." },
+      { id:"endday",    time:"9:30 PM – 10:00 PM",  title:"End Day with God — Prayer & Reflection",   subtitle:"Review · Bible study · Journal · Pray · Sleep by 11", type:"SACRED", color:"#FFD147", emoji:"🙏",
+        desc:"Review the day spiritually. Revisit Bible Study notes. Journal reflections. Pray before sleeping. You've been running on 5 hours — close the laptop, close the phone, close the day properly. 11 PM latest." },
     ];
 
     const SCRIPTURES = [
-      { ref:"Psalm 46:10", text:"Be still, and know that I am God.", embodiment:"Wednesday is your stated hard day. Today, stillness is the resistance. The pull to react, to overthink, to drift — meet it with presence, not more planning." },
+      { ref:"Philippians 4:13", text:"I can do all things through Christ who strengthens me.", embodiment:"You said your strength and mind feel close to quitting. That's not weakness — that's the sequence doing its work. The Fibonacci note said it clearly: the first months feel like 0, 1, 1, 2, 3. This is not failure. Receive strength today. Don't manufacture it — receive it." },
     ];
 
     const AFFIRMATION = `With humility and hope, I evoke divine discernment for every decision I will make today.
@@ -90,9 +91,9 @@ May new horizons open before me, filled with Your grace and contentment.
 Amen.`;
 
     const MEALS = {
-      breakfast: { name:"Egg Sauce",                   items:"Eggs in tomato/pepper sauce · bread or plantain on the side",                      time:"11:00 AM",  why:"Post-workout protein. Send Maraynn money for the market before you leave the house." },
-      lunch:     { name:"Snack on the Go",              items:"Meat pie or sandwich en route · or grab something at 16 during the session break",  time:"~1:30 PM",  why:"Keep it light. Creative meetings 12–4 PM — you need focus, not a food coma." },
-      dinner:    { name:"Amala · 100 Hours, Ikoyi",     items:"Amala + ewedu/gbegiri + protein · 100 Awolowo Rd, Ikoyi",                          time:"7:30 PM",   why:"Soul food. Enjoy it, eat well. Go home after — you already know the right call on a Wednesday is to stay on your rails." },
+      breakfast: { name:"Egg Sauce + Bread",          items:"Eggs in tomato/pepper sauce · bread on the side",                                    time:"After cardio",  why:"Post-walk protein. Sit down and eat properly — no phone. Morning admin can wait." },
+      lunch:     { name:"Amala + Beef",                items:"Amala · ewedu or gbegiri · beef · moderate portion",                                  time:"~1:15 PM",      why:"Fuel before the Cavemen pitch prep block. Don't overeat — you need sharp thinking at 1:30 PM, not a food coma." },
+      dinner:    { name:"Shawarma",                    items:"Chicken or beef shawarma · vegetables built in · clean and light",                     time:"~7:00 PM",      why:"Cleaner end to the day than heavy pasta. Kitchen closes 8:30 PM — this is the discipline that compounds." },
     };
 
     const SECTIONS = [
@@ -117,7 +118,7 @@ Amen.`;
     const scripture = SCRIPTURES[0];
 
     const STORE_KEY = "jafo_v4";
-    const todayKey  = () => "2026-03-04";
+    const todayKey  = () => "2026-03-05";
     function loadData() { try { return JSON.parse(localStorage.getItem(STORE_KEY)||"{}"); } catch { return {}; } }
     function saveData(d) { try { localStorage.setItem(STORE_KEY,JSON.stringify(d)); } catch {} }
 
@@ -220,7 +221,7 @@ Amen.`;
               <div>
                 <div style={{fontSize:8,letterSpacing:3,color:"#444",textTransform:"uppercase"}}>JÄFO · AI Chief of Staff</div>
                 <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:36,letterSpacing:4,lineHeight:1,color:"#E0DFD8"}}>FOUNDER DAY</div>
-                <div style={{fontSize:8,color:"#555",marginTop:1}}>Wednesday, March 4 2026 · Lagos</div>
+                <div style={{fontSize:8,color:"#555",marginTop:1}}>Thursday, March 5 2026 · Lagos</div>
               </div>
               <div style={{textAlign:"right"}}>
                 <div style={{fontSize:8,color:"#555",letterSpacing:2,textTransform:"uppercase"}}>Discipline</div>
@@ -248,20 +249,18 @@ Amen.`;
             {/* TODAY */}
             {tab==="today"&&<div>
               <div className="st" style={{color:"#E8FF47"}}>TODAY'S MAP</div>
-              <div className="sub">JÄFO Intelligence · Wednesday March 4 · 17 events</div>
+              <div className="sub">JÄFO Intelligence · Thursday March 5 · 17 events</div>
 
               <div style={{background:"#080f0d",border:"1px solid #47FFB430",borderRadius:8,padding:14,marginBottom:14}}>
-                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>🧠 JÄFO Wednesday Brief</div>
+                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>🧠 JÄFO Thursday Brief</div>
                 <div style={{fontSize:12,color:"#666",lineHeight:1.9}}>
-                  Today is about setting up tomorrow. Keep it clean, keep it moving — minimum distractions, minimum drag. The version of you that wakes up Thursday should feel like he ran a tight ship today, not like he's catching up.
+                  You opened X and found the Fibonacci note — growth is exponential but doesn't feel it until you're deep in the sequence. You wrote it yourself and you need to hear it again this morning: <em style={{color:"#E0DFD8"}}>you're not behind. You're early in the sequence.</em> The strength you feel running low is not running out. It's being built. Keep going.
                   <br/><br/>
-                  The highest-leverage moment today is the <strong style={{color:"#E0DFD8"}}>Dubem session at 3 PM</strong>. The offer is already in his hands. Come in confident, walk the scope, get a yes or a dated follow-up. Don't leave 16 without a decision. Everything before that — Prince at 12, the ATIDE plan review at 9 — feeds toward it. Hard stop with Prince at 1:45 so the Dubem conversation gets the space it needs.
+                  The highest-leverage block today is the <strong style={{color:"#E0DFD8"}}>Cavemen pitch prep from 1:30–4:00 PM.</strong> You have a full strategy document already. Today's job is precision: timeline updated to current dates, a budget with clear ATIDE margins, and a pricing position that reflects what you're actually delivering. You are doing a full-stack campaign — strategy, content, radio, PR, video, live event. Price the company accordingly. Also reach out to Prince today about Cavemen video treatments — he needs to know this is coming.
                   <br/><br/>
-                  Tonight: go home after dinner. You already know you're tempted to go to Ruby's and you already know the risk on a Wednesday. <em style={{color:"#FF6B35"}}>Call him instead</em> — that's the right call and you said it yourself. The rails hold if you hold them: Sermon at 8, prayer at 9:30.
+                  Two things to close in the morning before lunch: <strong style={{color:"#47C4FF"}}>send the Dubem retainer offer</strong> (updated to April 1 start) and <strong style={{color:"#47C4FF"}}>finalise the JRS 004 post and captions.</strong> Both are near-done. Ship them. Then eat lunch, and walk into the Cavemen block with a clear desk.
                   <br/><br/>
-                  <strong style={{color:"#47C4FF"}}>One to start this week:</strong> You're thinking about a ₦5M loan into ATIDE's website, branding, and 2026 talent build — potentially from your dad or brother. Build the plan document first. Don't present a number — present a case.
-                  <br/><br/>
-                  <strong style={{color:"#FF47A3"}}>Before leaving the house:</strong> Send Maraynn money for the market run.
+                  Tonight is for Joyce. She floats until you're free, then you walk. Two miles, present, no business. She's one of the people who actually knows you — let the evening be that. Sleep target: 11 PM. You've been running on 5 hours. The body is willing but the system needs fuel.
                 </div>
               </div>
 
@@ -297,7 +296,7 @@ Amen.`;
             {/* BODY */}
             {tab==="body"&&<div>
               <div className="st" style={{color:"#E8FF47"}}>BODY</div>
-              <div className="sub">Wednesday — Strength #2 · Cardio. Stretch first — back is flagged.</div>
+              <div className="sub">Thursday — Cardio 4 miles. Day 4 straight. Stretch first.</div>
 
               <div style={{background:"#0c0c08",border:"1px solid #E8FF4720",borderRadius:6,padding:12,marginBottom:12,display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
                 <div>
@@ -312,13 +311,15 @@ Amen.`;
               </div>
 
               <div style={{background:"#0c0c08",border:"1px solid #E8FF4725",borderRadius:7,padding:15,marginBottom:10}}>
-                <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Wednesday Training</div>
-                <div style={{fontFamily:"'Bebas Neue'",fontSize:30,color:"#E8FF47",marginTop:2}}>Strength #2 + Cardio</div>
+                <div style={{fontSize:9,color:"#E8FF47",letterSpacing:2,textTransform:"uppercase"}}>Thursday Training</div>
+                <div style={{fontFamily:"'Bebas Neue'",fontSize:30,color:"#E8FF47",marginTop:2}}>Cardio 4 Miles + Stretch</div>
                 <div style={{height:1,background:"linear-gradient(to right,#E8FF47,transparent)",margin:"10px 0",opacity:.18}}/>
                 <div style={{fontSize:11,color:"#555",lineHeight:1.9}}>
-                  <strong style={{color:"#FF6B35"}}>⚠️ STRETCH FIRST — back is flagged.</strong> It was fine yesterday as soon as you stretched. Don't compound it.<br/>
-                  <strong style={{color:"#E8FF47"}}>7:00 AM — Strength Training #2</strong> · 45 minutes. Show up clean.<br/>
-                  <strong style={{color:"#E8FF47"}}>7:45 AM — Cardio 2 Miles</strong> · 30 minutes. Fat loss work. Non-negotiable.
+                  <strong style={{color:"#FF6B35"}}>⚠️ STRETCH FIRST — back still needs it. Don't skip it.</strong><br/>
+                  <strong style={{color:"#E8FF47"}}>9:30 AM — Cardio 4 Miles</strong> · Ogudu GRA Estate · Day 4 in a row. Get this done before the work blocks.<br/>
+                  <strong style={{color:"#E8FF47"}}>6:00 PM — Cardio 2 Miles with Joyce</strong> · Evening walk together.<br/>
+                  <strong style={{color:"#E8FF47"}}>7:45 PM — Strength Training #4</strong> · 45 minutes. Evening session. Show up.<br/>
+                  <strong style={{color:"#E8FF47"}}>8:30 PM — Yoga & Breathing</strong> · Wind down before prayer.
                 </div>
               </div>
 
@@ -349,7 +350,7 @@ Amen.`;
             {/* SPIRIT */}
             {tab==="spirit"&&<div>
               <div className="st" style={{color:"#FF6B35"}}>SPIRIT</div>
-              <div className="sub">Wednesday — stillness is the resistance today.</div>
+              <div className="sub">Thursday — receive strength. You don't manufacture it today.</div>
 
               <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginBottom:10}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
@@ -372,16 +373,16 @@ Amen.`;
               </div>
 
               <div style={{background:"#110d08",border:"1px solid #FF6B3525",borderRadius:8,padding:15,marginBottom:10}}>
-                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>📖 {scripture.ref} — Wednesday's Word</div>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>📖 {scripture.ref} — Thursday's Word</div>
                 <div style={{fontSize:14,color:"#E0DFD8",lineHeight:1.7,fontStyle:"italic",fontFamily:"'Playfair Display',serif",marginBottom:10}}>"{scripture.text}"</div>
                 <div style={{height:1,background:"linear-gradient(to right,#FF6B35,transparent)",margin:"10px 0",opacity:.18}}/>
-                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Wednesday embodiment</div>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Thursday embodiment</div>
                 <div style={{fontSize:11,color:"#666",lineHeight:1.8,marginBottom:8}}>
                   {scripture.embodiment}
                   <br/><br/>
-                  God said this morning: <em style={{color:"#FF6B35"}}>"Stay in my presence. Meditate on the word. Be comfortable with the unknown and not figuring things out. Notice yourself — you are already thinking clearly and wiser."</em>
+                  God said this week: <em style={{color:"#FF6B35"}}>"Receive strength for the next few weeks. Before Eve came, Adam had time with the Lord — placed, commissioned, with responsibility, knowing God's voice for himself. You've been asleep. To speak the language of the higher self, you must repossess what the devil is trying to redesign."</em>
                   <br/><br/>
-                  That word is load-bearing today. The decisions, the Dubem close, the Esther question — none of them need to be figured out all at once. Presence first. Clarity follows.
+                  That's not abstract theology. That's the architecture of this season. Before the next chapter opens — be placed. Be commissioned. Know His voice for yourself.
                 </div>
                 <textarea rows={2} placeholder="What is God saying to me specifically this Wednesday?" value={notes.embody||""} onChange={e=>setNote("embody",e.target.value)}/>
                 <div className="ci" style={{marginTop:8}} onClick={()=>setCheck("embody_lived")}>
@@ -400,8 +401,8 @@ Amen.`;
               </div>
 
               <div className="card">
-                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>✍️ Wednesday Journal Prompt</div>
-                <div style={{fontSize:13,color:"#E0DFD8",lineHeight:1.7,marginBottom:8,fontStyle:"italic",fontFamily:"'Playfair Display',serif"}}>"When you found your ground yesterday after a thrown-off morning — what actually happened in that moment? What did you reach for, and why did it work? Can you name it clearly enough to reach for it again?"</div>
+                <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>✍️ Thursday Journal Prompt</div>
+                <div style={{fontSize:13,color:"#E0DFD8",lineHeight:1.7,marginBottom:8,fontStyle:"italic",fontFamily:"'Playfair Display',serif"}}>"You said you miss Ima — and that it's pure, and you're not acting on it, just sitting with it. What does it tell you about what you're actually longing for right now? Not her specifically — what does the feeling point to?"</div>
                 <textarea rows={5} placeholder="Write freely. No editing. Just truth..." value={notes.journal||""} onChange={e=>setNote("journal",e.target.value)}/>
               </div>
 
@@ -432,12 +433,12 @@ Amen.`;
             {/* MIND */}
             {tab==="mind"&&<div>
               <div className="st" style={{color:"#47C4FF"}}>MIND</div>
-              <div className="sub">Wednesday — feed the mind daily, without exception.</div>
+              <div className="sub">Thursday — feed the mind. Read the 300K strategy today.</div>
 
               <div className="card" style={{border:"2px solid #47C4FF30",marginBottom:12}}>
                 <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:5}}>🎯 THE ONE THING — Today</div>
                 <div style={{fontSize:10,color:"#666",marginBottom:8}}>If today were a success, what single thing would have to be true?</div>
-                <div style={{fontSize:13,color:"#47C4FF",marginBottom:8,fontFamily:"'Bebas Neue'",letterSpacing:1}}>Dubem retainer — yes or clear next step by 4 PM.</div>
+                <div style={{fontSize:13,color:"#47C4FF",marginBottom:8,fontFamily:"'Bebas Neue'",letterSpacing:1}}>Cavemen pitch prep done — timeline, budget, pricing position clear before Friday.</div>
                 <textarea rows={2} placeholder="Add your own..." value={notes.onethinq||""} onChange={e=>setNote("onethinq",e.target.value)}/>
               </div>
 
@@ -479,29 +480,29 @@ Amen.`;
               <div style={{background:"#080e11",border:"1px solid #47C4FF25",borderRadius:8,padding:15,marginBottom:12,marginTop:10}}>
                 <div style={{fontSize:9,color:"#47C4FF",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>⚡ Today's Deep Work Blocks</div>
 
-                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>8:30 AM — JP Star Task Overview</div>
-                {["Confirm campaign status — on track / stalled / decision needed today","Draft radio brief — target stations, interview/support package, budget cap ₦750k","Intro email: Korede → Casey + radio plugger — drafted and ready to send"].map(item=>(
-                  <div key={item} className="ci" onClick={()=>setCheck("jp_"+item)}>
-                    <div className="cb" style={{background:checks["jp_"+item]?"#47C4FF":"transparent",borderColor:checks["jp_"+item]?"#47C4FF":"#252525"}}>{checks["jp_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
-                    <div style={{fontSize:10,color:checks["jp_"+item]?"#2a2a2a":"#666",textDecoration:checks["jp_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Morning — Dubem Retainer + JRS 004</div>
+                {["Update retainer doc: April 1 start date, first payment April","Send Dubem the offer — email or WhatsApp, your call","JRS 004 post and captions finalised — done before lunch"].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("morn_"+item)}>
+                    <div className="cb" style={{background:checks["morn_"+item]?"#47C4FF":"transparent",borderColor:checks["morn_"+item]?"#47C4FF":"#252525"}}>{checks["morn_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
+                    <div style={{fontSize:10,color:checks["morn_"+item]?"#2a2a2a":"#666",textDecoration:checks["morn_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
                   </div>
                 ))}
 
                 <div style={{height:1,background:"linear-gradient(to right,#47C4FF,transparent)",margin:"12px 0",opacity:.12}}/>
-                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>9:00 AM — ATIDE Social Plan Review</div>
-                {["Read the plan fresh — dates, post order, video sequencing correct?","Note final edits clearly — Dubem (assets) or Korede (copy)","Confirm landing page brief ready — newsletter opt-in + inquiry form, live Day 1 Mar 17","Note anything to communicate to Prince at 12 PM"].map(item=>(
-                  <div key={item} className="ci" onClick={()=>setCheck("atide_"+item)}>
-                    <div className="cb" style={{background:checks["atide_"+item]?"#47C4FF":"transparent",borderColor:checks["atide_"+item]?"#47C4FF":"#252525"}}>{checks["atide_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
-                    <div style={{fontSize:10,color:checks["atide_"+item]?"#2a2a2a":"#666",textDecoration:checks["atide_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>1:30 PM — Cavemen Pitch Prep</div>
+                {["Refine timeline: update all dates in the strategy doc to current schedule","Draft budget with clear line items and ATIDE margin on each","Define pricing position — scope is full-stack, price should reflect that","WhatsApp Prince: Cavemen video treatments — what can he pull off?","Read the 300K strategy document today — extract what to lock in"].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("cav_"+item)}>
+                    <div className="cb" style={{background:checks["cav_"+item]?"#47C4FF":"transparent",borderColor:checks["cav_"+item]?"#47C4FF":"#252525"}}>{checks["cav_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
+                    <div style={{fontSize:10,color:checks["cav_"+item]?"#2a2a2a":"#666",textDecoration:checks["cav_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
                   </div>
                 ))}
 
                 <div style={{height:1,background:"linear-gradient(to right,#47C4FF,transparent)",margin:"12px 0",opacity:.12}}/>
-                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>10:00 AM — JRS 004 Announcement</div>
-                {["Review JRS comms plan for Mar 14 — sequence confirmed, day-of posts covered?","Write the first proper 004 announcement post — JRS voice, not a flyer caption","Post live before breakfast at 11 AM"].map(item=>(
-                  <div key={item} className="ci" onClick={()=>setCheck("jrs004_"+item)}>
-                    <div className="cb" style={{background:checks["jrs004_"+item]?"#47C4FF":"transparent",borderColor:checks["jrs004_"+item]?"#47C4FF":"#252525"}}>{checks["jrs004_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
-                    <div style={{fontSize:10,color:checks["jrs004_"+item]?"#2a2a2a":"#666",textDecoration:checks["jrs004_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                <div style={{fontSize:9,color:"#47C4FF",letterSpacing:1.5,textTransform:"uppercase",marginBottom:6}}>Also today — Financial + Payments</div>
+                {["ATIDE Drawdown Transfer at 12 PM — figures ready before you open the app","Follow up on pending payments: The Cavemen + Chiki — too much money in the air"].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("fin_"+item)}>
+                    <div className="cb" style={{background:checks["fin_"+item]?"#47C4FF":"transparent",borderColor:checks["fin_"+item]?"#47C4FF":"#252525"}}>{checks["fin_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
+                    <div style={{fontSize:10,color:checks["fin_"+item]?"#2a2a2a":"#666",textDecoration:checks["fin_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
                   </div>
                 ))}
               </div>
@@ -512,22 +513,31 @@ Amen.`;
             {/* BUSINESS */}
             {tab==="business"&&<div>
               <div className="st" style={{color:"#B47FFF"}}>BUSINESS</div>
-              <div className="sub">Wednesday — execute. Every task below has a tier.</div>
+              <div className="sub">Thursday — Cavemen prep is the main event. Everything else supports it.</div>
 
               <div style={{background:"#0f0814",border:"2px solid #FF474740",borderRadius:8,padding:14,marginBottom:10}}>
                 <div style={{fontSize:9,color:"#FF4747",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>🔴 TIER 1 — Must happen today</div>
 
-                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>ATIDE Rebrand</div>
-                {["Social media plan signed off (or specific change list — nothing vague)","Dubem: all launch week assets briefed — dimensions, copy, deadline on each","Dubem retainer: yes or clear next step by 4 PM","Prince: V01–V05 aligned, shoot date agreed, V01 locked by Mar 12 confirmed"].map(item=>(
-                  <div key={item} className="ci" onClick={()=>setCheck("t1atide_"+item)}>
-                    <div className="cb" style={{background:checks["t1atide_"+item]?"#FF4747":"transparent",borderColor:checks["t1atide_"+item]?"#FF4747":"#252525"}}>{checks["t1atide_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
-                    <div style={{fontSize:10,color:checks["t1atide_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1atide_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>Dubem Retainer</div>
+                {["Update offer doc: April 1 start, first payment April","Send offer to Dubem — WhatsApp or email, clean and confident"].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("t1dub_"+item)}>
+                    <div className="cb" style={{background:checks["t1dub_"+item]?"#FF4747":"transparent",borderColor:checks["t1dub_"+item]?"#FF4747":"#252525"}}>{checks["t1dub_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
+                    <div style={{fontSize:10,color:checks["t1dub_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1dub_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                  </div>
+                ))}
+
+                <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
+                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>The Cavemen — Pitch Prep</div>
+                {["Timeline refined and updated to current dates","Budget drafted — clear line items, clear ATIDE margins","Pricing position locked in your mind before the Friday meeting","Prince contacted about Cavemen video treatments"].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("t1cav_"+item)}>
+                    <div className="cb" style={{background:checks["t1cav_"+item]?"#FF4747":"transparent",borderColor:checks["t1cav_"+item]?"#FF4747":"#252525"}}>{checks["t1cav_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
+                    <div style={{fontSize:10,color:checks["t1cav_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1cav_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
                   </div>
                 ))}
 
                 <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
                 <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>JRS 004</div>
-                {["First proper announcement post live today — JRS voice, not a flyer caption","Dubem briefed on JRS design needs for 004 event"].map(item=>(
+                {["Final post and captions done before lunch","JRS 004 logistics meeting at 12:30 PM — exit with zero open items"].map(item=>(
                   <div key={item} className="ci" onClick={()=>setCheck("t1jrs_"+item)}>
                     <div className="cb" style={{background:checks["t1jrs_"+item]?"#FF4747":"transparent",borderColor:checks["t1jrs_"+item]?"#FF4747":"#252525"}}>{checks["t1jrs_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
                     <div style={{fontSize:10,color:checks["t1jrs_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1jrs_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
@@ -536,19 +546,10 @@ Amen.`;
 
                 <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
                 <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>JP Star</div>
-                {["Radio brief drafted — stations, support package, ₦750k budget cap (₦500–600k from model cuts)","Intro email: Korede → Casey + radio plugger sent today"].map(item=>(
+                {["Follow up on email — confirm Kaycee interview status","Send call sheet for interview"].map(item=>(
                   <div key={item} className="ci" onClick={()=>setCheck("t1jp_"+item)}>
                     <div className="cb" style={{background:checks["t1jp_"+item]?"#FF4747":"transparent",borderColor:checks["t1jp_"+item]?"#FF4747":"#252525"}}>{checks["t1jp_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
                     <div style={{fontSize:10,color:checks["t1jp_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1jp_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-                  </div>
-                ))}
-
-                <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
-                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>Personal Ops — Before Leaving</div>
-                {["Send Maraynn money for market run"].map(item=>(
-                  <div key={item} className="ci" onClick={()=>setCheck("t1ops_"+item)}>
-                    <div className="cb" style={{background:checks["t1ops_"+item]?"#FF4747":"transparent",borderColor:checks["t1ops_"+item]?"#FF4747":"#252525"}}>{checks["t1ops_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
-                    <div style={{fontSize:10,color:checks["t1ops_"+item]?"#2a2a2a":"#666",textDecoration:checks["t1ops_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
                   </div>
                 ))}
               </div>
@@ -556,38 +557,29 @@ Amen.`;
               <div style={{background:"#0c0c08",border:"1px solid #FFD14730",borderRadius:8,padding:14,marginBottom:10}}>
                 <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>🟡 TIER 2 — Move this week</div>
 
-                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>The Cavemen</div>
-                {["Back Thursday — meeting Friday for year plan","Prep the pitch: H2 plans, budget, compensation structure for ATIDE services","Come in with a plan — not notes, a plan"].map(item=>(
-                  <div key={item} className="ci" onClick={()=>setCheck("t2cav_"+item)}>
-                    <div className="cb" style={{background:checks["t2cav_"+item]?"#FFD147":"transparent",borderColor:checks["t2cav_"+item]?"#FFD147":"#252525"}}>{checks["t2cav_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
-                    <div style={{fontSize:10,color:checks["t2cav_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2cav_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>Pending Payments — Chase Today</div>
+                {["The Cavemen — outstanding payment, follow up","Chiki — outstanding payment, follow up","Too much money in the air — collect what you're owed"].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("t2pay_"+item)}>
+                    <div className="cb" style={{background:checks["t2pay_"+item]?"#FFD147":"transparent",borderColor:checks["t2pay_"+item]?"#FFD147":"#252525"}}>{checks["t2pay_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
+                    <div style={{fontSize:10,color:checks["t2pay_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2pay_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
                   </div>
                 ))}
 
                 <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
-                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>₦5M Loan Plan — ATIDE 2026</div>
-                {["Start the document — website, branding, key talent, client acquisition","Dad or brother as source — build the case before the conversation","Present a plan, not a number"].map(item=>(
-                  <div key={item} className="ci" onClick={()=>setCheck("t2loan_"+item)}>
-                    <div className="cb" style={{background:checks["t2loan_"+item]?"#FFD147":"transparent",borderColor:checks["t2loan_"+item]?"#FFD147":"#252525"}}>{checks["t2loan_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
-                    <div style={{fontSize:10,color:checks["t2loan_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2loan_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>ATIDE Social Media Schedule</div>
+                {["Finalise the 30-day social media schedule for March 17 launch — include new ideas from context doc","Sign off on the updated plan — nothing vague"].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("t2atide_"+item)}>
+                    <div className="cb" style={{background:checks["t2atide_"+item]?"#FFD147":"transparent",borderColor:checks["t2atide_"+item]?"#FFD147":"#252525"}}>{checks["t2atide_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
+                    <div style={{fontSize:10,color:checks["t2atide_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2atide_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
                   </div>
                 ))}
 
                 <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
-                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>Esther Decision</div>
-                {["Make the call by end of week — JÄFO is already handling chief-of-staff functions cleanly","If letting go: Dubem retainer confirmed + Korede structured pay + margins reviewed"].map(item=>(
-                  <div key={item} className="ci" onClick={()=>setCheck("t2est_"+item)}>
-                    <div className="cb" style={{background:checks["t2est_"+item]?"#FFD147":"transparent",borderColor:checks["t2est_"+item]?"#FFD147":"#252525"}}>{checks["t2est_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
-                    <div style={{fontSize:10,color:checks["t2est_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2est_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
-                  </div>
-                ))}
-
-                <div style={{height:1,background:"#1e1e1e",margin:"10px 0"}}/>
-                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>Uche Ikonne Pitch</div>
-                {["On your mind — open the file this week and start the approach"].map(item=>(
-                  <div key={item} className="ci" onClick={()=>setCheck("t2uche_"+item)}>
-                    <div className="cb" style={{background:checks["t2uche_"+item]?"#FFD147":"transparent",borderColor:checks["t2uche_"+item]?"#FFD147":"#252525"}}>{checks["t2uche_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
-                    <div style={{fontSize:10,color:checks["t2uche_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2uche_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
+                <div style={{fontSize:9,color:"#555",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>Car — Don't Let It Compound</div>
+                {["Engine cooling leak — fix this before it becomes a breakdown","Book the service this week"].map(item=>(
+                  <div key={item} className="ci" onClick={()=>setCheck("t2car_"+item)}>
+                    <div className="cb" style={{background:checks["t2car_"+item]?"#FFD147":"transparent",borderColor:checks["t2car_"+item]?"#FFD147":"#252525"}}>{checks["t2car_"+item]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
+                    <div style={{fontSize:10,color:checks["t2car_"+item]?"#2a2a2a":"#666",textDecoration:checks["t2car_"+item]?"line-through":"none",lineHeight:1.5}}>{item}</div>
                   </div>
                 ))}
               </div>
@@ -595,11 +587,12 @@ Amen.`;
               <div style={{background:"#0a0a0a",border:"1px solid #1e1e1e",borderRadius:8,padding:14,marginBottom:10}}>
                 <div style={{fontSize:9,color:"#666",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>⚪ TIER 3 — Keep on radar</div>
                 <div style={{fontSize:11,color:"#555",lineHeight:2}}>
-                  ATIDE public launch — March 17 · 13 days<br/>
-                  FAVE campaign reporting — Esther owns, monitor<br/>
-                  JRS 004 — March 14 · 10 days<br/>
-                  Room: clean + source temporary closet/drawer unit this week<br/>
-                  Car: book service soon · check water every 2 days, don't let it compound
+                  ATIDE public launch — March 17 · 12 days<br/>
+                  JRS 004 — March 14 · 9 days<br/>
+                  Dubem / 080 Studio partnership structure — Saturday thinking time<br/>
+                  Esther decision — make the call by end of week<br/>
+                  Uche Ikonne pitch — open the file this week<br/>
+                  Dami Orimogunje — need to see her soon
                 </div>
               </div>
 
@@ -624,16 +617,16 @@ Amen.`;
             {/* ENERGY */}
             {tab==="energy"&&<div>
               <div className="st" style={{color:"#47FFB4"}}>ENERGY</div>
-              <div className="sub">Wednesday — your stated hard day. Know your friction zones before they hit.</div>
+              <div className="sub">Thursday — 5 hours sleep. Know your friction zones before they hit.</div>
               <div style={{background:"#080f0d",border:"1px solid #1a3325",borderRadius:8,padding:14,marginBottom:10}}>
                 {[
-                  {risk:"Late start → morning blocks compressed",              fix:"JP Star at 8:30 is the first hard task. Phone face-down until then. Opening WhatsApp first costs you 30 minutes you don't have.",icon:"⏰"},
-                  {risk:"JRS post — perfectionism stall at 10 AM",             fix:"Write it in 30 minutes and post. JRS voice is developed. You know what to say. First draft is good enough if it's honest. Review once, send.",icon:"✍️"},
-                  {risk:"Prince session running into Dubem time",               fix:"Hard stop 1:45 PM with Prince — the wrap block is built. Honour it. The retainer conversation cannot be rushed.",icon:"🎬"},
-                  {risk:"Dubem retainer — hesitation to close",                 fix:"The offer doc is already sent. This is a structured close: walk the scope, confirm it works, agree terms or set a follow-up date. Don't leave without one of those two.",icon:"🤝"},
-                  {risk:"Wednesday emotional drag — your stated pattern",       fix:"You named it, which is half the work. When the pull shows up mid-day: notice it, name it, return to the current block. The rails hold if you hold them.",icon:"🌪️"},
-                  {risk:"Temptation to go to Ruby's after dinner",              fix:"Go home. Call him instead — you already called it right. Sermon at 8 and prayer at 9:30 do their best work when you're not drifting.",icon:"🏠"},
-                  {risk:"Relationship thoughts bleeding into work windows",     fix:"Journal at 6 AM and EOD are the right containers. Mid-work: acknowledge and defer — 'I'm holding this, not right now.'",icon:"💭"},
+                  {risk:"Running on 5 hours — energy dip likely mid-afternoon",               fix:"The Cavemen block is 1:30–4 PM. That's when the dip could hit. Eat lunch before 1:15 PM. Don't go into that block hungry or depleted. Water before you sit down.",icon:"😴"},
+                  {risk:"Morning tasks feel small so you delay them",                          fix:"Dubem retainer update is one small edit and a send. JRS captions are near-done. Both are 30 minutes max combined. Ship them before 12 PM. Don't let 'almost done' tasks float all day.",icon:"⏰"},
+                  {risk:"Cavemen block — scope creep in your own thinking",                   fix:"The goal is: timeline, budget, pricing. Not redesigning the strategy. The strategy doc is good. Your job today is to put numbers on it and sharpen the pitch. Stay in that lane.",icon:"🎯"},
+                  {risk:"Overthinking — you named it as your biggest risk today",              fix:"When you notice it: one physical action to reset (walk, water, breathe). Then return to the task. Overthinking is a delay mechanism. Name it and move.",icon:"🌪️"},
+                  {risk:"JRS 004 logistics meeting running long or loose",                    fix:"Come in with a checklist. Every open item gets a name and a date. If it can't get that, it's not resolved. Hard stop at 1:15 PM — lunch before Cavemen.",icon:"📋"},
+                  {risk:"Joyce time bleeding into work brain",                                 fix:"When Joyce arrives, the work day is done. The 2-mile walk is connection time — not a debrief of the day. Be present. She's one of the people who sees you clearly.",icon:"🫂"},
+                  {risk:"Late night again — the 3 AM pattern",                               fix:"Close the laptop after EOD prayer. No more screens. 11 PM target. The sequence compounds — and so does sleep debt.",icon:"🌙"},
                 ].map(item=>(
                   <div key={item.risk} style={{display:"flex",gap:10,padding:"10px 0",borderBottom:"1px solid #0e0e0e",alignItems:"flex-start"}}>
                     <div style={{fontSize:15,flexShrink:0}}>{item.icon}</div>
@@ -653,11 +646,11 @@ Amen.`;
             {/* EOD */}
             {tab==="eod"&&<div>
               <div className="st" style={{color:"#FFD147"}}>EOD REVIEW</div>
-              <div className="sub">Wednesday close · No hiding · 9:30 PM.</div>
+              <div className="sub">Thursday close · No hiding · Target: asleep by 11 PM.</div>
 
               <div style={{background:"#0e0c08",border:"1px solid #252000",borderRadius:7,padding:13,marginBottom:8}}>
                 <div style={{fontSize:9,color:"#FFD147",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>💪 BODY</div>
-                {[["eodb_stretch","Stretched before training (back care)"],["eodb_strength","Completed Strength Training #2"],["eodb_cardio","Completed cardio — 2 miles"],["eodb_eat","Ate aligned — egg sauce, snack, amala"],["eodb_water","Hit 3.5L hydration"],["eodb_fast","No food after 8:30 PM"],["eodb_home","Home early — didn't drift into the evening"]].map(([k,label])=>(
+                {[["eodb_stretch","Stretched before cardio"],["eodb_cardio4","Completed cardio — 4 miles (morning)"],["eodb_walk","Completed cardio — 2 miles with Joyce (evening)"],["eodb_strength","Completed Strength Training #4"],["eodb_yoga","Yoga & breathing done"],["eodb_eat","Ate aligned — egg sauce, amala, shawarma"],["eodb_water","Hit 3.5L hydration"],["eodb_fast","No food after 8:30 PM"],["eodb_sleep","In bed by 11 PM — no 3 AM tonight"]].map(([k,label])=>(
                   <div key={k} className="ci" onClick={()=>setCheck(k)}>
                     <div className="cb" style={{background:checks[k]?"#FFD147":"transparent",borderColor:checks[k]?"#FFD147":"#222"}}>{checks[k]&&<span style={{fontSize:8,color:"#080808"}}>✓</span>}</div>
                     <div style={{fontSize:11,color:checks[k]?"#3a3a3a":"#666",textDecoration:checks[k]?"line-through":"none"}}>{label}</div>
@@ -667,7 +660,7 @@ Amen.`;
 
               <div style={{background:"#0e0a08",border:"1px solid #251500",borderRadius:7,padding:13,marginBottom:8}}>
                 <div style={{fontSize:9,color:"#FF6B35",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>🔥 SPIRIT</div>
-                {[{q:"Did I choose or react today — where specifically?",k:"sp_aff"},{q:"Where did I feel a trigger today? What was underneath it?",k:"sp_identity"},{q:"Where did I sense God in the day?",k:"sp_god"},{q:"Did I end the day with prayer?",k:"sp_prayer"}].map(item=>(
+                {[{q:"Did I choose or react today — where specifically?",k:"sp_aff"},{q:"Where did I feel the strength running low — and where did it come back?",k:"sp_identity"},{q:"Where did I sense God in the day?",k:"sp_god"},{q:"Did I end the day with prayer?",k:"sp_prayer"}].map(item=>(
                   <div key={item.k} style={{marginBottom:8}}>
                     <div style={{fontSize:11,color:"#555",marginBottom:3}}>{item.q}</div>
                     <textarea rows={1} style={{minHeight:36}} placeholder="Honest answer..." value={notes[item.k]||""} onChange={e=>setNote(item.k,e.target.value)}/>
@@ -677,7 +670,7 @@ Amen.`;
 
               <div style={{background:"#0a0810",border:"1px solid #150d25",borderRadius:7,padding:13,marginBottom:8}}>
                 <div style={{fontSize:9,color:"#B47FFF",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>🎯 BUSINESS</div>
-                {[["eodbi_dubem","Dubem retainer — decision made or follow-up dated"],["eodbi_jrspost","JRS 004 announcement post is live"],["eodbi_jp","JP Star radio brief drafted + Korede intro sent"],["eodbi_prince","Prince: shoot date confirmed, timeline locked"],["eodbi_maraynn","Sent Maraynn money before leaving the house"]].map(([k,label])=>(
+                {[["eodbi_dubem","Dubem retainer offer sent (April start)"],["eodbi_jrs004","JRS 004 post and captions finalised"],["eodbi_jrslogistics","JRS logistics meeting — zero open items"],["eodbi_cav","Cavemen pitch prep done — timeline, budget, pricing clear"],["eodbi_prince","Prince contacted about Cavemen treatments"],["eodbi_jp","JP Star email followed up + call sheet sent"],["eodbi_payments","Chased The Cavemen + Chiki outstanding payments"]].map(([k,label])=>(
                   <div key={k} className="ci" onClick={()=>setCheck(k)}>
                     <div className="cb" style={{background:checks[k]?"#B47FFF":"transparent",borderColor:checks[k]?"#B47FFF":"#222"}}>{checks[k]&&<span style={{fontSize:8,color:"#fff"}}>✓</span>}</div>
                     <div style={{fontSize:11,color:checks[k]?"#333":"#666",textDecoration:checks[k]?"line-through":"none"}}>{label}</div>
@@ -708,8 +701,8 @@ Amen.`;
               </div>
 
               <div style={{background:"#090d09",border:"2px solid #47FFB4",borderRadius:7,padding:13}}>
-                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🔒 WEDNESDAY LOCK-IN</div>
-                <div style={{fontSize:9,color:"#555",marginBottom:6}}>Thursday: Cavemen are back. What's the one thing the man needs to have ready?</div>
+                <div style={{fontSize:9,color:"#47FFB4",letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>🔒 THURSDAY LOCK-IN</div>
+                <div style={{fontSize:9,color:"#555",marginBottom:6}}>Friday: The Cavemen meeting. What's the one thing the man needs to walk in with locked and ready?</div>
                 <textarea rows={2} placeholder="Tomorrow I will non-negotiably..." value={notes.tomorrow||""} onChange={e=>setNote("tomorrow",e.target.value)}/>
               </div>
             </div>}
@@ -909,7 +902,7 @@ Amen.`;
           </div>
 
           <div style={{borderTop:"1px solid #0d0d0d",padding:"10px 16px",display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6,paddingBottom:"max(10px,env(safe-area-inset-bottom))"}}>
-            <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:3,textTransform:"uppercase"}}>JÄFO · Wednesday March 4 2026</div>
+            <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:3,textTransform:"uppercase"}}>JÄFO · Thursday March 5 2026</div>
             <div style={{fontSize:7,color:"#1a1a1a",letterSpacing:2,textTransform:"uppercase"}}>Energy · Revenue · Never Ego</div>
           </div>
         </div>
